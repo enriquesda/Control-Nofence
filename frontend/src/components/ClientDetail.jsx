@@ -1,0 +1,404 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getClientes, updateCliente, updateKit, addAcuerdo, updateAcuerdo } from '../api';
+import { ArrowLeft, User, FileText, Gift, DollarSign, Save, Info, MapPin, Plus, Calendar, AlertTriangle, CheckSquare, Square } from 'lucide-react';
+import InvoiceManager from './InvoiceManager';
+
+const ClientDetail = () => {
+    const { dni } = useParams();
+    const navigate = useNavigate();
+    const [client, setClient] = useState(null);
+    const [activeTab, setActiveTab] = useState('general');
+    const [showClosureModal, setShowClosureModal] = useState(false);
+    const [showAcuerdoModal, setShowAcuerdoModal] = useState(false);
+    const [newAcuerdo, setNewAcuerdo] = useState({ Numero_Acuerdo: '', Tipo: 'GA', Importe: 0, Fecha_Aprobacion: '' });
+    const [loading, setLoading] = useState(true);
+
+    const fetchData = async () => {
+        const res = await getClientes();
+        const data = res.data.find(c => c.Dni === dni);
+        setClient(data);
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [dni]);
+
+    // Calcular saldo y totales
+    const totalAcuerdos = client?.acuerdos ? client.acuerdos.reduce((acc, curr) => acc + (curr.Importe || 0), 0) : 0;
+    const importeBono = client?.Importe_Bono || 0;
+    const saldoRestante = importeBono - totalAcuerdos;
+    const isKitCompleted = importeBono > 0 && saldoRestante <= 0;
+
+    const handleUpdateClient = async (e) => {
+        e.preventDefault();
+        // Helper para valores numéricos opcionales
+        const parseOptionalFloat = (val) => val ? parseFloat(val) : null;
+
+        const payload = {
+            Nombre: client.Nombre,
+            Telefono: client.Telefono ? String(client.Telefono) : '',
+            Email: client.Email,
+            Calle: client.Calle || null,
+            Localidad: client.Localidad || null,
+            Provincia: client.Provincia || null,
+            Codigo_Postal: client.Codigo_Postal ? String(client.Codigo_Postal) : null,
+            Estado_Nofence: client.Estado_Nofence || null,
+            Pedido_Nofence: client.Pedido_Nofence || null,
+            Importe_Factura_Nofence: parseOptionalFloat(client.Importe_Factura_Nofence),
+            Importe_Cobrado_Cliente: parseOptionalFloat(client.Importe_Cobrado_Cliente),
+            Beneficio: parseOptionalFloat(client.Beneficio)
+        };
+
+        try {
+            await updateCliente(dni, payload);
+            fetchData();
+            alert('Datos guardados correctamente');
+        } catch (error) {
+            console.error(error);
+            const detail = error.response?.data?.detail;
+            alert('Error al guardar: ' + (detail ? JSON.stringify(detail) : error.message));
+        }
+    };
+
+    const handleUpdateKit = async (e) => {
+        e.preventDefault();
+        await updateKit(dni, client);
+        fetchData();
+        alert('Datos del bono actualizados');
+    };
+
+    const handleAddAcuerdo = async (e) => {
+        e.preventDefault();
+        // Auto-set Enviado=true by default
+        const todayStr = new Date().toISOString().split('T')[0];
+        const acuerdoToSend = {
+            ...newAcuerdo,
+            Enviado: true,
+            Fecha_Envio: todayStr
+        };
+
+        await addAcuerdo(dni, acuerdoToSend);
+        setShowAcuerdoModal(false);
+        fetchData();
+        setNewAcuerdo({ Numero_Acuerdo: '', Tipo: 'GA', Importe: 0, Fecha_Aprobacion: '' });
+    };
+
+    const handleToggleAcuerdo = async (id, field, currentValue) => {
+        const newValue = !currentValue;
+        const payload = { [field]: newValue };
+
+        // Auto-set date if checking true
+        const today = new Date().toISOString().split('T')[0];
+        if (newValue) {
+            if (field === 'Enviado') payload.Fecha_Envio = today;
+            if (field === 'Firmado') payload.Fecha_Firma = today;
+        } else {
+            if (field === 'Enviado') payload.Fecha_Envio = null;
+            if (field === 'Firmado') payload.Fecha_Firma = null;
+        }
+
+        await updateAcuerdo(id, payload);
+        fetchData();
+    };
+
+    if (loading) return <div className="flex justify-center items-center h-64 text-slate-400">Cargando...</div>;
+    if (!client) return <div>Cliente no encontrado</div>;
+
+    const tabs = [
+        { id: 'general', label: 'Datos Generales', icon: <User size={18} /> },
+        { id: 'kit', label: 'Kit Digital & Acuerdos', icon: <Gift size={18} /> },
+        { id: 'facturas', label: 'Facturación Global', icon: <FileText size={18} /> },
+    ];
+
+    return (
+        <div className="max-w-5xl mx-auto pb-20">
+            <button onClick={() => navigate('/clientes')} className="flex items-center space-x-2 text-slate-500 hover:text-slate-700 mb-6 transition-colors">
+                <ArrowLeft size={20} />
+                <span>Volver al listado</span>
+            </button>
+
+            <div className="flex justify-between items-start mb-8">
+                <div>
+                    <h2 className="text-3xl font-bold text-slate-900">{client.Nombre}</h2>
+                    <div className="flex items-center space-x-4 mt-1 text-slate-500 font-medium">
+                        <span>DNI: {client.Dni}</span>
+                        {client.Localidad && (
+                            <span className="flex items-center text-sm"><MapPin size={14} className="mr-1" /> {client.Localidad} ({client.Provincia})</span>
+                        )}
+                    </div>
+                </div>
+                <div className="text-right">
+                    <div className="text-xs font-bold text-slate-400 uppercase mb-1 tracking-wider">Estado Actual</div>
+                    <span className="bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full font-bold text-sm border border-primary-100">
+                        {client.Estado}
+                    </span>
+                </div>
+            </div>
+
+            <div className="flex space-x-1 bg-slate-200/50 p-1 rounded-xl mb-8">
+                {tabs.map(tab => (
+                    <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`flex-1 flex items-center justify-center space-x-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === tab.id ? 'bg-white text-primary-600 shadow-sm' : 'text-slate-600 hover:bg-white/50'
+                            }`}
+                    >
+                        {tab.icon}
+                        <span>{tab.label}</span>
+                    </button>
+                ))}
+            </div>
+
+            <div className="animate-in fade-in duration-300">
+                {activeTab === 'general' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="card space-y-6">
+                            <div>
+                                <h3 className="text-lg font-bold mb-4 flex items-center space-x-2 border-b pb-2">
+                                    <Info size={20} className="text-primary-500" />
+                                    <span>Información de Contacto</span>
+                                </h3>
+                                <div className="grid grid-cols-1 gap-4">
+                                    <div>
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Nombre Completo</label>
+                                        <input type="text" className="input-field" value={client.Nombre} onChange={e => setClient({ ...client, Nombre: e.target.value })} />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Teléfono</label>
+                                        <input type="text" className="input-field" value={client.Telefono} onChange={e => setClient({ ...client, Telefono: e.target.value })} />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Email</label>
+                                        <input type="email" className="input-field" value={client.Email} onChange={e => setClient({ ...client, Email: e.target.value })} />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 className="text-lg font-bold mb-4 flex items-center space-x-2 border-b pb-2">
+                                    <MapPin size={20} className="text-primary-500" />
+                                    <span>Dirección Fiscal</span>
+                                </h3>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="col-span-2">
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Calle / Dirección</label>
+                                        <input type="text" className="input-field" value={client.Calle || ''} onChange={e => setClient({ ...client, Calle: e.target.value })} />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Localidad</label>
+                                        <input type="text" className="input-field" value={client.Localidad || ''} onChange={e => setClient({ ...client, Localidad: e.target.value })} />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">CP</label>
+                                        <input type="text" className="input-field" value={client.Codigo_Postal || ''} onChange={e => setClient({ ...client, Codigo_Postal: e.target.value })} />
+                                    </div>
+                                    <div className="col-span-2">
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Provincia</label>
+                                        <input type="text" className="input-field" value={client.Provincia || ''} onChange={e => setClient({ ...client, Provincia: e.target.value })} />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button onClick={handleUpdateClient} className="btn-primary w-full flex items-center justify-center space-x-2">
+                                <Save size={18} />
+                                <span>Guardar Cambios General</span>
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'kit' && (
+                    <div className="space-y-8">
+                        <div className={`card ${isKitCompleted ? 'bg-green-50/50 border-green-100' : 'bg-blue-50/50 border-blue-100'}`}>
+                            <div className="flex justify-between items-start mb-4">
+                                <h3 className={`text-lg font-bold ${isKitCompleted ? 'text-green-800' : 'text-blue-800'}`}>1. Bono Kit Digital</h3>
+                                <div className="text-right">
+                                    <div className="text-xs font-bold text-slate-400 uppercase">Saldo Restante</div>
+                                    <div className={`text-xl font-bold ${saldoRestante < 0 ? 'text-red-500' : (isKitCompleted ? 'text-green-600' : 'text-blue-600')}`}>
+                                        {saldoRestante.toFixed(2)} €
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form onSubmit={handleUpdateKit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label className="block text-xs font-semibold uppercase mb-1 opacity-70">Número Bono</label>
+                                    <input type="text" className="input-field bg-white/50" value={client.Numero_Bono || ''} onChange={e => setClient({ ...client, Numero_Bono: e.target.value })} placeholder="Ej: 2025/C022/..." />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold uppercase mb-1 opacity-70">Importe Bono (€)</label>
+                                    <input type="number" step="0.01" className="input-field bg-white/50" value={client.Importe_Bono || ''} onChange={e => setClient({ ...client, Importe_Bono: parseFloat(e.target.value) })} />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold uppercase mb-1 opacity-70">Fecha Aprobación</label>
+                                    <input type="date" className="input-field bg-white/50" value={client.Fecha_Aprobacion_Bono || ''} onChange={e => setClient({ ...client, Fecha_Aprobacion_Bono: e.target.value })} />
+                                </div>
+                                <div className="md:col-span-3 flex justify-end">
+                                    <button type="submit" className={`btn-primary py-1 px-4 text-sm ${isKitCompleted ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}`}>Actualizar Bono</button>
+                                </div>
+                            </form>
+
+                            {client.Fecha_Limite_Acuerdos && (
+                                <div className={`mt-4 flex items-center text-sm p-2 rounded-lg border w-fit font-medium 
+                                    ${isKitCompleted
+                                        ? 'text-green-700 bg-green-100 border-green-200'
+                                        : 'text-orange-600 bg-orange-50 border-orange-100'}`}>
+
+                                    {isKitCompleted ? <CheckSquare size={16} className="mr-2" /> : <AlertTriangle size={16} className="mr-2" />}
+
+                                    {isKitCompleted
+                                        ? <span>Kit Digital Completado (Saldo Usado)</span>
+                                        : <span>Fecha Límite para firmar Acuerdos (6 meses): <span className="font-bold ml-1">{client.Fecha_Limite_Acuerdos}</span></span>
+                                    }
+                                </div>
+                            )}
+                        </div>
+
+                        <div>
+                            <div className="flex justify-between items-center mb-4 pt-6 border-t border-blue-100">
+                                <h3 className="text-lg font-bold text-slate-800">2. Acuerdos Asociados</h3>
+                                <button onClick={() => setShowAcuerdoModal(true)} className="btn-secondary flex items-center space-x-2 text-sm">
+                                    <Plus size={16} />
+                                    <span>Nuevo Acuerdo</span>
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-4">
+                                {client.acuerdos && client.acuerdos.map((acuerdo, idx) => (
+                                    <div key={idx} className="card border-l-4 border-l-purple-500 bg-white">
+                                        <div className="flex flex-col md:flex-row justify-between items-start mb-4 gap-4">
+                                            <div className="flex-1 w-full">
+                                                <div className="flex items-center space-x-2 mb-2">
+                                                    <span className="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-0.5 rounded uppercase">{acuerdo.Tipo}</span>
+                                                    <span className="font-bold text-lg">{acuerdo.Importe} €</span>
+                                                </div>
+
+                                                {/* Editing Fields for Number/Date */}
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 bg-slate-50 p-3 rounded-md">
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Nº Acuerdo</label>
+                                                        <div className="flex space-x-2">
+                                                            <input
+                                                                type="text"
+                                                                className="input-field text-sm py-1"
+                                                                defaultValue={acuerdo.Numero_Acuerdo || ''}
+                                                                id={`num-${acuerdo.Id_Acuerdo}`}
+                                                                placeholder="Pendiente..."
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Fecha Aprobación</label>
+                                                        <div className="flex space-x-2">
+                                                            <input
+                                                                type="date"
+                                                                className="input-field text-sm py-1"
+                                                                defaultValue={acuerdo.Fecha_Aprobacion || ''}
+                                                                id={`date-${acuerdo.Id_Acuerdo}`}
+                                                            />
+                                                            <button
+                                                                onClick={() => {
+                                                                    const num = document.getElementById(`num-${acuerdo.Id_Acuerdo}`).value;
+                                                                    const date = document.getElementById(`date-${acuerdo.Id_Acuerdo}`).value;
+                                                                    updateAcuerdo(acuerdo.Id_Acuerdo, { Numero_Acuerdo: num, Fecha_Aprobacion: date }).then(() => {
+                                                                        fetchData();
+                                                                        alert('Datos del acuerdo actualizados');
+                                                                    });
+                                                                }}
+                                                                className="bg-blue-600 text-white p-1 rounded hover:bg-blue-700"
+                                                                title="Guardar Nº y Fecha"
+                                                            >
+                                                                <Save size={16} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="flex items-center space-x-4">
+                                                    <button onClick={() => handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Enviado', acuerdo.Enviado)} className="flex items-center space-x-2 text-sm focus:outline-none bg-white border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-colors">
+                                                        {acuerdo.Enviado ? <CheckSquare className="text-blue-600" size={18} /> : <Square className="text-slate-400" size={18} />}
+                                                        <span className={acuerdo.Enviado ? "text-blue-700 font-bold" : "text-slate-600"}>
+                                                            Enviado {acuerdo.Enviado && <span className="text-xs font-normal ml-1">({acuerdo.Fecha_Envio})</span>}
+                                                        </span>
+                                                    </button>
+                                                    <button onClick={() => handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Firmado', acuerdo.Firmado)} className="flex items-center space-x-2 text-sm focus:outline-none bg-white border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-colors">
+                                                        {acuerdo.Firmado ? <CheckSquare className="text-green-600" size={18} /> : <Square className="text-slate-400" size={18} />}
+                                                        <span className={acuerdo.Firmado ? "text-green-700 font-bold" : "text-slate-600"}>
+                                                            Firmado {acuerdo.Firmado && <span className="text-xs font-normal ml-1">({acuerdo.Fecha_Firma})</span>}
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="text-right min-w-[120px]">
+                                                <div className="text-xs font-bold text-slate-400 uppercase">Límite Facturación</div>
+                                                <div className="text-sm font-bold text-red-600">{acuerdo.Fecha_Limite_Factura || '---'}</div>
+                                            </div>
+                                        </div>
+
+                                        {/* Facturas del acuerdo */}
+                                        <div className="bg-slate-50 p-4 rounded-lg">
+                                            <h5 className="text-xs font-bold text-slate-500 uppercase mb-2">Facturas de este Acuerdo</h5>
+                                            <InvoiceManager
+                                                dni={dni}
+                                                facturas={acuerdo.facturas || []}
+                                                onUpdate={fetchData}
+                                                allowAdd={(!acuerdo.facturas || acuerdo.facturas.length === 0)}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                                {(!client.acuerdos || client.acuerdos.length === 0) && (
+                                    <div className="text-center p-8 border-2 border-dashed border-slate-200 rounded-xl text-slate-400">
+                                        No hay acuerdos registrados para este bono.
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'facturas' && (
+                    <div className="card">
+                        <h3 className="text-lg font-bold mb-4">Todas las Facturas del Cliente</h3>
+                        <InvoiceManager dni={dni} facturas={client.facturas_flat || []} onUpdate={fetchData} />
+                    </div>
+                )}
+            </div>
+
+            {showAcuerdoModal && (
+                <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
+                        <h3 className="text-lg font-bold mb-4">Añadir Nuevo Acuerdo</h3>
+                        <form onSubmit={handleAddAcuerdo} className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Tipo de Acuerdo</label>
+                                <select className="input-field" value={newAcuerdo.Tipo} onChange={e => setNewAcuerdo({ ...newAcuerdo, Tipo: e.target.value })}>
+                                    <option value="GA">Gestión del Cambio (GA)</option>
+                                    <option value="GC">Gestión de Clientes (GC)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Importe (€)</label>
+                                <input required type="number" step="0.01" className="input-field" value={newAcuerdo.Importe} onChange={e => setNewAcuerdo({ ...newAcuerdo, Importe: parseFloat(e.target.value) })} />
+                            </div>
+
+                            <div className="bg-blue-50 p-3 rounded-lg text-xs text-blue-700">
+                                <Info size={14} className="inline mr-1 mb-0.5" />
+                                Podrás añadir el Nº de Acuerdo y la Fecha de Aprobación más tarde, una vez firmado.
+                            </div>
+
+                            <div className="flex space-x-3 pt-4">
+                                <button type="button" onClick={() => setShowAcuerdoModal(false)} className="btn-secondary flex-1">Cancelar</button>
+                                <button type="submit" className="btn-primary flex-1">Añadir</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ClientDetail;

@@ -1,0 +1,3 @@
+Id_Factura,Dni_Cliente,Id_Acuerdo,Numero_Factura_Real,Concepto,Importe,Fecha_Emision,Estado_Pago
+0d03adf7,07256443N,,123,23434321421,1000.0,2026-01-28,Pendiente
+78a350a5,07256443N,,213,23434321421,997.0,2026-01-28,Pendiente

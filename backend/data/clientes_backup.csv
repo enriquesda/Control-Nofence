@@ -1,0 +1,3 @@
+Dni,Nombre,Telefono,Email,Estado,Estado_Nofence,Pedido_Nofence,Importe_Factura_Nofence,Importe_Cobrado_Cliente,Beneficio
+12345678A,Juan Perez,600112233,juan@example.com,Kit aprobado,,,,,
+87654321B,Maria Garcia,611223344,maria@example.com,Acuerdos firmados,,,,,
