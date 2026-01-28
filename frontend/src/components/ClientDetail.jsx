@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getClientes, updateCliente, updateKit, addAcuerdo, updateAcuerdo } from '../api';
-import { ArrowLeft, User, FileText, Gift, DollarSign, Save, Info, MapPin, Plus, Calendar, AlertTriangle, CheckSquare, Square } from 'lucide-react';
+import { getClientes, getDashboard, createCliente, deleteCliente, updateCliente, updateKit, addAcuerdo, updateAcuerdo, deleteAcuerdo } from '../api';
+import { ArrowLeft, Plus, Check, AlertCircle, FileText, Send, PenTool, Trash2, User, Gift, DollarSign, Info, MapPin, Save, CheckSquare, AlertTriangle, Square } from 'lucide-react';
 import InvoiceManager from './InvoiceManager';
 
 const ClientDetail = () => {
@@ -259,10 +259,12 @@ const ClientDetail = () => {
                         <div>
                             <div className="flex justify-between items-center mb-4 pt-6 border-t border-blue-100">
                                 <h3 className="text-lg font-bold text-slate-800">2. Acuerdos Asociados</h3>
-                                <button onClick={() => setShowAcuerdoModal(true)} className="btn-secondary flex items-center space-x-2 text-sm">
-                                    <Plus size={16} />
-                                    <span>Nuevo Acuerdo</span>
-                                </button>
+                                {(!client.acuerdos || client.acuerdos.length < 2) && (
+                                    <button onClick={() => setShowAcuerdoModal(true)} className="btn-secondary flex items-center space-x-2 text-sm">
+                                        <Plus size={16} />
+                                        <span>Nuevo Acuerdo</span>
+                                    </button>
+                                )}
                             </div>
 
                             <div className="grid grid-cols-1 gap-4">
@@ -270,11 +272,43 @@ const ClientDetail = () => {
                                     <div key={idx} className="card border-l-4 border-l-purple-500 bg-white">
                                         <div className="flex flex-col md:flex-row justify-between items-start mb-4 gap-4">
                                             <div className="flex-1 w-full">
-                                                <div className="flex items-center space-x-2 mb-2">
-                                                    <span className="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-0.5 rounded uppercase">{acuerdo.Tipo}</span>
-                                                    <span className="font-bold text-lg">{acuerdo.Importe} €</span>
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <div>
+                                                        <div className="flex items-center space-x-2">
+                                                            <h4 className="text-sm font-bold text-slate-800">
+                                                                Acuerdo {acuerdo.Numero_Acuerdo || '(Sin número)'}
+                                                            </h4>
+                                                            {(!acuerdo.facturas || acuerdo.facturas.length === 0) && (
+                                                                <button
+                                                                    onClick={async (e) => {
+                                                                        e.stopPropagation();
+                                                                        if (confirm('¿Seguro que quieres eliminar este acuerdo?')) {
+                                                                            await deleteAcuerdo(acuerdo.Id_Acuerdo);
+                                                                            fetchData();
+                                                                        }
+                                                                    }}
+                                                                    className="text-slate-400 hover:text-red-500 transition-colors p-1"
+                                                                    title="Eliminar Acuerdo"
+                                                                >
+                                                                    <Trash2 size={14} />
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                        <div className="text-xs text-slate-500 font-medium">{acuerdo.Tipo === 'GA' ? 'Gestión Agronómica' : 'Gestión Cinegética'}</div>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <div className="text-sm font-bold text-slate-900">{acuerdo.Importe} €</div>
+                                                        <div className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full inline-block mt-1 ${acuerdo.Firmado ? 'bg-green-100 text-green-700' :
+                                                            acuerdo.Enviado ? 'bg-blue-100 text-blue-700' :
+                                                                acuerdo.Fecha_Aprobacion ? 'bg-purple-100 text-purple-700 border border-purple-200' :
+                                                                    'bg-slate-100 text-slate-500'
+                                                            }`}>
+                                                            {acuerdo.Firmado ? 'Firmado' :
+                                                                acuerdo.Enviado ? 'Enviado' :
+                                                                    acuerdo.Fecha_Aprobacion ? 'Aprobado' : 'Borrador'}
+                                                        </div>
+                                                    </div>
                                                 </div>
-
                                                 {/* Editing Fields for Number/Date */}
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 bg-slate-50 p-3 rounded-md">
                                                     <div>
@@ -331,9 +365,16 @@ const ClientDetail = () => {
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div className="text-right min-w-[120px]">
-                                                <div className="text-xs font-bold text-slate-400 uppercase">Límite Facturación</div>
-                                                <div className="text-sm font-bold text-red-600">{acuerdo.Fecha_Limite_Factura || '---'}</div>
+                                            <div className="text-right min-w-[150px]">
+                                                <div className="text-xs font-bold text-slate-400 uppercase">
+                                                    {acuerdo.facturas && acuerdo.facturas.length > 0 ? "Límite Justificación" : "Límite Facturación"}
+                                                </div>
+                                                <div className={`text-sm font-bold ${acuerdo.facturas && acuerdo.facturas.length > 0 ? 'text-purple-600' : 'text-red-600'}`}>
+                                                    {acuerdo.facturas && acuerdo.facturas.length > 0
+                                                        ? (acuerdo.Fecha_Limite_Justificacion || '---')
+                                                        : (acuerdo.Fecha_Limite_Factura || '---')
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
 
@@ -342,9 +383,8 @@ const ClientDetail = () => {
                                             <h5 className="text-xs font-bold text-slate-500 uppercase mb-2">Facturas de este Acuerdo</h5>
                                             <InvoiceManager
                                                 dni={dni}
-                                                facturas={acuerdo.facturas || []}
+                                                acuerdo={acuerdo}
                                                 onUpdate={fetchData}
-                                                allowAdd={(!acuerdo.facturas || acuerdo.facturas.length === 0)}
                                             />
                                         </div>
                                     </div>

@@ -46,6 +46,7 @@ class Factura(BaseModel):
     Importe: float
     Fecha_Emision: str
     Estado_Pago: str # Pagado/Pendiente
+    Fecha_Pago: Optional[str] = None
 
 class Acuerdo(BaseModel):
     Id_Acuerdo: Optional[str] = None
@@ -66,6 +67,14 @@ class AcuerdoUpdate(BaseModel):
     Fecha_Envio: Optional[str] = None
     Firmado: Optional[bool] = None
     Fecha_Firma: Optional[str] = None
+
+class FacturaUpdate(BaseModel):
+    Numero_Factura_Real: Optional[str] = None
+    Concepto: Optional[str] = None
+    Importe: Optional[float] = None
+    Fecha_Emision: Optional[str] = None
+    Estado_Pago: Optional[str] = None
+    Fecha_Pago: Optional[str] = None
 
 # ... (rest of models)
 
@@ -246,6 +255,21 @@ def get_clientes():
                     pass
             acuerdo['Fecha_Limite_Factura'] = limite_factura
 
+            # Limite Justificacion (calculado si hay factura)
+            limite_justificacion = None
+            if acuerdo_facturas:
+                # Tomamos la fecha de emisión de la primera factura
+                factura = acuerdo_facturas[0]
+                fecha_emision = factura.get('Fecha_Emision')
+                if fecha_emision:
+                    try:
+                        dt_emision = datetime.strptime(str(fecha_emision), "%Y-%m-%d")
+                        # Asumimos 3 meses (90 días) para justificación tras factura
+                        limite_justificacion = (dt_emision + timedelta(days=90)).strftime("%Y-%m-%d")
+                    except:
+                        pass
+            acuerdo['Fecha_Limite_Justificacion'] = limite_justificacion
+
         client['acuerdos'] = client_acuerdos
         
         # Facturas Flat
@@ -331,6 +355,18 @@ def add_acuerdo(dni: str, acuerdo: Acuerdo):
     recalcular_estados()
     return {"message": "Acuerdo añadido"}
 
+@app.delete("/api/acuerdos/{id_acuerdo}")
+def delete_acuerdo(id_acuerdo: str):
+    df_a = read_csv(ACUERDOS_CSV)
+    if not df_a.empty and str(id_acuerdo) in df_a['Id_Acuerdo'].astype(str).values:
+        initial_len = len(df_a)
+        df_a = df_a[df_a['Id_Acuerdo'].astype(str) != str(id_acuerdo)]
+        if len(df_a) < initial_len:
+            save_csv(df_a, ACUERDOS_CSV)
+            recalcular_estados()
+            return {"message": "Acuerdo eliminado"}
+    raise HTTPException(status_code=404, detail="Acuerdo no encontrado")
+
 @app.post("/api/clientes/{dni}/factura")
 def add_factura(dni: str, factura: Factura):
     df_f = read_csv(FACTURAS_CSV)
@@ -342,6 +378,22 @@ def add_factura(dni: str, factura: Factura):
     save_csv(df_f, FACTURAS_CSV)
     recalcular_estados()
     return {"message": "Factura añadida"}
+
+@app.patch("/api/facturas/{id_factura}")
+def update_factura(id_factura: str, update: FacturaUpdate):
+    df_f = read_csv(FACTURAS_CSV)
+    if df_f.empty or str(id_factura) not in df_f['Id_Factura'].astype(str).values:
+        raise HTTPException(status_code=404, detail="Factura no encontrada")
+    
+    idx = df_f[df_f['Id_Factura'].astype(str) == str(id_factura)].index[0]
+    update_data = update.model_dump(exclude_unset=True)
+    
+    for key, value in update_data.items():
+        df_f.at[idx, key] = value
+        
+    save_csv(df_f, FACTURAS_CSV)
+    recalcular_estados()
+    return {"message": "Factura actualizada"}
 
 @app.patch("/api/clientes/{dni}")
 def update_cliente(dni: str, update: ClienteUpdate):

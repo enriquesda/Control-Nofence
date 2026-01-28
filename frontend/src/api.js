@@ -12,6 +12,8 @@ export const updateCliente = (dni, data) => api.patch(`/clientes/${dni}`, data);
 export const updateKit = (dni, data) => api.put(`/clientes/${dni}/kit`, data);
 export const addAcuerdo = (dni, data) => api.post(`/clientes/${dni}/acuerdos`, data);
 export const updateAcuerdo = (id, data) => api.patch(`/acuerdos/${id}`, data);
+export const deleteAcuerdo = (id) => api.delete(`/acuerdos/${id}`);
 export const addFactura = (dni, data) => api.post(`/clientes/${dni}/factura`, data);
+export const updateFactura = (id, data) => api.patch(`/facturas/${id}`, data);
 
 export default api;
