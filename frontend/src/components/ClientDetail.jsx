@@ -25,6 +25,17 @@ const ClientDetail = () => {
         fetchData();
     }, [dni]);
 
+    // Format date from YYYY-MM-DD to DD-MM-YYYY
+    const formatDate = (dateStr) => {
+        if (!dateStr) return dateStr;
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+            return `${parts[2]}-${parts[1]}-${parts[0]}`;
+        }
+        return dateStr;
+    };
+
+
     // Calcular saldo y totales
     const totalAcuerdos = client?.acuerdos ? client.acuerdos.reduce((acc, curr) => acc + (curr.Importe || 0), 0) : 0;
     const importeBono = client?.Importe_Bono || 0;
@@ -255,7 +266,7 @@ const ClientDetail = () => {
 
                                     {isKitCompleted
                                         ? <span>Kit Digital Completado (Saldo Usado)</span>
-                                        : <span>Fecha Límite para firmar Acuerdos (6 meses): <span className="font-bold ml-1">{client.Fecha_Limite_Acuerdos}</span></span>
+                                        : <span>Fecha Límite para firmar Acuerdos (6 meses): <span className="font-bold ml-1">{formatDate(client.Fecha_Limite_Acuerdos)}</span></span>
                                     }
                                 </div>
                             )}
@@ -393,10 +404,13 @@ const ClientDetail = () => {
                                                 <div className="text-xs font-bold text-slate-400 uppercase">
                                                     {acuerdo.facturas && acuerdo.facturas.length > 0 ? "Límite Justificación" : "Límite Facturación"}
                                                 </div>
-                                                <div className={`text-sm font-bold ${acuerdo.facturas && acuerdo.facturas.length > 0 ? 'text-purple-600' : 'text-red-600'}`}>
+                                                <div className={`text-sm font-bold ${acuerdo.facturas && acuerdo.facturas.length > 0
+                                                    ? (acuerdo.Estado_Justificacion === 'Justificada' ? 'text-green-600' : 'text-red-600')
+                                                    : 'text-red-600'
+                                                    }`}>
                                                     {acuerdo.facturas && acuerdo.facturas.length > 0
-                                                        ? (acuerdo.Fecha_Limite_Justificacion || '---')
-                                                        : (acuerdo.Fecha_Limite_Factura || '---')
+                                                        ? formatDate(acuerdo.Fecha_Limite_Justificacion) || '---'
+                                                        : formatDate(acuerdo.Fecha_Limite_Factura) || '---'
                                                     }
                                                 </div>
                                             </div>
@@ -495,7 +509,7 @@ const ClientDetail = () => {
                                             }`}></div>
                                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center bg-slate-50 p-3 rounded-lg">
                                             <div>
-                                                <span className="text-xs font-bold text-slate-400 block mb-1">{ev.date}</span>
+                                                <span className="text-xs font-bold text-slate-400 block mb-1">{formatDate(ev.date)}</span>
                                                 <h4 className="text-sm font-bold text-slate-800">{ev.title}</h4>
                                             </div>
                                             {ev.amount && (
