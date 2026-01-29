@@ -12,6 +12,7 @@ const ClientDetail = () => {
     const [showClosureModal, setShowClosureModal] = useState(false);
     const [showAcuerdoModal, setShowAcuerdoModal] = useState(false);
     const [newAcuerdo, setNewAcuerdo] = useState({ Numero_Acuerdo: '', Tipo: 'GA', Importe: 0, Fecha_Aprobacion: '' });
+    const [newCollar, setNewCollar] = useState('');
     const [loading, setLoading] = useState(true);
 
     const fetchData = async () => {
@@ -120,6 +121,7 @@ const ClientDetail = () => {
     const tabs = [
         { id: 'general', label: 'Resumen Cliente', icon: <User size={18} /> },
         { id: 'kit', label: 'Kit Digital & Acuerdos', icon: <Gift size={18} /> },
+        { id: 'nofence', label: 'Nofence', icon: <Gift size={18} /> },
         { id: 'historial', label: 'Historial', icon: <Clock size={18} /> },
     ];
 
@@ -231,6 +233,42 @@ const ClientDetail = () => {
                                 <div className="text-2xl font-bold text-primary-700">{client.Estado}</div>
                             </div>
 
+                            {/* Nofence Status Badge */}
+                            {client.Estado_Nofence && (
+                                <div className={`p-4 rounded-lg border-2 ${client.Estado_Nofence === 'Avisar a Nofence' ? 'bg-orange-50 border-orange-200' :
+                                    client.Estado_Nofence === 'Pago pendiente' ? 'bg-blue-50 border-blue-200' :
+                                        client.Estado_Nofence === 'Pago realizado' ? 'bg-green-50 border-green-200' :
+                                            'bg-purple-50 border-purple-200'
+                                    }`}>
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <div className="text-xs font-bold text-slate-400 uppercase mb-1">Estado Nofence</div>
+                                            <div className={`text-lg font-bold ${client.Estado_Nofence === 'Avisar a Nofence' ? 'text-orange-700' :
+                                                client.Estado_Nofence === 'Pago pendiente' ? 'text-blue-700' :
+                                                    client.Estado_Nofence === 'Pago realizado' ? 'text-green-700' :
+                                                        'text-purple-700'
+                                                }`}>
+                                                {client.Estado_Nofence}
+                                            </div>
+                                        </div>
+                                        {(() => {
+                                            try {
+                                                const collarCount = client.Collares ? JSON.parse(client.Collares).length : 0;
+                                                if (collarCount > 0) {
+                                                    return (
+                                                        <div className="text-right">
+                                                            <div className="text-2xl font-bold text-green-600">{collarCount}</div>
+                                                            <div className="text-[10px] font-bold text-slate-500 uppercase">Collares</div>
+                                                        </div>
+                                                    );
+                                                }
+                                            } catch { }
+                                            return null;
+                                        })()}
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Next Critical Deadline */}
                             {(() => {
                                 let deadline = null;
@@ -283,8 +321,8 @@ const ClientDetail = () => {
 
                                     return (
                                         <div className={`p-4 rounded-lg border-2 ${isOverdue ? 'bg-red-50 border-red-300' :
-                                                isUrgent ? 'bg-orange-50 border-orange-300' :
-                                                    'bg-blue-50 border-blue-300'
+                                            isUrgent ? 'bg-orange-50 border-orange-300' :
+                                                'bg-blue-50 border-blue-300'
                                             }`}>
                                             <div className="flex items-center justify-between">
                                                 <div>
@@ -292,16 +330,16 @@ const ClientDetail = () => {
                                                         {deadlineLabel}
                                                     </div>
                                                     <div className={`text-lg font-bold ${isOverdue ? 'text-red-700' :
-                                                            isUrgent ? 'text-orange-700' :
-                                                                'text-blue-700'
+                                                        isUrgent ? 'text-orange-700' :
+                                                            'text-blue-700'
                                                         }`}>
                                                         {formatDate(deadline)}
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
                                                     <div className={`text-2xl font-bold ${isOverdue ? 'text-red-600' :
-                                                            isUrgent ? 'text-orange-600' :
-                                                                'text-blue-600'
+                                                        isUrgent ? 'text-orange-600' :
+                                                            'text-blue-600'
                                                         }`}>
                                                         {isOverdue ? `¡${Math.abs(daysUntil)}d!` : `${daysUntil}d`}
                                                     </div>
@@ -696,6 +734,151 @@ const ClientDetail = () => {
                     </div>
                 )}
 
+
+                {activeTab === 'nofence' && (
+                    <div className="card space-y-6">
+                        <h3 className="text-lg font-bold mb-6 flex items-center space-x-2 border-b pb-2">
+                            <Gift size={20} className="text-primary-500" />
+                            <span>Gestión Nofence</span>
+                        </h3>
+
+                        {/* Nofence Status */}
+                        <div className="card bg-slate-50">
+                            <h4 className="text-sm font-bold text-slate-700 uppercase mb-4 flex items-center">
+                                <div className="w-2 h-2 rounded-full bg-purple-500 mr-2"></div>
+                                Estado Nofence
+                            </h4>
+                            <div className="space-y-3">
+                                <select
+                                    className={`input-field font-bold text-sm ${!client.Estado_Nofence || client.Estado_Nofence === 'Avisar a Nofence' ? 'bg-orange-50 text-orange-700 border-orange-200' :
+                                        client.Estado_Nofence === 'Pago pendiente' ? 'bg-blue-50 text-blue-700 border-blue-200' :
+                                            client.Estado_Nofence === 'Pago realizado' ? 'bg-green-50 text-green-700 border-green-200' :
+                                                'bg-purple-50 text-purple-700 border-purple-200'
+                                        }`}
+                                    value={client.Estado_Nofence || ''}
+                                    onChange={async (e) => {
+                                        await updateCliente(dni, { Estado_Nofence: e.target.value });
+                                        fetchData();
+                                    }}
+                                >
+                                    <option value="">Sin estado</option>
+                                    <option value="Avisar a Nofence">Avisar a Nofence</option>
+                                    <option value="Pago pendiente">Pago pendiente</option>
+                                    <option value="Pago realizado">Pago realizado</option>
+                                    <option value="Fotos recibidas">Fotos recibidas</option>
+                                </select>
+
+                                {!client.Estado_Nofence && (
+                                    <div className="text-xs text-slate-400 italic">
+                                        El estado se establecerá automáticamente a "Avisar a Nofence" cuando se emita la primera factura.
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Collares Management */}
+                        <div className="card bg-slate-50">
+                            <h4 className="text-sm font-bold text-slate-700 uppercase mb-4 flex items-center">
+                                <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
+                                Collares ({(() => {
+                                    try {
+                                        return client.Collares ? JSON.parse(client.Collares).length : 0;
+                                    } catch {
+                                        return 0;
+                                    }
+                                })()})
+                            </h4>
+
+                            {/* Add Collar Form */}
+                            <div className="mb-4">
+                                <form onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    if (!newCollar.trim()) return;
+
+                                    try {
+                                        let collares = [];
+                                        if (client.Collares) {
+                                            try {
+                                                collares = JSON.parse(client.Collares);
+                                            } catch (parseErr) {
+                                                console.error('Error parsing existing Collares:', parseErr);
+                                                collares = [];
+                                            }
+                                        }
+                                        collares.push(newCollar.trim());
+
+                                        const collaresString = JSON.stringify(collares);
+                                        console.log('Sending collares update:', collaresString);
+
+                                        const response = await updateCliente(dni, { Collares: collaresString });
+                                        console.log('Update response:', response);
+
+                                        setNewCollar('');
+                                        await fetchData();
+                                    } catch (err) {
+                                        console.error('Error adding collar:', err);
+                                        alert('Error al añadir collar: ' + (err.message || err));
+                                    }
+                                }} className="flex space-x-2">
+                                    <input
+                                        type="text"
+                                        className="input-field flex-1"
+                                        placeholder="Número de collar"
+                                        value={newCollar}
+                                        onChange={(e) => setNewCollar(e.target.value)}
+                                    />
+                                    <button type="submit" className="btn-primary flex items-center space-x-1 px-4">
+                                        <Plus size={16} />
+                                        <span>Añadir</span>
+                                    </button>
+                                </form>
+                            </div>
+
+                            {/* Collar List */}
+                            <div className="space-y-2">
+                                {(() => {
+                                    try {
+                                        const collares = client.Collares ? JSON.parse(client.Collares) : [];
+                                        if (collares.length === 0) {
+                                            return <div className="text-sm text-slate-400 italic">No hay collares registrados</div>;
+                                        }
+                                        return collares.map((collar, idx) => (
+                                            <div key={idx} className="flex justify-between items-center bg-white p-3 rounded-lg border border-slate-200">
+                                                <div className="flex items-center space-x-3">
+                                                    <div className="w-8 h-8 bg-green-100 text-green-700 rounded-full flex items-center justify-center font-bold text-xs">
+                                                        {idx + 1}
+                                                    </div>
+                                                    <span className="font-bold text-slate-800">{collar}</span>
+                                                </div>
+                                                <button
+                                                    onClick={async () => {
+                                                        if (!confirm(`¿Eliminar collar ${collar}?`)) return;
+                                                        try {
+                                                            let collares = JSON.parse(client.Collares);
+                                                            collares.splice(idx, 1);
+                                                            await updateCliente(dni, { Collares: JSON.stringify(collares) });
+                                                            fetchData();
+                                                        } catch (err) {
+                                                            console.error('Error removing collar:', err);
+                                                            alert('Error al eliminar collar');
+                                                        }
+                                                    }}
+                                                    className="text-red-500 hover:text-red-700 transition-colors p-1"
+                                                    title="Eliminar collar"
+                                                >
+                                                    <Trash2 size={16} />
+                                                </button>
+                                            </div>
+                                        ));
+                                    } catch (err) {
+                                        return <div className="text-sm text-red-500">Error al cargar collares</div>;
+                                    }
+                                })()}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {activeTab === 'historial' && (
                     <div className="card">
                         <h3 className="text-lg font-bold mb-6 flex items-center space-x-2">
@@ -757,37 +940,39 @@ const ClientDetail = () => {
                 )}
             </div>
 
-            {showAcuerdoModal && (
-                <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
-                        <h3 className="text-lg font-bold mb-4">Añadir Nuevo Acuerdo</h3>
-                        <form onSubmit={handleAddAcuerdo} className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Tipo de Acuerdo</label>
-                                <select className="input-field" value={newAcuerdo.Tipo} onChange={e => setNewAcuerdo({ ...newAcuerdo, Tipo: e.target.value })}>
-                                    <option value="GA">Gestión del Cambio (GA)</option>
-                                    <option value="GC">Gestión de Clientes (GC)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Importe (€)</label>
-                                <input required type="number" step="0.01" className="input-field" value={newAcuerdo.Importe} onChange={e => setNewAcuerdo({ ...newAcuerdo, Importe: parseFloat(e.target.value) })} />
-                            </div>
+            {
+                showAcuerdoModal && (
+                    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                        <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
+                            <h3 className="text-lg font-bold mb-4">Añadir Nuevo Acuerdo</h3>
+                            <form onSubmit={handleAddAcuerdo} className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Tipo de Acuerdo</label>
+                                    <select className="input-field" value={newAcuerdo.Tipo} onChange={e => setNewAcuerdo({ ...newAcuerdo, Tipo: e.target.value })}>
+                                        <option value="GA">Gestión del Cambio (GA)</option>
+                                        <option value="GC">Gestión de Clientes (GC)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Importe (€)</label>
+                                    <input required type="number" step="0.01" className="input-field" value={newAcuerdo.Importe} onChange={e => setNewAcuerdo({ ...newAcuerdo, Importe: parseFloat(e.target.value) })} />
+                                </div>
 
-                            <div className="bg-blue-50 p-3 rounded-lg text-xs text-blue-700">
-                                <Info size={14} className="inline mr-1 mb-0.5" />
-                                Podrás añadir el Nº de Acuerdo y la Fecha de Aprobación más tarde, una vez firmado.
-                            </div>
+                                <div className="bg-blue-50 p-3 rounded-lg text-xs text-blue-700">
+                                    <Info size={14} className="inline mr-1 mb-0.5" />
+                                    Podrás añadir el Nº de Acuerdo y la Fecha de Aprobación más tarde, una vez firmado.
+                                </div>
 
-                            <div className="flex space-x-3 pt-4">
-                                <button type="button" onClick={() => setShowAcuerdoModal(false)} className="btn-secondary flex-1">Cancelar</button>
-                                <button type="submit" className="btn-primary flex-1">Añadir</button>
-                            </div>
-                        </form>
+                                <div className="flex space-x-3 pt-4">
+                                    <button type="button" onClick={() => setShowAcuerdoModal(false)} className="btn-secondary flex-1">Cancelar</button>
+                                    <button type="submit" className="btn-primary flex-1">Añadir</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 };
 

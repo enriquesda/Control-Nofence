@@ -122,6 +122,7 @@ class Cliente(BaseModel):
     
     Estado: Optional[str] = "Kit pedido"
     Estado_Nofence: Optional[str] = None 
+    Collares: Optional[str] = None  # JSON array of collar numbers
     Pedido_Nofence: Optional[str] = None
     Importe_Factura_Nofence: Optional[float] = None
     Importe_Cobrado_Cliente: Optional[float] = None
@@ -136,6 +137,7 @@ class ClienteUpdate(BaseModel):
     Provincia: Optional[str] = None
     Codigo_Postal: Optional[str] = None
     Estado_Nofence: Optional[str] = None
+    Collares: Optional[str] = None
     Pedido_Nofence: Optional[str] = None
     Importe_Factura_Nofence: Optional[float] = None
     Importe_Cobrado_Cliente: Optional[float] = None
@@ -462,10 +464,15 @@ def update_cliente(dni: str, update: ClienteUpdate):
     idx = df_c[df_c['Dni'].astype(str) == str(dni)].index[0]
     update_data = update.model_dump(exclude_unset=True)
     for key, value in update_data.items():
+        # Ensure column exists
+        if key not in df_c.columns:
+            print(f"DEBUG: Creating new column {key}")
+            df_c[key] = None
         print(f"DEBUG: Setting {key} = {value}")
         df_c.at[idx, key] = value
         
     save_csv(df_c, CLIENTES_CSV)
+    print(f"DEBUG: Saved CSV. Client {dni} now has Collares: {df_c.at[idx, 'Collares'] if 'Collares' in df_c.columns else 'N/A'}")
     return {"message": "Cliente actualizado"}
 
 @app.get("/api/dashboard")

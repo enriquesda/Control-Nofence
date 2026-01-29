@@ -83,6 +83,21 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
                     payload.Id_Acuerdo = acuerdo.Id_Acuerdo;
                 }
                 await addFactura(dni, payload);
+
+                // Auto-update Nofence status to "Avisar a Nofence" when first invoice is created
+                try {
+                    const { updateCliente } = await import('../api');
+                    const { getClientes } = await import('../api');
+                    const clientsRes = await getClientes();
+                    const currentClient = clientsRes.data.find(c => c.Dni === dni);
+
+                    if (currentClient && !currentClient.Estado_Nofence) {
+                        await updateCliente(dni, { Estado_Nofence: 'Avisar a Nofence' });
+                    }
+                } catch (err) {
+                    console.log('Could not auto-update Nofence status:', err);
+                }
+
                 setShowCreate(false);
                 setShowAddList(false);
             }
