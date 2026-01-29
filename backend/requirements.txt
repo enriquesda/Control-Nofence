@@ -1,5 +1,15 @@
-fastapi
-uvicorn
-pandas
-pydantic
-python-multipart
+# Core dependencies for FastAPI backend
+fastapi==0.128.0
+uvicorn==0.39.0
+pydantic==2.12.5
+pandas==2.3.3
+numpy==2.0.2
+python-multipart==0.0.20
+python-dotenv==1.2.1
+
+# Document generation
+python-docx==1.2.0
+docxtpl==0.20.2
+Jinja2==3.1.6
+lxml==6.0.2
+pillow==11.3.0
