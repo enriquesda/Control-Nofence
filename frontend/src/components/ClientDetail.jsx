@@ -118,7 +118,7 @@ const ClientDetail = () => {
     if (!client) return <div>Cliente no encontrado</div>;
 
     const tabs = [
-        { id: 'general', label: 'Datos Generales', icon: <User size={18} /> },
+        { id: 'general', label: 'Resumen Cliente', icon: <User size={18} /> },
         { id: 'kit', label: 'Kit Digital & Acuerdos', icon: <Gift size={18} /> },
         { id: 'historial', label: 'Historial', icon: <Clock size={18} /> },
     ];
@@ -216,6 +216,100 @@ const ClientDetail = () => {
                                 <Save size={18} />
                                 <span>Guardar Cambios General</span>
                             </button>
+                        </div>
+
+                        {/* Summary Panel */}
+                        <div className="card space-y-6">
+                            <h3 className="text-lg font-bold mb-4 flex items-center space-x-2 border-b pb-2">
+                                <Gift size={20} className="text-primary-500" />
+                                <span>Resumen de Estado</span>
+                            </h3>
+
+                            {/* Estado Global */}
+                            <div className="p-4 bg-primary-50 rounded-lg border border-primary-100">
+                                <div className="text-xs font-bold text-slate-400 uppercase mb-2">Estado Actual</div>
+                                <div className="text-2xl font-bold text-primary-700">{client.Estado}</div>
+                            </div>
+
+                            {/* Kit Digital Status */}
+                            <div>
+                                <h4 className="text-sm font-bold text-slate-700 uppercase mb-3 flex items-center">
+                                    <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
+                                    Kit Digital
+                                </h4>
+                                <div className="space-y-2 pl-4">
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-slate-600">Número Bono:</span>
+                                        <span className="font-bold text-slate-900">{client.Numero_Bono || 'Pendiente'}</span>
+                                    </div>
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-slate-600">Importe:</span>
+                                        <span className="font-bold text-slate-900">{client.Importe_Bono ? `${client.Importe_Bono} €` : '-'}</span>
+                                    </div>
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-slate-600">Saldo Restante:</span>
+                                        <span className={`font-bold ${saldoRestante < 0 ? 'text-red-500' : (isKitCompleted ? 'text-green-600' : 'text-blue-600')}`}>
+                                            {saldoRestante.toFixed(2)} €
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Agreements Status */}
+                            <div>
+                                <h4 className="text-sm font-bold text-slate-700 uppercase mb-3 flex items-center">
+                                    <div className="w-2 h-2 rounded-full bg-purple-500 mr-2"></div>
+                                    Acuerdos ({client.acuerdos?.length || 0})
+                                </h4>
+                                {client.acuerdos && client.acuerdos.length > 0 ? (
+                                    <div className="space-y-3 pl-4">
+                                        {client.acuerdos.map((acuerdo, idx) => (
+                                            <div key={idx} className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <div className="flex items-center space-x-2">
+                                                        <span className="text-xs font-bold text-slate-700">
+                                                            {acuerdo.Numero_Acuerdo || `Acuerdo ${idx + 1}`}
+                                                        </span>
+                                                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${acuerdo.Tipo === 'GA' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                                                            {acuerdo.Tipo}
+                                                        </span>
+                                                    </div>
+                                                    <span className="text-xs font-bold text-slate-900">{acuerdo.Importe} €</span>
+                                                </div>
+                                                <div className="flex items-center space-x-2 text-[10px]">
+                                                    <span className={`px-2 py-0.5 rounded-full font-bold ${acuerdo.Firmado ? 'bg-green-100 text-green-700' :
+                                                            acuerdo.Enviado ? 'bg-blue-100 text-blue-700' :
+                                                                acuerdo.Fecha_Aprobacion ? 'bg-purple-100 text-purple-700' :
+                                                                    'bg-slate-100 text-slate-500'
+                                                        }`}>
+                                                        {acuerdo.Firmado ? 'Firmado' :
+                                                            acuerdo.Enviado ? 'Enviado' :
+                                                                acuerdo.Fecha_Aprobacion ? 'Aprobado' : 'Borrador'}
+                                                    </span>
+                                                    {acuerdo.facturas && acuerdo.facturas.length > 0 && (
+                                                        <span className={`px-2 py-0.5 rounded-full font-bold ${acuerdo.Estado_Justificacion === 'Justificada' ? 'bg-green-100 text-green-700' :
+                                                                acuerdo.Estado_Justificacion === 'Enviada para firma' ? 'bg-blue-100 text-blue-700' :
+                                                                    'bg-orange-100 text-orange-700'
+                                                            }`}>
+                                                            {acuerdo.Estado_Justificacion || 'Pend. Justif.'}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-sm text-slate-400 italic pl-4">No hay acuerdos registrados</div>
+                                )}
+                            </div>
+
+                            {/* Total Facturado */}
+                            {client.total_facturado > 0 && (
+                                <div className="p-4 bg-green-50 rounded-lg border border-green-100">
+                                    <div className="text-xs font-bold text-slate-400 uppercase mb-1">Total Facturado</div>
+                                    <div className="text-xl font-bold text-green-700">{client.total_facturado?.toFixed(2)} €</div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
