@@ -122,6 +122,7 @@ class Cliente(BaseModel):
     
     Estado: Optional[str] = "Kit pedido"
     Estado_Nofence: Optional[str] = None 
+    Importe_Nofence: Optional[float] = None  # Payment amount for Nofence
     Collares: Optional[str] = None  # JSON array of collar numbers
     Pedido_Nofence: Optional[str] = None
     Importe_Factura_Nofence: Optional[float] = None
@@ -137,6 +138,7 @@ class ClienteUpdate(BaseModel):
     Provincia: Optional[str] = None
     Codigo_Postal: Optional[str] = None
     Estado_Nofence: Optional[str] = None
+    Importe_Nofence: Optional[float] = None
     Collares: Optional[str] = None
     Pedido_Nofence: Optional[str] = None
     Importe_Factura_Nofence: Optional[float] = None

@@ -236,35 +236,81 @@ const ClientDetail = () => {
                             {/* Nofence Status Badge */}
                             {client.Estado_Nofence && (
                                 <div className={`p-4 rounded-lg border-2 ${client.Estado_Nofence === 'Avisar a Nofence' ? 'bg-orange-50 border-orange-200' :
-                                    client.Estado_Nofence === 'Pago pendiente' ? 'bg-blue-50 border-blue-200' :
-                                        client.Estado_Nofence === 'Pago realizado' ? 'bg-green-50 border-green-200' :
-                                            'bg-purple-50 border-purple-200'
+                                        client.Estado_Nofence === 'Pago pendiente' ? 'bg-blue-50 border-blue-200' :
+                                            client.Estado_Nofence === 'Pago realizado' ? 'bg-green-50 border-green-200' :
+                                                'bg-purple-50 border-purple-200'
                                     }`}>
-                                    <div className="flex justify-between items-center">
-                                        <div>
-                                            <div className="text-xs font-bold text-slate-400 uppercase mb-1">Estado Nofence</div>
-                                            <div className={`text-lg font-bold ${client.Estado_Nofence === 'Avisar a Nofence' ? 'text-orange-700' :
-                                                client.Estado_Nofence === 'Pago pendiente' ? 'text-blue-700' :
-                                                    client.Estado_Nofence === 'Pago realizado' ? 'text-green-700' :
-                                                        'text-purple-700'
-                                                }`}>
-                                                {client.Estado_Nofence}
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <div className="text-xs font-bold text-slate-400 uppercase mb-1">Estado Nofence</div>
+                                                <div className={`text-lg font-bold ${client.Estado_Nofence === 'Avisar a Nofence' ? 'text-orange-700' :
+                                                        client.Estado_Nofence === 'Pago pendiente' ? 'text-blue-700' :
+                                                            client.Estado_Nofence === 'Pago realizado' ? 'text-green-700' :
+                                                                'text-purple-700'
+                                                    }`}>
+                                                    {client.Estado_Nofence}
+                                                </div>
                                             </div>
+                                            {(() => {
+                                                try {
+                                                    const collarCount = client.Collares ? JSON.parse(client.Collares).length : 0;
+                                                    if (collarCount > 0) {
+                                                        return (
+                                                            <div className="text-right">
+                                                                <div className="text-2xl font-bold text-green-600">{collarCount}</div>
+                                                                <div className="text-[10px] font-bold text-slate-500 uppercase">Collares</div>
+                                                            </div>
+                                                        );
+                                                    }
+                                                } catch { }
+                                                return null;
+                                            })()}
                                         </div>
-                                        {(() => {
-                                            try {
-                                                const collarCount = client.Collares ? JSON.parse(client.Collares).length : 0;
-                                                if (collarCount > 0) {
-                                                    return (
-                                                        <div className="text-right">
-                                                            <div className="text-2xl font-bold text-green-600">{collarCount}</div>
-                                                            <div className="text-[10px] font-bold text-slate-500 uppercase">Collares</div>
+
+                                        {/* Payment Amount & Profit Calculation */}
+                                        {client.Importe_Nofence && (
+                                            <div className="pt-3 border-t border-slate-200">
+                                                <div className="grid grid-cols-3 gap-3">
+                                                    {/* Total con IVA */}
+                                                    <div>
+                                                        <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Facturado + IVA</div>
+                                                        <div className="text-sm font-bold text-slate-700">
+                                                            {(client.total_facturado * 1.21).toFixed(2)} €
                                                         </div>
-                                                    );
-                                                }
-                                            } catch { }
-                                            return null;
-                                        })()}
+                                                    </div>
+
+                                                    {/* Pago Nofence */}
+                                                    <div>
+                                                        <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Pago Nofence</div>
+                                                        <div className="text-sm font-bold text-red-600">
+                                                            -{client.Importe_Nofence.toFixed(2)} €
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Beneficio Final */}
+                                                    <div>
+                                                        <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Beneficio Neto</div>
+                                                        {(() => {
+                                                            // Beneficio = (Facturas * 1.21 + 100) - Importe_Nofence
+                                                            const ingresosConIVA = client.total_facturado * 1.21;
+                                                            const gastosGestion = 100;
+                                                            const beneficio = ingresosConIVA + gastosGestion - client.Importe_Nofence;
+
+                                                            return (
+                                                                <div className={`text-lg font-bold ${beneficio > 0 ? 'text-green-600' : 'text-red-600'
+                                                                    }`}>
+                                                                    {beneficio.toFixed(2)} €
+                                                                </div>
+                                                            );
+                                                        })()}
+                                                    </div>
+                                                </div>
+                                                <div className="text-[10px] text-slate-400 mt-2 italic">
+                                                    * Incluye IVA 21% + 100€ gastos gestión
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -773,6 +819,28 @@ const ClientDetail = () => {
                                         El estado se establecerá automáticamente a "Avisar a Nofence" cuando se emita la primera factura.
                                     </div>
                                 )}
+
+                                {/* Importe Nofence */}
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-600 uppercase mb-2">
+                                        Importe Pago Nofence (€)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        step="0.01"
+                                        className="input-field"
+                                        placeholder="0.00"
+                                        value={client.Importe_Nofence || ''}
+                                        onChange={async (e) => {
+                                            const value = e.target.value ? parseFloat(e.target.value) : null;
+                                            await updateCliente(dni, { Importe_Nofence: value });
+                                            fetchData();
+                                        }}
+                                    />
+                                    <div className="text-xs text-slate-400 mt-1 italic">
+                                        Importe del pago realizado a Nofence para calcular beneficios
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
