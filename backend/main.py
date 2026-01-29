@@ -55,14 +55,16 @@ class Acuerdo(BaseModel):
     Tipo: str # GA / GC
     Importe: float
     Fecha_Aprobacion: Optional[str] = None
-    Enviado: Optional[bool] = False
+    Estado: Optional[str] = "Borrador" # Borrador, Pendiente de Capturas, Enviado, Firmado
+    Enviado: Optional[bool] = False # Legacy/Helper
     Fecha_Envio: Optional[str] = None
-    Firmado: Optional[bool] = False
+    Firmado: Optional[bool] = False # Legacy/Helper
     Fecha_Firma: Optional[str] = None
 
 class AcuerdoUpdate(BaseModel):
     Numero_Acuerdo: Optional[str] = None
     Fecha_Aprobacion: Optional[str] = None
+    Estado: Optional[str] = None
     Enviado: Optional[bool] = None
     Fecha_Envio: Optional[str] = None
     Firmado: Optional[bool] = None

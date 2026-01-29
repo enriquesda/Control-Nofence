@@ -278,6 +278,9 @@ const ClientDetail = () => {
                                                             <h4 className="text-sm font-bold text-slate-800">
                                                                 Acuerdo {acuerdo.Numero_Acuerdo || '(Sin número)'}
                                                             </h4>
+                                                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${acuerdo.Tipo === 'GA' ? 'bg-teal-50 text-teal-700 border-teal-200' : 'bg-indigo-50 text-indigo-700 border-indigo-200'}`}>
+                                                                {acuerdo.Tipo || 'GA'}
+                                                            </span>
                                                             {(!acuerdo.facturas || acuerdo.facturas.length === 0) && (
                                                                 <button
                                                                     onClick={async (e) => {
@@ -309,6 +312,7 @@ const ClientDetail = () => {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {/* Editing Fields for Number/Date */}
                                                 {/* Editing Fields for Number/Date */}
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 bg-slate-50 p-3 rounded-md">
                                                     <div>
@@ -350,19 +354,34 @@ const ClientDetail = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="flex items-center space-x-4">
-                                                    <button onClick={() => handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Enviado', acuerdo.Enviado)} className="flex items-center space-x-2 text-sm focus:outline-none bg-white border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-colors">
-                                                        {acuerdo.Enviado ? <CheckSquare className="text-blue-600" size={18} /> : <Square className="text-slate-400" size={18} />}
-                                                        <span className={acuerdo.Enviado ? "text-blue-700 font-bold" : "text-slate-600"}>
-                                                            Enviado {acuerdo.Enviado && <span className="text-xs font-normal ml-1">({acuerdo.Fecha_Envio})</span>}
-                                                        </span>
-                                                    </button>
-                                                    <button onClick={() => handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Firmado', acuerdo.Firmado)} className="flex items-center space-x-2 text-sm focus:outline-none bg-white border border-slate-200 px-3 py-1.5 rounded-lg hover:bg-slate-50 transition-colors">
-                                                        {acuerdo.Firmado ? <CheckSquare className="text-green-600" size={18} /> : <Square className="text-slate-400" size={18} />}
-                                                        <span className={acuerdo.Firmado ? "text-green-700 font-bold" : "text-slate-600"}>
-                                                            Firmado {acuerdo.Firmado && <span className="text-xs font-normal ml-1">({acuerdo.Fecha_Firma})</span>}
-                                                        </span>
-                                                    </button>
+                                                <div className="flex items-center space-x-4 mb-2">
+                                                    <div className="flex space-x-4 mt-2">
+                                                        <label className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg border cursor-pointer transition-colors ${acuerdo.Enviado ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'}`}>
+                                                            <div className={`w-4 h-4 rounded border flex items-center justify-center ${acuerdo.Enviado ? 'bg-blue-600 border-blue-600' : 'border-slate-300 bg-white'}`}>
+                                                                {acuerdo.Enviado && <Check size={12} className="text-white" />}
+                                                            </div>
+                                                            <input
+                                                                type="checkbox"
+                                                                className="hidden"
+                                                                checked={!!acuerdo.Enviado}
+                                                                onChange={() => handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Enviado', acuerdo.Enviado)}
+                                                            />
+                                                            <span className="text-xs font-bold uppercase select-none">Enviado</span>
+                                                        </label>
+
+                                                        <label className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg border cursor-pointer transition-colors ${acuerdo.Firmado ? 'bg-green-50 border-green-200 text-green-700' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'}`}>
+                                                            <div className={`w-4 h-4 rounded border flex items-center justify-center ${acuerdo.Firmado ? 'bg-green-600 border-green-600' : 'border-slate-300 bg-white'}`}>
+                                                                {acuerdo.Firmado && <Check size={12} className="text-white" />}
+                                                            </div>
+                                                            <input
+                                                                type="checkbox"
+                                                                className="hidden"
+                                                                checked={!!acuerdo.Firmado}
+                                                                onChange={() => handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Firmado', acuerdo.Firmado)}
+                                                            />
+                                                            <span className="text-xs font-bold uppercase select-none">Firmado</span>
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className="text-right min-w-[150px]">

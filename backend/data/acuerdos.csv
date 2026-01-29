@@ -1,3 +1,3 @@
-Id_Acuerdo,Dni_Cliente,Numero_Acuerdo,Tipo,Importe,Fecha_Aprobacion,Enviado,Fecha_Envio,Firmado,Fecha_Firma
-d143e110,07256443N,937842,GA,2000.0,2026-01-28,True,2026-01-28,True,2026-01-28
-af84ff09,07256443N,,GA,3333333.0,,True,2026-01-28,False,
+Id_Acuerdo,Dni_Cliente,Numero_Acuerdo,Tipo,Importe,Fecha_Aprobacion,Enviado,Fecha_Envio,Firmado,Fecha_Firma,Estado
+d143e110,07256443N,937842.0,GA,2000.0,2026-01-28,True,2026-01-28,True,2026-01-28,Firmado
+ba2d131d,07256443N,,GA,2000.0,,True,2026-01-28,True,2026-01-29,Borrador
