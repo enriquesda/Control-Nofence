@@ -124,7 +124,9 @@ const Dashboard = () => {
     const getKitsProximosCaducar = () => {
         const results = [];
         clientes.forEach(client => {
-            if (client.Fecha_Aprobacion_Bono) {
+            // Only show kits with remaining balance (not fully consumed)
+            const hasBalance = client.Saldo && client.Saldo > 0;
+            if (client.Fecha_Aprobacion_Bono && hasBalance) {
                 const expiryDate = new Date(client.Fecha_Aprobacion_Bono);
                 expiryDate.setDate(expiryDate.getDate() + 180);
                 const days = daysUntil(expiryDate.toISOString().split('T')[0]);
