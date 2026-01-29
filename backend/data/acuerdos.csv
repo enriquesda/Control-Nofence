@@ -1,3 +1,7 @@
 Id_Acuerdo,Dni_Cliente,Numero_Acuerdo,Tipo,Importe,Fecha_Aprobacion,Enviado,Fecha_Envio,Firmado,Fecha_Firma,Estado,Estado_Justificacion
 d143e110,07256443N,937842.0,GA,2000.0,2026-01-28,True,2026-01-28,True,2026-01-28,Firmado,Justificada
 ba2d131d,07256443N,389276857237.0,GA,2000.0,2026-01-29,True,2026-01-28,True,2026-01-29,Borrador,Justificada
+8205f99d,12345678A,8675645.0,GA,1000.0,2026-01-29,True,2026-01-29,True,2026-01-29,Borrador,Justificada
+a62545f6,12345678A,67879865.0,GC,2000.0,2026-01-29,True,2026-01-29,True,2026-01-29,Borrador,Justificada
+00e7f394,07278324365,2123871263.0,GC,2000.0,2026-01-29,True,2026-01-29,True,2026-01-29,Borrador,
+dbaede4c,07278324365,8876545.0,GA,1000.0,2025-12-30,True,2026-01-29,True,2026-01-29,Borrador,

@@ -231,6 +231,91 @@ const ClientDetail = () => {
                                 <div className="text-2xl font-bold text-primary-700">{client.Estado}</div>
                             </div>
 
+                            {/* Next Critical Deadline */}
+                            {(() => {
+                                let deadline = null;
+                                let deadlineLabel = '';
+                                let deadlineType = '';
+
+                                // Determine next critical deadline based on state
+                                const hasInvoices = client.acuerdos?.some(a => a.facturas && a.facturas.length > 0);
+                                const hasSignedAgreements = client.acuerdos?.some(a => a.Firmado);
+                                const hasAgreements = client.acuerdos && client.acuerdos.length > 0;
+                                const hasPendingJustification = client.acuerdos?.some(a =>
+                                    a.facturas && a.facturas.length > 0 && a.Estado_Justificacion !== 'Justificada'
+                                );
+
+                                if (hasPendingJustification) {
+                                    // Priority 1: Justification deadline
+                                    const acuerdoWithJustif = client.acuerdos.find(a =>
+                                        a.facturas && a.facturas.length > 0 &&
+                                        a.Estado_Justificacion !== 'Justificada' &&
+                                        a.Fecha_Limite_Justificacion
+                                    );
+                                    if (acuerdoWithJustif) {
+                                        deadline = acuerdoWithJustif.Fecha_Limite_Justificacion;
+                                        deadlineLabel = 'Límite Justificación';
+                                        deadlineType = 'justification';
+                                    }
+                                } else if (hasSignedAgreements && !hasInvoices) {
+                                    // Priority 2: Invoice emission deadline
+                                    const acuerdoWithInvoiceDeadline = client.acuerdos.find(a =>
+                                        a.Firmado && a.Fecha_Limite_Factura
+                                    );
+                                    if (acuerdoWithInvoiceDeadline) {
+                                        deadline = acuerdoWithInvoiceDeadline.Fecha_Limite_Factura;
+                                        deadlineLabel = 'Límite Emisión Facturas';
+                                        deadlineType = 'invoice';
+                                    }
+                                } else if (client.Fecha_Limite_Acuerdos && !isKitCompleted) {
+                                    // Priority 3: Agreement signing deadline
+                                    deadline = client.Fecha_Limite_Acuerdos;
+                                    deadlineLabel = 'Límite Firma Acuerdos';
+                                    deadlineType = 'agreement';
+                                }
+
+                                if (deadline) {
+                                    const today = new Date();
+                                    const deadlineDate = new Date(deadline);
+                                    const daysUntil = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+                                    const isUrgent = daysUntil <= 30;
+                                    const isOverdue = daysUntil < 0;
+
+                                    return (
+                                        <div className={`p-4 rounded-lg border-2 ${isOverdue ? 'bg-red-50 border-red-300' :
+                                                isUrgent ? 'bg-orange-50 border-orange-300' :
+                                                    'bg-blue-50 border-blue-300'
+                                            }`}>
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <div className="text-xs font-bold text-slate-400 uppercase mb-1">
+                                                        {deadlineLabel}
+                                                    </div>
+                                                    <div className={`text-lg font-bold ${isOverdue ? 'text-red-700' :
+                                                            isUrgent ? 'text-orange-700' :
+                                                                'text-blue-700'
+                                                        }`}>
+                                                        {formatDate(deadline)}
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <div className={`text-2xl font-bold ${isOverdue ? 'text-red-600' :
+                                                            isUrgent ? 'text-orange-600' :
+                                                                'text-blue-600'
+                                                        }`}>
+                                                        {isOverdue ? `¡${Math.abs(daysUntil)}d!` : `${daysUntil}d`}
+                                                    </div>
+                                                    <div className="text-[10px] font-bold text-slate-500 uppercase">
+                                                        {isOverdue ? 'Vencido' : 'Restantes'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                                return null;
+                            })()}
+
                             {/* Kit Digital Status */}
                             <div>
                                 <h4 className="text-sm font-bold text-slate-700 uppercase mb-3 flex items-center">
@@ -276,24 +361,71 @@ const ClientDetail = () => {
                                                     </div>
                                                     <span className="text-xs font-bold text-slate-900">{acuerdo.Importe} €</span>
                                                 </div>
-                                                <div className="flex items-center space-x-2 text-[10px]">
-                                                    <span className={`px-2 py-0.5 rounded-full font-bold ${acuerdo.Firmado ? 'bg-green-100 text-green-700' :
+                                                <div className="flex items-center justify-between space-x-2 text-[10px]">
+                                                    <div className="flex items-center space-x-2">
+                                                        <span className={`px-2 py-0.5 rounded-full font-bold ${acuerdo.Firmado ? 'bg-green-100 text-green-700' :
                                                             acuerdo.Enviado ? 'bg-blue-100 text-blue-700' :
                                                                 acuerdo.Fecha_Aprobacion ? 'bg-purple-100 text-purple-700' :
                                                                     'bg-slate-100 text-slate-500'
-                                                        }`}>
-                                                        {acuerdo.Firmado ? 'Firmado' :
-                                                            acuerdo.Enviado ? 'Enviado' :
-                                                                acuerdo.Fecha_Aprobacion ? 'Aprobado' : 'Borrador'}
-                                                    </span>
-                                                    {acuerdo.facturas && acuerdo.facturas.length > 0 && (
-                                                        <span className={`px-2 py-0.5 rounded-full font-bold ${acuerdo.Estado_Justificacion === 'Justificada' ? 'bg-green-100 text-green-700' :
+                                                            }`}>
+                                                            {acuerdo.Firmado ? 'Firmado' :
+                                                                acuerdo.Enviado ? 'Enviado' :
+                                                                    acuerdo.Fecha_Aprobacion ? 'Aprobado' : 'Borrador'}
+                                                        </span>
+                                                        {acuerdo.facturas && acuerdo.facturas.length > 0 && (
+                                                            <span className={`px-2 py-0.5 rounded-full font-bold ${acuerdo.Estado_Justificacion === 'Justificada' ? 'bg-green-100 text-green-700' :
                                                                 acuerdo.Estado_Justificacion === 'Enviada para firma' ? 'bg-blue-100 text-blue-700' :
                                                                     'bg-orange-100 text-orange-700'
-                                                            }`}>
-                                                            {acuerdo.Estado_Justificacion || 'Pend. Justif.'}
-                                                        </span>
-                                                    )}
+                                                                }`}>
+                                                                {acuerdo.Estado_Justificacion || 'Pend. Justif.'}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    {/* Quick Actions */}
+                                                    <div className="flex items-center space-x-1">
+                                                        {!acuerdo.Firmado && (
+                                                            <>
+                                                                {!acuerdo.Enviado ? (
+                                                                    <button
+                                                                        onClick={async () => {
+                                                                            await handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Enviado', acuerdo.Enviado);
+                                                                        }}
+                                                                        className="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded text-[10px] font-bold transition-colors flex items-center space-x-1"
+                                                                        title="Marcar como Enviado"
+                                                                    >
+                                                                        <Send size={12} />
+                                                                        <span>Enviar</span>
+                                                                    </button>
+                                                                ) : (
+                                                                    <button
+                                                                        onClick={async () => {
+                                                                            await handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Firmado', acuerdo.Firmado);
+                                                                        }}
+                                                                        className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-[10px] font-bold transition-colors flex items-center space-x-1"
+                                                                        title="Marcar como Firmado"
+                                                                    >
+                                                                        <PenTool size={12} />
+                                                                        <span>Firmar</span>
+                                                                    </button>
+                                                                )}
+                                                            </>
+                                                        )}
+                                                        {acuerdo.facturas && acuerdo.facturas.length > 0 && acuerdo.Estado_Justificacion !== 'Justificada' && (
+                                                            <select
+                                                                className="px-2 py-1 text-[10px] border border-slate-300 rounded bg-white font-bold cursor-pointer hover:border-primary-400"
+                                                                value={acuerdo.Estado_Justificacion || 'Pendiente de captura'}
+                                                                onChange={async (e) => {
+                                                                    await updateAcuerdo(acuerdo.Id_Acuerdo, { Estado_Justificacion: e.target.value });
+                                                                    fetchData();
+                                                                }}
+                                                                title="Cambiar estado de justificación"
+                                                            >
+                                                                <option value="Pendiente de captura">Pendiente</option>
+                                                                <option value="Enviada para firma">Enviada</option>
+                                                                <option value="Justificada">Justificada</option>
+                                                            </select>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
                                         ))}
