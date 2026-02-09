@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getClientes } from '../api';
-import { Users, CreditCard, AlertTriangle, TrendingUp, FileText, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { getClientes, updateAcuerdo } from '../api';
+import { Users, CreditCard, AlertTriangle, TrendingUp, FileText, CheckCircle, Clock, AlertCircle, PenTool } from 'lucide-react';
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const [clientes, setClientes] = useState([]);
+
+    const handleQuickSign = async (idAcuerdo, e) => {
+        e.stopPropagation();
+        if (window.confirm('¿Marcar este acuerdo como FIRMADO con fecha de hpy?')) {
+            const today = new Date().toISOString().split('T')[0];
+            await updateAcuerdo(idAcuerdo, { Firmado: true, Fecha_Firma: today });
+            loadData();
+        }
+    };
     const [stats, setStats] = useState({
         total_clientes: 0,
         total_facturado: 0,
@@ -248,15 +257,24 @@ const Dashboard = () => {
                             <div
                                 key={idx}
                                 onClick={() => navigate(`/clientes/${item.client.Dni}`)}
-                                className="p-3 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 cursor-pointer transition-colors"
+                                className="p-3 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 cursor-pointer transition-colors flex justify-between items-center"
                             >
-                                <div className="font-bold text-sm text-slate-800">{item.client.Nombre}</div>
-                                <div className="text-xs text-slate-600">Acuerdo: {item.acuerdo.Numero_Acuerdo}</div>
-                                {item.daysSinceSent !== null && (
-                                    <div className="text-xs text-orange-600 font-bold mt-1">
-                                        Hace {item.daysSinceSent} días
-                                    </div>
-                                )}
+                                <div>
+                                    <div className="font-bold text-sm text-slate-800">{item.client.Nombre}</div>
+                                    <div className="text-xs text-slate-600">Acuerdo: {item.acuerdo.Numero_Acuerdo}</div>
+                                    {item.daysSinceSent !== null && (
+                                        <div className="text-xs text-orange-600 font-bold mt-1">
+                                            Hace {item.daysSinceSent} días
+                                        </div>
+                                    )}
+                                </div>
+                                <button
+                                    onClick={(e) => handleQuickSign(item.acuerdo.Id_Acuerdo, e)}
+                                    className="ml-2 p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors shadow-sm"
+                                    title="Firmar acuerdo"
+                                >
+                                    <PenTool size={16} />
+                                </button>
                             </div>
                         )}
                     />
