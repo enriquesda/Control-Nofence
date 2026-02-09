@@ -88,7 +88,7 @@ const Dashboard = () => {
                 acuerdo.facturas?.forEach(factura => {
                     if (factura.Estado_Pago === 'Pendiente') {
                         const daysOverdue = factura.Fecha_Emision ? -daysUntil(factura.Fecha_Emision) : null;
-                        results.push({ client, factura, daysOverdue, sortKey: daysOverdue || 0 });
+                        results.push({ client, factura, acuerdo, daysOverdue, sortKey: daysOverdue || 0 });
                     }
                 });
             });

@@ -41,7 +41,15 @@ const Alertas = ({
                                 </div>
                             </div>
                             <div className="text-xs mt-1 opacity-80">Vence: {item.expiryDate}</div>
-                            {item.acuerdo && <div className="text-[10px] mt-0.5 opacity-70">Acuerdo: {item.acuerdo.Numero_Acuerdo}</div>}
+                            {item.acuerdo && (
+                                <div className="flex items-center space-x-2 mt-1">
+                                    <span className={`text-[10px] font-bold px-1 py-0.5 rounded border ${item.acuerdo.Tipo === 'GA' ? 'bg-teal-50 text-teal-700 border-teal-200' : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                        }`}>
+                                        {item.acuerdo.Tipo || 'GA'}
+                                    </span>
+                                    <span className="text-[10px] opacity-70">Acuerdo: {item.acuerdo.Numero_Acuerdo}</span>
+                                </div>
+                            )}
                         </div>
                     ))
                 )}

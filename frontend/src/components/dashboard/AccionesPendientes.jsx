@@ -47,7 +47,13 @@ const AccionesPendientes = ({
                             className="p-3 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 cursor-pointer transition-colors flex justify-between items-center group"
                         >
                             <div>
-                                <div className="font-bold text-sm text-slate-800">{item.client.Nombre}</div>
+                                <div className="font-bold text-sm text-slate-800 flex items-center mb-1">
+                                    {item.client.Nombre}
+                                    <span className={`ml-2 text-[10px] font-bold px-1 py-0.5 rounded border ${item.acuerdo.Tipo === 'GA' ? 'bg-teal-50 text-teal-700 border-teal-200' : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                        }`}>
+                                        {item.acuerdo.Tipo || 'GA'}
+                                    </span>
+                                </div>
                                 <div className="text-xs text-slate-600">Acuerdo: {item.acuerdo.Numero_Acuerdo}</div>
                                 {item.daysSinceSent !== null && (
                                     <div className="text-[10px] text-orange-600 font-bold mt-1">
@@ -77,7 +83,15 @@ const AccionesPendientes = ({
                             onClick={() => navigate(`/clientes/${item.client.Dni}`)}
                             className="p-3 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 cursor-pointer transition-colors"
                         >
-                            <div className="font-bold text-sm text-slate-800">{item.client.Nombre}</div>
+                            <div className="font-bold text-sm text-slate-800 flex items-center">
+                                {item.client.Nombre}
+                                {item.acuerdo && (
+                                    <span className={`ml-2 text-[10px] font-bold px-1 py-0.5 rounded border ${item.acuerdo.Tipo === 'GA' ? 'bg-teal-50 text-teal-700 border-teal-200' : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                        }`}>
+                                        {item.acuerdo.Tipo || 'GA'}
+                                    </span>
+                                )}
+                            </div>
                             <div className="flex justify-between items-center mt-1">
                                 <div className="text-xs text-slate-600">Factura {item.factura.Numero_Factura_Real || ''}</div>
                                 <div className="font-bold text-slate-800 text-xs">{item.factura.Importe} €</div>
@@ -102,7 +116,13 @@ const AccionesPendientes = ({
                             onClick={() => navigate(`/clientes/${item.client.Dni}`)}
                             className="p-3 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 cursor-pointer transition-colors"
                         >
-                            <div className="font-bold text-sm text-slate-800">{item.client.Nombre}</div>
+                            <div className="font-bold text-sm text-slate-800 flex items-center mb-1">
+                                {item.client.Nombre}
+                                <span className={`ml-2 text-[10px] font-bold px-1 py-0.5 rounded border ${item.acuerdo.Tipo === 'GA' ? 'bg-teal-50 text-teal-700 border-teal-200' : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                    }`}>
+                                    {item.acuerdo.Tipo || 'GA'}
+                                </span>
+                            </div>
                             <div className="text-xs text-slate-600">Acuerdo: {item.acuerdo.Numero_Acuerdo}</div>
                             <div className="text-[10px] text-blue-600 font-medium mt-1">Esperando firma del cliente</div>
                         </div>

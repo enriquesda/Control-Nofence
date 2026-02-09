@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getClientes, updateCliente, addAcuerdo, updateAcuerdo, deleteAcuerdo } from '../../api';
+import { getClientes, updateCliente, addAcuerdo, updateAcuerdo, deleteAcuerdo } from "../api";
 import { ArrowLeft, User, Gift, Clock, MapPin } from 'lucide-react';
-import Button from '../ui/Button';
-import Badge from '../ui/Badge';
+import Button from "./ui/Button";
+import Badge from "./ui/Badge";
 
 import ResumenCliente from './clientes/detalle/ResumenCliente';
 import GestionKitDigital from './clientes/detalle/GestionKitDigital';

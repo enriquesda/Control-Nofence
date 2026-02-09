@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { addFactura, updateFactura, updateCliente, getClientes } from '../../api';
+import { addFactura, updateFactura, updateCliente, getClientes } from '../api';
 import { Plus, List, FileText, Edit2 } from 'lucide-react';
-import Button from '../ui/Button';
-import Input from '../ui/Input';
-import Card from '../ui/Card';
-import Badge from '../ui/Badge';
+import Button from './ui/Button';
+import Input from './ui/Input';
+import Card from './ui/Card';
+import Badge from './ui/Badge';
 
 const GestorFacturas = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true }) => {
     // Mode determination
