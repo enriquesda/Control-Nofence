@@ -34,7 +34,7 @@ const Dashboard = () => {
         clientsData.forEach(client => {
             client.acuerdos?.forEach(acuerdo => {
                 if (acuerdo.Enviado && !acuerdo.Firmado) acuerdosPendientes++;
-                if (acuerdo.Estado_Justificacion === 'Enviada') justificacionesPendientes++;
+                if (acuerdo.Estado_Justificacion === 'Enviada para firma') justificacionesPendientes++;
                 acuerdo.facturas?.forEach(factura => {
                     if (factura.Estado_Pago === 'Pendiente') facturasPendientes++;
                 });
@@ -113,7 +113,7 @@ const Dashboard = () => {
         const results = [];
         clientes.forEach(client => {
             client.acuerdos?.forEach(acuerdo => {
-                if (acuerdo.Estado_Justificacion === 'Enviada') {
+                if (acuerdo.Estado_Justificacion === 'Enviada para firma') {
                     results.push({ client, acuerdo });
                 }
             });
@@ -125,7 +125,11 @@ const Dashboard = () => {
         const results = [];
         clientes.forEach(client => {
             // Only show kits with remaining balance (not fully consumed)
-            const hasBalance = client.Saldo && client.Saldo > 0;
+            // Calculate balance on the fly
+            const totalAcuerdos = client.acuerdos ? client.acuerdos.reduce((acc, curr) => acc + (curr.Importe || 0), 0) : 0;
+            const importeBono = client.Importe_Bono || 0;
+            const saldoRestante = importeBono - totalAcuerdos;
+            const hasBalance = saldoRestante > 0;
             if (client.Fecha_Aprobacion_Bono && hasBalance) {
                 const expiryDate = new Date(client.Fecha_Aprobacion_Bono);
                 expiryDate.setDate(expiryDate.getDate() + 180);
@@ -203,7 +207,7 @@ const Dashboard = () => {
                 {items.length === 0 ? (
                     <div className="text-sm text-slate-400 italic text-center py-4">{emptyMessage}</div>
                 ) : (
-                    items.slice(0, 10).map((item, idx) => renderItem(item, idx))
+                    items.map((item, idx) => renderItem(item, idx))
                 )}
             </div>
         </div>
@@ -294,9 +298,6 @@ const Dashboard = () => {
                             >
                                 <div className="font-bold text-sm text-slate-800">{item.client.Nombre}</div>
                                 <div className="text-xs text-slate-600">Acuerdo: {item.acuerdo.Numero_Acuerdo}</div>
-                                <div className="text-xs text-blue-600 font-bold mt-1">
-                                    Estado: {item.acuerdo.Estado_Justificacion}
-                                </div>
                             </div>
                         )}
                     />
