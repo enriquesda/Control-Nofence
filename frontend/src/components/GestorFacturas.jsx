@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { addFactura, updateFactura } from '../api';
-import { Plus, List, CheckSquare, Square, FileText, Edit2 } from 'lucide-react';
+import { addFactura, updateFactura, updateCliente, getClientes } from '../../api';
+import { Plus, List, FileText, Edit2 } from 'lucide-react';
+import Button from '../ui/Button';
+import Input from '../ui/Input';
+import Card from '../ui/Card';
+import Badge from '../ui/Badge';
 
-const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true }) => {
+const GestorFacturas = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true }) => {
     // Mode determination
     const isSingleMode = !!acuerdo;
 
@@ -86,8 +90,7 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
 
                 // Auto-update Nofence status to "Avisar a Nofence" when first invoice is created
                 try {
-                    const { updateCliente } = await import('../api');
-                    const { getClientes } = await import('../api');
+
                     const clientsRes = await getClientes();
                     const currentClient = clientsRes.data.find(c => c.Dni === dni);
 
@@ -142,9 +145,9 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
                     <div className="flex items-center space-x-4">
                         <div className="text-right">
                             <div className="font-bold text-slate-900">{agreementInvoice.Importe.toLocaleString()} €</div>
-                            <div className={`text-xs font-bold uppercase ${agreementInvoice.Estado_Pago === 'Pagado' ? 'text-green-600' : 'text-orange-600'}`}>
+                            <Badge variant={agreementInvoice.Estado_Pago === 'Pagado' ? 'success' : 'warning'}>
                                 {agreementInvoice.Estado_Pago}
-                            </div>
+                            </Badge>
                             {agreementInvoice.Estado_Pago === 'Pagado' && agreementInvoice.Fecha_Pago && (
                                 <div className="text-[10px] text-green-700 font-medium">
                                     Pagado el: {agreementInvoice.Fecha_Pago}
@@ -152,7 +155,6 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
                             )}
                         </div>
 
-                        {/* Edit Button - Now inline */}
                         <button
                             onClick={() => setIsEditing(true)}
                             className="p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors shadow-sm"
@@ -183,27 +185,20 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
                             <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Importe (Auto)</label>
                             <div className="input-field bg-slate-100 text-slate-500">{invoiceForm.Importe} €</div>
                         </div>
-                        <div>
-                            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Nº Factura</label>
-                            <input
-                                required
-                                type="text"
-                                className="input-field"
-                                value={invoiceForm.Numero_Factura_Real}
-                                onChange={e => setInvoiceForm({ ...invoiceForm, Numero_Factura_Real: e.target.value })}
-                                placeholder="Ej: F-2025-01"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Fecha Emisión</label>
-                            <input
-                                required
-                                type="date"
-                                className="input-field"
-                                value={invoiceForm.Fecha_Emision}
-                                onChange={e => setInvoiceForm({ ...invoiceForm, Fecha_Emision: e.target.value })}
-                            />
-                        </div>
+                        <Input
+                            label="Nº Factura"
+                            value={invoiceForm.Numero_Factura_Real}
+                            onChange={e => setInvoiceForm({ ...invoiceForm, Numero_Factura_Real: e.target.value })}
+                            placeholder="Ej: F-2025-01"
+                            required
+                        />
+                        <Input
+                            label="Fecha Emisión"
+                            type="date"
+                            value={invoiceForm.Fecha_Emision}
+                            onChange={e => setInvoiceForm({ ...invoiceForm, Fecha_Emision: e.target.value })}
+                            required
+                        />
                         <div className="col-span-2">
                             <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">Estado Pago</label>
                             <select
@@ -218,12 +213,12 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
 
                         {invoiceForm.Estado_Pago === 'Pagado' && (
                             <div className="col-span-2 animate-in slide-in-from-top-1 fade-in">
-                                <label className="block text-[10px] font-bold text-green-600 uppercase mb-1">Fecha de Pago</label>
-                                <input
+                                <Input
+                                    label="Fecha de Pago"
                                     type="date"
-                                    className="input-field border-green-200 focus:border-green-500 focus:ring-green-500"
                                     value={invoiceForm.Fecha_Pago}
                                     onChange={e => setInvoiceForm({ ...invoiceForm, Fecha_Pago: e.target.value })}
+                                    className="border-green-200 focus:border-green-500 focus:ring-green-500"
                                 />
                                 <div className="text-[10px] text-slate-400 mt-1 italic">Si se deja vacío, se usará la fecha de hoy.</div>
                             </div>
@@ -231,10 +226,10 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
                     </div>
 
                     <div className="flex justify-end space-x-2">
-                        <button type="button" onClick={() => { setShowCreate(false); setIsEditing(false); }} className="px-3 py-1 text-xs font-bold text-slate-500 hover:bg-slate-200 rounded">Cancelar</button>
-                        <button type="submit" className="px-3 py-1 text-xs font-bold text-white bg-primary-600 hover:bg-primary-700 rounded shadow-sm">
+                        <Button variant="secondary" onClick={() => { setShowCreate(false); setIsEditing(false); }} className="px-3 py-1 text-xs">Cancelar</Button>
+                        <Button type="submit" className="px-3 py-1 text-xs">
                             {isEditing ? "Actualizar" : "Guardar Factura"}
-                        </button>
+                        </Button>
                     </div>
                 </form>
             );
@@ -253,10 +248,10 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
 
         return (
             <div className="flex justify-start">
-                <button onClick={() => setShowCreate(true)} className="btn-primary py-1.5 px-3 text-xs flex items-center space-x-1 shadow-sm">
+                <Button onClick={() => setShowCreate(true)} className="py-1.5 px-3 text-xs flex items-center space-x-1 shadow-sm">
                     <Plus size={14} />
                     <span>Generar Factura</span>
-                </button>
+                </Button>
             </div>
         );
     }
@@ -272,52 +267,48 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
                     <span>Historial de Facturas</span>
                 </div>
                 {allowAdd && (
-                    <button
+                    <Button
                         onClick={() => setShowAddList(!showAddList)}
-                        className="btn-primary flex items-center space-x-2 py-1 text-sm"
+                        className="flex items-center space-x-2 py-1 text-sm"
                     >
                         <Plus size={16} />
                         <span>Nueva Factura</span>
-                    </button>
+                    </Button>
                 )}
             </div>
 
             {showAddList && (
                 <form onSubmit={handleSubmit} className="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2">
-                    <div className="col-span-1">
-                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Nº Factura</label>
-                        <input
-                            type="text" required className="input-field"
-                            value={invoiceForm.Numero_Factura_Real}
-                            onChange={e => setInvoiceForm({ ...invoiceForm, Numero_Factura_Real: e.target.value })}
-                        />
-                    </div>
-                    <div className="col-span-1">
-                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Importe (€)</label>
-                        <input
-                            type="number" required className="input-field"
-                            value={invoiceForm.Importe}
-                            onChange={e => setInvoiceForm({ ...invoiceForm, Importe: e.target.value ? parseFloat(e.target.value) : 0 })}
-                        />
-                    </div>
+                    <Input
+                        label="Nº Factura"
+                        value={invoiceForm.Numero_Factura_Real}
+                        onChange={e => setInvoiceForm({ ...invoiceForm, Numero_Factura_Real: e.target.value })}
+                        required
+                    />
+                    <Input
+                        label="Importe (€)"
+                        type="number"
+                        value={invoiceForm.Importe}
+                        onChange={e => setInvoiceForm({ ...invoiceForm, Importe: e.target.value ? parseFloat(e.target.value) : 0 })}
+                        required
+                    />
                     <div className="col-span-2">
-                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Concepto</label>
-                        <input
-                            type="text" required className="input-field"
+                        <Input
+                            label="Concepto"
                             value={invoiceForm.Concepto}
                             onChange={e => setInvoiceForm({ ...invoiceForm, Concepto: e.target.value })}
+                            required
                         />
                     </div>
+                    <Input
+                        label="Fecha Emisión"
+                        type="date"
+                        value={invoiceForm.Fecha_Emision}
+                        onChange={e => setInvoiceForm({ ...invoiceForm, Fecha_Emision: e.target.value })}
+                        required
+                    />
                     <div className="col-span-1">
-                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Fecha Emisión</label>
-                        <input
-                            type="date" required className="input-field"
-                            value={invoiceForm.Fecha_Emision}
-                            onChange={e => setInvoiceForm({ ...invoiceForm, Fecha_Emision: e.target.value })}
-                        />
-                    </div>
-                    <div className="col-span-1">
-                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Estado</label>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Estado</label>
                         <select
                             className="input-field"
                             value={invoiceForm.Estado_Pago}
@@ -328,13 +319,13 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
                         </select>
                     </div>
                     <div className="col-span-2 flex justify-end space-x-2 mt-2">
-                        <button type="button" onClick={() => setShowAddList(false)} className="btn-secondary py-1 text-sm">Cancelar</button>
-                        <button type="submit" className="btn-primary py-1 text-sm">Guardar Factura</button>
+                        <Button variant="secondary" onClick={() => setShowAddList(false)} className="py-1 text-sm">Cancelar</Button>
+                        <Button type="submit" className="py-1 text-sm">Guardar Factura</Button>
                     </div>
                 </form>
             )}
 
-            <div className="overflow-hidden border border-slate-200 rounded-xl">
+            <Card padding="p-0" className="overflow-hidden">
                 <table className="w-full text-left">
                     <thead className="bg-slate-50 border-b border-slate-200">
                         <tr>
@@ -353,9 +344,9 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
                                 <td className="px-4 py-3 text-slate-600">{f.Concepto}</td>
                                 <td className="px-4 py-3 font-semibold text-slate-800">{f.Importe.toLocaleString()} €</td>
                                 <td className="px-4 py-3">
-                                    <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-bold ${f.Estado_Pago === 'Pagado' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
+                                    <Badge variant={f.Estado_Pago === 'Pagado' ? 'success' : 'warning'}>
                                         {f.Estado_Pago}
-                                    </span>
+                                    </Badge>
                                 </td>
                             </tr>
                         ))}
@@ -373,9 +364,9 @@ const InvoiceManager = ({ dni, facturas = [], acuerdo, onUpdate, allowAdd = true
                         </tr>
                     </tfoot>
                 </table>
-            </div>
+            </Card>
         </div>
     );
 };
 
-export default InvoiceManager;
+export default GestorFacturas;

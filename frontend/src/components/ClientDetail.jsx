@@ -1,113 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getClientes, getDashboard, createCliente, deleteCliente, updateCliente, updateKit, addAcuerdo, updateAcuerdo, deleteAcuerdo } from '../api';
-import { ArrowLeft, Plus, Check, AlertCircle, FileText, Send, PenTool, Trash2, User, Gift, DollarSign, Info, MapPin, Save, CheckSquare, AlertTriangle, Square, Clock } from 'lucide-react';
-import InvoiceManager from './InvoiceManager';
+import { getClientes, updateCliente, addAcuerdo, updateAcuerdo, deleteAcuerdo } from '../../api';
+import { ArrowLeft, User, Gift, Clock, MapPin } from 'lucide-react';
+import Button from '../ui/Button';
+import Badge from '../ui/Badge';
+
+import ResumenCliente from './clientes/detalle/ResumenCliente';
+import GestionKitDigital from './clientes/detalle/GestionKitDigital';
+import GestionNofence from './clientes/detalle/GestionNofence';
+import Historial from './clientes/detalle/Historial';
 
 const ClientDetail = () => {
     const { dni } = useParams();
     const navigate = useNavigate();
     const [client, setClient] = useState(null);
-    const [activeTab, setActiveTab] = useState('general');
-    const [showClosureModal, setShowClosureModal] = useState(false);
-    const [showAcuerdoModal, setShowAcuerdoModal] = useState(false);
-    const [newAcuerdo, setNewAcuerdo] = useState({ Numero_Acuerdo: '', Tipo: 'GA', Importe: 0, Fecha_Aprobacion: '' });
-    const [newCollar, setNewCollar] = useState('');
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('general');
 
     const fetchData = async () => {
-        const res = await getClientes();
-        const data = res.data.find(c => c.Dni === dni);
-        setClient(data);
-        setLoading(false);
+        try {
+            const res = await getClientes();
+            const found = res.data.find(c => c.Dni === dni);
+            if (found) {
+                setClient(found);
+            } else {
+                alert('Cliente no encontrado');
+                navigate('/');
+            }
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
         fetchData();
     }, [dni]);
 
-    // Format date from YYYY-MM-DD to DD-MM-YYYY
-    const formatDate = (dateStr) => {
-        if (!dateStr) return dateStr;
-        const parts = dateStr.split('-');
-        if (parts.length === 3) {
-            return `${parts[2]}-${parts[1]}-${parts[0]}`;
-        }
-        return dateStr;
-    };
-
-
-    // Calcular saldo y totales
-    const totalAcuerdos = client?.acuerdos ? client.acuerdos.reduce((acc, curr) => acc + (curr.Importe || 0), 0) : 0;
-    const importeBono = client?.Importe_Bono || 0;
-    const saldoRestante = importeBono - totalAcuerdos;
-    const isKitCompleted = importeBono > 0 && saldoRestante <= 0;
-
     const handleUpdateClient = async (e) => {
-        e.preventDefault();
-        // Helper para valores numéricos opcionales
-        const parseOptionalFloat = (val) => val ? parseFloat(val) : null;
+        if (e) e.preventDefault();
+        await updateCliente(dni, client);
+        fetchData();
+        alert('Datos actualizados correctamente');
+    };
 
-        const payload = {
-            Nombre: client.Nombre,
-            Telefono: client.Telefono ? String(client.Telefono) : '',
-            Email: client.Email,
-            Calle: client.Calle || null,
-            Localidad: client.Localidad || null,
-            Provincia: client.Provincia || null,
-            Codigo_Postal: client.Codigo_Postal ? String(client.Codigo_Postal) : null,
-            Codigo_Postal: client.Codigo_Postal ? String(client.Codigo_Postal) : null,
-            Numero_Explotacion: client.Numero_Explotacion || null, // New field
-            Estado_Nofence: client.Estado_Nofence || null,
-            Pedido_Nofence: client.Pedido_Nofence || null,
-            Importe_Factura_Nofence: parseOptionalFloat(client.Importe_Factura_Nofence),
-            Importe_Cobrado_Cliente: parseOptionalFloat(client.Importe_Cobrado_Cliente),
-            Beneficio: parseOptionalFloat(client.Beneficio),
-            Coordenadas_X: parseOptionalFloat(client.Coordenadas_X), // New field
-            Coordenadas_Y: parseOptionalFloat(client.Coordenadas_Y)  // New field
-        };
-
+    // --- AGREEMENT HANDLERS ---
+    const handleAddAcuerdo = async (newAcuerdo) => {
         try {
-            await updateCliente(dni, payload);
+            await addAcuerdo(dni, newAcuerdo);
             fetchData();
-            alert('Datos guardados correctamente');
         } catch (error) {
-            console.error(error);
-            const detail = error.response?.data?.detail;
-            alert('Error al guardar: ' + (detail ? JSON.stringify(detail) : error.message));
+            alert('Error al añadir acuerdo');
         }
     };
 
-    const handleUpdateKit = async (e) => {
-        e.preventDefault();
-        await updateKit(dni, client);
-        fetchData();
-        alert('Datos del bono actualizados');
-    };
-
-    const handleAddAcuerdo = async (e) => {
-        e.preventDefault();
-        // Auto-set Enviado=true by default
-        const todayStr = new Date().toISOString().split('T')[0];
-        const acuerdoToSend = {
-            ...newAcuerdo,
-            Enviado: true,
-            Fecha_Envio: todayStr
-        };
-
-        await addAcuerdo(dni, acuerdoToSend);
-        setShowAcuerdoModal(false);
-        fetchData();
-        setNewAcuerdo({ Numero_Acuerdo: '', Tipo: 'GA', Importe: 0, Fecha_Aprobacion: '' });
-    };
-
-    const handleToggleAcuerdo = async (id, field, currentValue) => {
+    const handleToggleAcuerdo = async (idAcuerdo, field, currentValue) => {
         const newValue = !currentValue;
         const payload = { [field]: newValue };
 
-        // Auto-set date if checking true
-        const today = new Date().toISOString().split('T')[0];
+        // Set date automatically if checked
         if (newValue) {
+            const today = new Date().toISOString().split('T')[0];
             if (field === 'Enviado') payload.Fecha_Envio = today;
             if (field === 'Firmado') payload.Fecha_Firma = today;
         } else {
@@ -115,981 +69,107 @@ const ClientDetail = () => {
             if (field === 'Firmado') payload.Fecha_Firma = null;
         }
 
-        await updateAcuerdo(id, payload);
+        await updateAcuerdo(idAcuerdo, payload);
         fetchData();
     };
 
-    if (loading) return <div className="flex justify-center items-center h-64 text-slate-400">Cargando...</div>;
-    if (!client) return <div>Cliente no encontrado</div>;
+    const handleUpdateAcuerdo = async (idAcuerdo, updates) => {
+        await updateAcuerdo(idAcuerdo, updates);
+    };
+
+
+    if (loading) return <div className="p-8 text-center text-slate-500">Cargando datos del cliente...</div>;
+    if (!client) return <div className="p-8 text-center text-red-500">Cliente no encontrado</div>;
 
     const tabs = [
-        { id: 'general', label: 'Resumen Cliente', icon: <User size={18} /> },
+        { id: 'general', label: 'Resumen', icon: <User size={18} /> },
         { id: 'kit', label: 'Kit Digital & Acuerdos', icon: <Gift size={18} /> },
-        { id: 'nofence', label: 'Nofence', icon: <Gift size={18} /> },
+        { id: 'nofence', label: 'Nofence', icon: <MapPin size={18} /> },
         { id: 'historial', label: 'Historial', icon: <Clock size={18} /> },
     ];
 
     return (
-        <div className="max-w-5xl mx-auto pb-20">
-            <button onClick={() => navigate('/clientes')} className="flex items-center space-x-2 text-slate-500 hover:text-slate-700 mb-6 transition-colors">
-                <ArrowLeft size={20} />
-                <span>Volver al listado</span>
-            </button>
-
-            <div className="flex justify-between items-start mb-8">
-                <div>
-                    <h2 className="text-3xl font-bold text-slate-900">{client.Nombre}</h2>
-                    <div className="flex items-center space-x-4 mt-1 text-slate-500 font-medium">
-                        <span>DNI: {client.Dni}</span>
-                        {client.Localidad && (
-                            <span className="flex items-center text-sm"><MapPin size={14} className="mr-1" /> {client.Localidad} ({client.Provincia})</span>
-                        )}
-                    </div>
-                </div>
-                <div className="text-right">
-                    <div className="text-xs font-bold text-slate-400 uppercase mb-1 tracking-wider">Estado Actual</div>
-                    <span className="bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full font-bold text-sm border border-primary-100">
-                        {client.Estado}
-                    </span>
-                </div>
-            </div>
-
-            <div className="flex space-x-1 bg-slate-200/50 p-1 rounded-xl mb-8">
-                {tabs.map(tab => (
+        <div className="pb-20">
+            {/* Header */}
+            <div className="bg-white border-b border-slate-200 sticky top-0 z-10 px-8 py-4 mb-8 flex justify-between items-center shadow-sm">
+                <div className="flex items-center space-x-4">
                     <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`flex-1 flex items-center justify-center space-x-2 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === tab.id ? 'bg-white text-primary-600 shadow-sm' : 'text-slate-600 hover:bg-white/50'
-                            }`}
+                        onClick={() => navigate('/')}
+                        className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
                     >
-                        {tab.icon}
-                        <span>{tab.label}</span>
+                        <ArrowLeft size={24} />
                     </button>
-                ))}
+                    <div>
+                        <h1 className="text-2xl font-bold text-slate-800">{client.Nombre}</h1>
+                        <div className="flex items-center space-x-2 text-sm text-slate-500">
+                            <span className="font-mono bg-slate-100 px-1.5 rounded">{client.Dni}</span>
+                            <span>•</span>
+                            <span className="flex items-center"><MapPin size={12} className="mr-1" /> {client.Localidad || 'Sin localidad'}</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                    <Badge variant="primary" className="text-sm px-3 py-1">{client.Estado}</Badge>
+                </div>
             </div>
 
-            <div className="animate-in fade-in duration-300">
-                {activeTab === 'general' && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="card space-y-6">
-                            <div>
-                                <h3 className="text-lg font-bold mb-4 flex items-center space-x-2 border-b pb-2">
-                                    <Info size={20} className="text-primary-500" />
-                                    <span>Información de Contacto</span>
-                                </h3>
-                                <div className="grid grid-cols-1 gap-4">
-                                    <div>
-                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Nombre Completo</label>
-                                        <input type="text" className="input-field" value={client.Nombre} onChange={e => setClient({ ...client, Nombre: e.target.value })} />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Teléfono</label>
-                                        <input type="text" className="input-field" value={client.Telefono} onChange={e => setClient({ ...client, Telefono: e.target.value })} />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Email</label>
-                                        <input type="email" className="input-field" value={client.Email} onChange={e => setClient({ ...client, Email: e.target.value })} />
-                                    </div>
-                                </div>
-                            </div>
+            <div className="px-8 max-w-7xl mx-auto">
+                {/* Tabs Navigation */}
+                <div className="flex space-x-6 border-b border-slate-200 mb-8 overflow-x-auto">
+                    {tabs.map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`flex items-center space-x-2 pb-4 px-2 border-b-2 font-medium transition-colors whitespace-nowrap
+                                ${activeTab === tab.id
+                                    ? 'border-primary-600 text-primary-700'
+                                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                                }`}
+                        >
+                            {tab.icon}
+                            <span>{tab.label}</span>
+                        </button>
+                    ))}
+                </div>
 
-                            <div>
-                                <h3 className="text-lg font-bold mb-4 flex items-center space-x-2 border-b pb-2">
-                                    <MapPin size={20} className="text-primary-500" />
-                                    <span>Dirección Fiscal</span>
-                                </h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="col-span-2">
-                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Calle / Dirección</label>
-                                        <input type="text" className="input-field" value={client.Calle || ''} onChange={e => setClient({ ...client, Calle: e.target.value })} />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Localidad</label>
-                                        <input type="text" className="input-field" value={client.Localidad || ''} onChange={e => setClient({ ...client, Localidad: e.target.value })} />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">CP</label>
-                                        <input type="text" className="input-field" value={client.Codigo_Postal || ''} onChange={e => setClient({ ...client, Codigo_Postal: e.target.value })} />
-                                    </div>
-                                    <div className="col-span-2">
-                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Provincia</label>
-                                        <input type="text" className="input-field" value={client.Provincia || ''} onChange={e => setClient({ ...client, Provincia: e.target.value })} />
-                                    </div>
-                                    <div className="col-span-2">
-                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Nº Explotación</label>
-                                        <input
-                                            type="text"
-                                            className="input-field"
-                                            value={client.Numero_Explotacion || ''}
-                                            onChange={e => setClient({ ...client, Numero_Explotacion: e.target.value })}
-                                            onBlur={() => updateCliente(dni, { Numero_Explotacion: client.Numero_Explotacion })}
-                                            placeholder="ES..."
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+                {/* Tab Content */}
+                <div className="animate-in fade-in duration-300 slide-in-from-bottom-2">
+                    {activeTab === 'general' && (
+                        <ResumenCliente
+                            client={client}
+                            setClient={setClient}
+                            onSave={handleUpdateClient}
+                        />
+                    )}
 
-                            <button onClick={handleUpdateClient} className="btn-primary w-full flex items-center justify-center space-x-2">
-                                <Save size={18} />
-                                <span>Guardar Cambios General</span>
-                            </button>
-                        </div>
+                    {activeTab === 'kit' && (
+                        <GestionKitDigital
+                            client={client}
+                            setClient={setClient}
+                            dni={dni}
+                            onUpdateKit={handleUpdateClient}
+                            onAddAcuerdo={handleAddAcuerdo}
+                            onToggleAcuerdo={handleToggleAcuerdo}
+                            onUpdateAcuerdo={handleUpdateAcuerdo}
+                            fetchData={fetchData}
+                        />
+                    )}
 
-                        {/* Summary Panel */}
-                        <div className="card space-y-6">
-                            <h3 className="text-lg font-bold mb-4 flex items-center space-x-2 border-b pb-2">
-                                <Gift size={20} className="text-primary-500" />
-                                <span>Resumen de Estado</span>
-                            </h3>
+                    {activeTab === 'nofence' && (
+                        <GestionNofence
+                            client={client}
+                            setClient={setClient}
+                            onUpdate={handleUpdateClient}
+                            dni={dni}
+                        />
+                    )}
 
-                            {/* Estado Global */}
-                            <div className="p-4 bg-primary-50 rounded-lg border border-primary-100">
-                                <div className="text-xs font-bold text-slate-400 uppercase mb-2">Estado Actual</div>
-                                <div className="text-2xl font-bold text-primary-700">{client.Estado}</div>
-                            </div>
-
-                            {/* Nofence Status Badge */}
-                            {client.Estado_Nofence && (
-                                <div className={`p-4 rounded-lg border-2 ${client.Estado_Nofence === 'Avisar a Nofence' ? 'bg-orange-50 border-orange-200' :
-                                    client.Estado_Nofence === 'Pago pendiente' ? 'bg-blue-50 border-blue-200' :
-                                        client.Estado_Nofence === 'Pago realizado' ? 'bg-green-50 border-green-200' :
-                                            'bg-purple-50 border-purple-200'
-                                    }`}>
-                                    <div className="space-y-3">
-                                        <div className="flex justify-between items-center">
-                                            <div>
-                                                <div className="text-xs font-bold text-slate-400 uppercase mb-1">Estado Nofence</div>
-                                                <div className={`text-lg font-bold ${client.Estado_Nofence === 'Avisar a Nofence' ? 'text-orange-700' :
-                                                    client.Estado_Nofence === 'Pago pendiente' ? 'text-blue-700' :
-                                                        client.Estado_Nofence === 'Pago realizado' ? 'text-green-700' :
-                                                            'text-purple-700'
-                                                    }`}>
-                                                    {client.Estado_Nofence}
-                                                </div>
-                                            </div>
-                                            {(() => {
-                                                try {
-                                                    const collarCount = client.Collares ? JSON.parse(client.Collares).length : 0;
-                                                    if (collarCount > 0) {
-                                                        return (
-                                                            <div className="text-right">
-                                                                <div className="text-2xl font-bold text-green-600">{collarCount}</div>
-                                                                <div className="text-[10px] font-bold text-slate-500 uppercase">Collares</div>
-                                                            </div>
-                                                        );
-                                                    }
-                                                } catch { }
-                                                return null;
-                                            })()}
-                                        </div>
-
-                                        {/* Payment Amount & Profit Calculation */}
-                                        {client.Importe_Nofence && (
-                                            <div className="pt-3 border-t border-slate-200">
-                                                <div className="grid grid-cols-3 gap-3">
-                                                    {/* Total con IVA */}
-                                                    <div>
-                                                        <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Facturado + IVA</div>
-                                                        <div className="text-sm font-bold text-slate-700">
-                                                            {(client.total_facturado * 1.21).toFixed(2)} €
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Pago Nofence */}
-                                                    <div>
-                                                        <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Pago Nofence</div>
-                                                        <div className="text-sm font-bold text-red-600">
-                                                            -{client.Importe_Nofence.toFixed(2)} €
-                                                        </div>
-                                                    </div>
-
-                                                    {/* Beneficio Final */}
-                                                    <div>
-                                                        <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Beneficio Neto</div>
-                                                        {(() => {
-                                                            // Beneficio = (Facturas * 1.21 + 100) - Importe_Nofence
-                                                            const ingresosConIVA = client.total_facturado * 1.21;
-                                                            const gastosGestion = 100;
-                                                            const beneficio = ingresosConIVA + gastosGestion - client.Importe_Nofence;
-
-                                                            return (
-                                                                <div className={`text-lg font-bold ${beneficio > 0 ? 'text-green-600' : 'text-red-600'
-                                                                    }`}>
-                                                                    {beneficio.toFixed(2)} €
-                                                                </div>
-                                                            );
-                                                        })()}
-                                                    </div>
-                                                </div>
-                                                <div className="text-[10px] text-slate-400 mt-2 italic">
-                                                    * Incluye IVA 21% + 100€ gastos gestión
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Next Critical Deadline */}
-                            {(() => {
-                                let deadline = null;
-                                let deadlineLabel = '';
-                                let deadlineType = '';
-
-                                // Determine next critical deadline based on state
-                                const hasInvoices = client.acuerdos?.some(a => a.facturas && a.facturas.length > 0);
-                                const hasSignedAgreements = client.acuerdos?.some(a => a.Firmado);
-                                const hasAgreements = client.acuerdos && client.acuerdos.length > 0;
-                                const hasPendingJustification = client.acuerdos?.some(a =>
-                                    a.facturas && a.facturas.length > 0 && a.Estado_Justificacion !== 'Justificada'
-                                );
-
-                                if (hasPendingJustification) {
-                                    // Priority 1: Justification deadline
-                                    const acuerdoWithJustif = client.acuerdos.find(a =>
-                                        a.facturas && a.facturas.length > 0 &&
-                                        a.Estado_Justificacion !== 'Justificada' &&
-                                        a.Fecha_Limite_Justificacion
-                                    );
-                                    if (acuerdoWithJustif) {
-                                        deadline = acuerdoWithJustif.Fecha_Limite_Justificacion;
-                                        deadlineLabel = 'Límite Justificación';
-                                        deadlineType = 'justification';
-                                    }
-                                } else if (hasSignedAgreements && !hasInvoices) {
-                                    // Priority 2: Invoice emission deadline
-                                    const acuerdoWithInvoiceDeadline = client.acuerdos.find(a =>
-                                        a.Firmado && a.Fecha_Limite_Factura
-                                    );
-                                    if (acuerdoWithInvoiceDeadline) {
-                                        deadline = acuerdoWithInvoiceDeadline.Fecha_Limite_Factura;
-                                        deadlineLabel = 'Límite Emisión Facturas';
-                                        deadlineType = 'invoice';
-                                    }
-                                } else if (client.Fecha_Limite_Acuerdos && !isKitCompleted) {
-                                    // Priority 3: Agreement signing deadline
-                                    deadline = client.Fecha_Limite_Acuerdos;
-                                    deadlineLabel = 'Límite Firma Acuerdos';
-                                    deadlineType = 'agreement';
-                                }
-
-                                if (deadline) {
-                                    const today = new Date();
-                                    const deadlineDate = new Date(deadline);
-                                    const daysUntil = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
-                                    const isUrgent = daysUntil <= 30;
-                                    const isOverdue = daysUntil < 0;
-
-                                    return (
-                                        <div className={`p-4 rounded-lg border-2 ${isOverdue ? 'bg-red-50 border-red-300' :
-                                            isUrgent ? 'bg-orange-50 border-orange-300' :
-                                                'bg-blue-50 border-blue-300'
-                                            }`}>
-                                            <div className="flex items-center justify-between">
-                                                <div>
-                                                    <div className="text-xs font-bold text-slate-400 uppercase mb-1">
-                                                        {deadlineLabel}
-                                                    </div>
-                                                    <div className={`text-lg font-bold ${isOverdue ? 'text-red-700' :
-                                                        isUrgent ? 'text-orange-700' :
-                                                            'text-blue-700'
-                                                        }`}>
-                                                        {formatDate(deadline)}
-                                                    </div>
-                                                </div>
-                                                <div className="text-right">
-                                                    <div className={`text-2xl font-bold ${isOverdue ? 'text-red-600' :
-                                                        isUrgent ? 'text-orange-600' :
-                                                            'text-blue-600'
-                                                        }`}>
-                                                        {isOverdue ? `¡${Math.abs(daysUntil)}d!` : `${daysUntil}d`}
-                                                    </div>
-                                                    <div className="text-[10px] font-bold text-slate-500 uppercase">
-                                                        {isOverdue ? 'Vencido' : 'Restantes'}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                }
-                                return null;
-                            })()}
-
-                            {/* Kit Digital Status */}
-                            <div>
-                                <h4 className="text-sm font-bold text-slate-700 uppercase mb-3 flex items-center">
-                                    <div className="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
-                                    Kit Digital
-                                </h4>
-                                <div className="space-y-2 pl-4">
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-slate-600">Número Bono:</span>
-                                        <span className="font-bold text-slate-900">{client.Numero_Bono || 'Pendiente'}</span>
-                                    </div>
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-slate-600">Importe:</span>
-                                        <span className="font-bold text-slate-900">{client.Importe_Bono ? `${client.Importe_Bono} €` : '-'}</span>
-                                    </div>
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-slate-600">Saldo Restante:</span>
-                                        <span className={`font-bold ${saldoRestante < 0 ? 'text-red-500' : (isKitCompleted ? 'text-green-600' : 'text-blue-600')}`}>
-                                            {saldoRestante.toFixed(2)} €
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Agreements Status */}
-                            <div>
-                                <h4 className="text-sm font-bold text-slate-700 uppercase mb-3 flex items-center">
-                                    <div className="w-2 h-2 rounded-full bg-purple-500 mr-2"></div>
-                                    Acuerdos ({client.acuerdos?.length || 0})
-                                </h4>
-                                {client.acuerdos && client.acuerdos.length > 0 ? (
-                                    <div className="space-y-3 pl-4">
-                                        {client.acuerdos.map((acuerdo, idx) => (
-                                            <div key={idx} className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <div className="flex items-center space-x-2">
-                                                        <span className="text-xs font-bold text-slate-700">
-                                                            {acuerdo.Numero_Acuerdo || `Acuerdo ${idx + 1}`}
-                                                        </span>
-                                                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${acuerdo.Tipo === 'GA' ? 'bg-teal-100 text-teal-700' : 'bg-indigo-100 text-indigo-700'}`}>
-                                                            {acuerdo.Tipo}
-                                                        </span>
-                                                    </div>
-                                                    <span className="text-xs font-bold text-slate-900">{acuerdo.Importe} €</span>
-                                                </div>
-                                                <div className="flex items-center justify-between space-x-2 text-[10px]">
-                                                    <div className="flex items-center space-x-2">
-                                                        <span className={`px-2 py-0.5 rounded-full font-bold ${acuerdo.Firmado ? 'bg-green-100 text-green-700' :
-                                                            acuerdo.Enviado ? 'bg-blue-100 text-blue-700' :
-                                                                acuerdo.Fecha_Aprobacion ? 'bg-purple-100 text-purple-700' :
-                                                                    'bg-slate-100 text-slate-500'
-                                                            }`}>
-                                                            {acuerdo.Firmado ? 'Firmado' :
-                                                                acuerdo.Enviado ? 'Enviado' :
-                                                                    acuerdo.Fecha_Aprobacion ? 'Aprobado' : 'Borrador'}
-                                                        </span>
-                                                        {acuerdo.facturas && acuerdo.facturas.length > 0 && (
-                                                            <span className={`px-2 py-0.5 rounded-full font-bold ${acuerdo.Estado_Justificacion === 'Justificada' ? 'bg-green-100 text-green-700' :
-                                                                acuerdo.Estado_Justificacion === 'Enviada para firma' ? 'bg-blue-100 text-blue-700' :
-                                                                    'bg-orange-100 text-orange-700'
-                                                                }`}>
-                                                                {acuerdo.Estado_Justificacion || 'Pend. Justif.'}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    {/* Quick Actions */}
-                                                    <div className="flex items-center space-x-1">
-                                                        {!acuerdo.Firmado && (
-                                                            <>
-                                                                {!acuerdo.Enviado ? (
-                                                                    <button
-                                                                        onClick={async () => {
-                                                                            await handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Enviado', acuerdo.Enviado);
-                                                                        }}
-                                                                        className="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded text-[10px] font-bold transition-colors flex items-center space-x-1"
-                                                                        title="Marcar como Enviado"
-                                                                    >
-                                                                        <Send size={12} />
-                                                                        <span>Enviar</span>
-                                                                    </button>
-                                                                ) : (
-                                                                    <button
-                                                                        onClick={async () => {
-                                                                            await handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Firmado', acuerdo.Firmado);
-                                                                        }}
-                                                                        className="px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-[10px] font-bold transition-colors flex items-center space-x-1"
-                                                                        title="Marcar como Firmado"
-                                                                    >
-                                                                        <PenTool size={12} />
-                                                                        <span>Firmar</span>
-                                                                    </button>
-                                                                )}
-                                                            </>
-                                                        )}
-                                                        {acuerdo.facturas && acuerdo.facturas.length > 0 && acuerdo.Estado_Justificacion !== 'Justificada' && (
-                                                            <select
-                                                                className="px-2 py-1 text-[10px] border border-slate-300 rounded bg-white font-bold cursor-pointer hover:border-primary-400"
-                                                                value={acuerdo.Estado_Justificacion || 'Pendiente de captura'}
-                                                                onChange={async (e) => {
-                                                                    await updateAcuerdo(acuerdo.Id_Acuerdo, { Estado_Justificacion: e.target.value });
-                                                                    fetchData();
-                                                                }}
-                                                                title="Cambiar estado de justificación"
-                                                            >
-                                                                <option value="Pendiente de captura">Pendiente</option>
-                                                                <option value="Enviada para firma">Enviada</option>
-                                                                <option value="Justificada">Justificada</option>
-                                                            </select>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-sm text-slate-400 italic pl-4">No hay acuerdos registrados</div>
-                                )}
-                            </div>
-
-                            {/* Total Facturado */}
-                            {client.total_facturado > 0 && (
-                                <div className="p-4 bg-green-50 rounded-lg border border-green-100">
-                                    <div className="text-xs font-bold text-slate-400 uppercase mb-1">Total Facturado</div>
-                                    <div className="text-xl font-bold text-green-700">{client.total_facturado?.toFixed(2)} €</div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                )}
-
-                {activeTab === 'kit' && (
-                    <div className="space-y-8">
-                        <div className={`card ${isKitCompleted ? 'bg-green-50/50 border-green-100' : 'bg-blue-50/50 border-blue-100'}`}>
-                            <div className="flex justify-between items-start mb-4">
-                                <h3 className={`text-lg font-bold ${isKitCompleted ? 'text-green-800' : 'text-blue-800'}`}>1. Bono Kit Digital</h3>
-                                <div className="text-right">
-                                    <div className="text-xs font-bold text-slate-400 uppercase">Saldo Restante</div>
-                                    <div className={`text-xl font-bold ${saldoRestante < 0 ? 'text-red-500' : (isKitCompleted ? 'text-green-600' : 'text-blue-600')}`}>
-                                        {saldoRestante.toFixed(2)} €
-                                    </div>
-                                </div>
-                            </div>
-
-                            <form onSubmit={handleUpdateKit} className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div>
-                                    <label className="block text-xs font-semibold uppercase mb-1 opacity-70 flex justify-between">
-                                        <span>Número Bono</span>
-                                        <span className="text-[10px] bg-primary-100 text-primary-700 px-2 rounded-full font-bold ml-2">
-                                            {client.Estado}
-                                        </span>
-                                    </label>
-                                    <input type="text" className="input-field bg-white/50" value={client.Numero_Bono || ''} onChange={e => setClient({ ...client, Numero_Bono: e.target.value })} placeholder="Ej: 2025/C022/..." />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-semibold uppercase mb-1 opacity-70">Importe Bono (€)</label>
-                                    <input type="number" step="0.01" className="input-field bg-white/50" value={client.Importe_Bono || ''} onChange={e => setClient({ ...client, Importe_Bono: parseFloat(e.target.value) })} />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-semibold uppercase mb-1 opacity-70">Fecha Aprobación</label>
-                                    <input type="date" className="input-field bg-white/50" value={client.Fecha_Aprobacion_Bono || ''} onChange={e => setClient({ ...client, Fecha_Aprobacion_Bono: e.target.value })} />
-                                </div>
-                                <div className="md:col-span-3 flex justify-end">
-                                    <button type="submit" className={`btn-primary py-1 px-4 text-sm ${isKitCompleted ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'}`}>Actualizar Bono</button>
-                                </div>
-                            </form>
-
-                            {client.Fecha_Limite_Acuerdos && (
-                                <div className={`mt-4 flex items-center text-sm p-2 rounded-lg border w-fit font-medium 
-                                    ${isKitCompleted
-                                        ? 'text-green-700 bg-green-100 border-green-200'
-                                        : 'text-orange-600 bg-orange-50 border-orange-100'}`}>
-
-                                    {isKitCompleted ? <CheckSquare size={16} className="mr-2" /> : <AlertTriangle size={16} className="mr-2" />}
-
-                                    {isKitCompleted
-                                        ? <span>Kit Digital Completado (Saldo Usado)</span>
-                                        : <span>Fecha Límite para firmar Acuerdos (6 meses): <span className="font-bold ml-1">{formatDate(client.Fecha_Limite_Acuerdos)}</span></span>
-                                    }
-                                </div>
-                            )}
-                        </div>
-
-                        <div>
-                            <div className="flex justify-between items-center mb-4 pt-6 border-t border-blue-100">
-                                <h3 className="text-lg font-bold text-slate-800">2. Acuerdos Asociados</h3>
-                                {(!client.acuerdos || client.acuerdos.length < 2) && (
-                                    <button onClick={() => setShowAcuerdoModal(true)} className="btn-secondary flex items-center space-x-2 text-sm">
-                                        <Plus size={16} />
-                                        <span>Nuevo Acuerdo</span>
-                                    </button>
-                                )}
-                            </div>
-
-                            <div className="grid grid-cols-1 gap-4">
-                                {client.acuerdos && client.acuerdos.map((acuerdo, idx) => (
-                                    <div key={idx} className="card border-l-4 border-l-purple-500 bg-white">
-                                        <div className="flex flex-col md:flex-row justify-between items-start mb-4 gap-4">
-                                            <div className="flex-1 w-full">
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <div>
-                                                        <div className="flex items-center space-x-2">
-                                                            <h4 className="text-sm font-bold text-slate-800">
-                                                                Acuerdo {acuerdo.Numero_Acuerdo || '(Sin número)'}
-                                                            </h4>
-                                                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${acuerdo.Tipo === 'GA' ? 'bg-teal-50 text-teal-700 border-teal-200' : 'bg-indigo-50 text-indigo-700 border-indigo-200'}`}>
-                                                                {acuerdo.Tipo || 'GA'}
-                                                            </span>
-                                                            <div className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${acuerdo.Firmado ? 'bg-green-100 text-green-700' :
-                                                                acuerdo.Enviado ? 'bg-blue-100 text-blue-700' :
-                                                                    acuerdo.Fecha_Aprobacion ? 'bg-purple-100 text-purple-700 border border-purple-200' :
-                                                                        'bg-slate-100 text-slate-500'
-                                                                }`}>
-                                                                {acuerdo.Firmado ? 'Firmado' :
-                                                                    acuerdo.Enviado ? 'Enviado' :
-                                                                        acuerdo.Fecha_Aprobacion ? 'Aprobado' : 'Borrador'}
-                                                            </div>
-                                                            {(!acuerdo.facturas || acuerdo.facturas.length === 0) && (
-                                                                <button
-                                                                    onClick={async (e) => {
-                                                                        e.stopPropagation();
-                                                                        if (confirm('¿Seguro que quieres eliminar este acuerdo?')) {
-                                                                            await deleteAcuerdo(acuerdo.Id_Acuerdo);
-                                                                            fetchData();
-                                                                        }
-                                                                    }}
-                                                                    className="text-slate-400 hover:text-red-500 transition-colors p-1"
-                                                                    title="Eliminar Acuerdo"
-                                                                >
-                                                                    <Trash2 size={14} />
-                                                                </button>
-                                                            )}
-                                                        </div>
-                                                        <div className="text-xs text-slate-500 font-medium">{acuerdo.Tipo === 'GA' ? 'Gestión Agronómica' : 'Gestión Cinegética'}</div>
-                                                    </div>
-                                                    <div className="text-right">
-                                                        <div className="text-sm font-bold text-slate-900">{acuerdo.Importe} €</div>
-                                                    </div>
-                                                </div>
-                                                {/* Editing Fields for Number/Date */}
-                                                {/* Editing Fields for Number/Date */}
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 bg-slate-50 p-3 rounded-md">
-                                                    <div>
-                                                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Nº Acuerdo</label>
-                                                        <div className="flex space-x-2">
-                                                            <input
-                                                                type="text"
-                                                                className="input-field text-sm py-1"
-                                                                defaultValue={acuerdo.Numero_Acuerdo || ''}
-                                                                id={`num-${acuerdo.Id_Acuerdo}`}
-                                                                placeholder="Pendiente..."
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Fecha Aprobación</label>
-                                                        <div className="flex space-x-2">
-                                                            <input
-                                                                type="date"
-                                                                className="input-field text-sm py-1"
-                                                                defaultValue={acuerdo.Fecha_Aprobacion || ''}
-                                                                id={`date-${acuerdo.Id_Acuerdo}`}
-                                                            />
-                                                            <button
-                                                                onClick={() => {
-                                                                    const num = document.getElementById(`num-${acuerdo.Id_Acuerdo}`).value;
-                                                                    const date = document.getElementById(`date-${acuerdo.Id_Acuerdo}`).value;
-                                                                    updateAcuerdo(acuerdo.Id_Acuerdo, { Numero_Acuerdo: num, Fecha_Aprobacion: date }).then(() => {
-                                                                        fetchData();
-                                                                        alert('Datos del acuerdo actualizados');
-                                                                    });
-                                                                }}
-                                                                className="bg-blue-600 text-white p-1 rounded hover:bg-blue-700"
-                                                                title="Guardar Nº y Fecha"
-                                                            >
-                                                                <Save size={16} />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex items-center space-x-4 mb-2">
-                                                    <div className="flex space-x-4 mt-2">
-                                                        <label className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg border cursor-pointer transition-colors ${acuerdo.Enviado ? 'bg-blue-50 border-blue-200 text-blue-700' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'}`}>
-                                                            <div className={`w-4 h-4 rounded border flex items-center justify-center ${acuerdo.Enviado ? 'bg-blue-600 border-blue-600' : 'border-slate-300 bg-white'}`}>
-                                                                {acuerdo.Enviado && <Check size={12} className="text-white" />}
-                                                            </div>
-                                                            <input
-                                                                type="checkbox"
-                                                                className="hidden"
-                                                                checked={!!acuerdo.Enviado}
-                                                                onChange={() => handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Enviado', acuerdo.Enviado)}
-                                                            />
-                                                            <span className="text-xs font-bold uppercase select-none">Enviado</span>
-                                                        </label>
-
-                                                        <label className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg border cursor-pointer transition-colors ${acuerdo.Firmado ? 'bg-green-50 border-green-200 text-green-700' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'}`}>
-                                                            <div className={`w-4 h-4 rounded border flex items-center justify-center ${acuerdo.Firmado ? 'bg-green-600 border-green-600' : 'border-slate-300 bg-white'}`}>
-                                                                {acuerdo.Firmado && <Check size={12} className="text-white" />}
-                                                            </div>
-                                                            <input
-                                                                type="checkbox"
-                                                                className="hidden"
-                                                                checked={!!acuerdo.Firmado}
-                                                                onChange={() => handleToggleAcuerdo(acuerdo.Id_Acuerdo, 'Firmado', acuerdo.Firmado)}
-                                                            />
-                                                            <span className="text-xs font-bold uppercase select-none">Firmado</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="text-right min-w-[150px]">
-                                                <div className="text-xs font-bold text-slate-400 uppercase">
-                                                    {acuerdo.facturas && acuerdo.facturas.length > 0 ? "Límite Justificación" : "Límite Facturación"}
-                                                </div>
-                                                <div className={`text-sm font-bold ${acuerdo.facturas && acuerdo.facturas.length > 0
-                                                    ? (acuerdo.Estado_Justificacion === 'Justificada' ? 'text-green-600' : 'text-red-600')
-                                                    : 'text-red-600'
-                                                    }`}>
-                                                    {acuerdo.facturas && acuerdo.facturas.length > 0
-                                                        ? formatDate(acuerdo.Fecha_Limite_Justificacion) || '---'
-                                                        : formatDate(acuerdo.Fecha_Limite_Factura) || '---'
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        {/* Justificación - Only if invoices exist */}
-                                        {acuerdo.facturas && acuerdo.facturas.length > 0 && (
-                                            <div className="mt-4 pt-4 border-t border-slate-100">
-                                                <div className="flex items-center justify-between">
-                                                    <div>
-                                                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Estado Justificación</label>
-                                                        <select
-                                                            className={`input-field font-bold py-1.5 text-xs ${!acuerdo.Estado_Justificacion || acuerdo.Estado_Justificacion === 'Pendiente de captura' ? 'text-orange-600 bg-orange-50 border-orange-200' :
-                                                                acuerdo.Estado_Justificacion === 'Enviada para firma' ? 'text-blue-600 bg-blue-50 border-blue-200' :
-                                                                    'text-green-600 bg-green-50 border-green-200'
-                                                                }`}
-                                                            value={acuerdo.Estado_Justificacion || 'Pendiente de captura'}
-                                                            onChange={async (e) => {
-                                                                await updateAcuerdo(acuerdo.Id_Acuerdo, { Estado_Justificacion: e.target.value });
-                                                                fetchData();
-                                                            }}
-                                                        >
-                                                            <option value="Pendiente de captura">Pendiente de captura</option>
-                                                            <option value="Enviada para firma">Enviada para firma</option>
-                                                            <option value="Justificada">Justificada</option>
-                                                        </select>
-                                                    </div>
-                                                    <div className="text-right">
-                                                        <div className="text-xs font-bold text-slate-400 uppercase">Estado Global</div>
-                                                        <div className="text-xs font-medium text-slate-600">
-                                                            {acuerdo.Estado_Justificacion || 'Pendiente'}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Facturas del acuerdo */}
-                                        <div className="bg-slate-50 p-4 rounded-lg">
-                                            <h5 className="text-xs font-bold text-slate-500 uppercase mb-2">Facturas de este Acuerdo</h5>
-                                            <InvoiceManager
-                                                dni={dni}
-                                                acuerdo={acuerdo}
-                                                onUpdate={fetchData}
-                                            />
-                                        </div>
-                                    </div>
-                                ))}
-                                {(!client.acuerdos || client.acuerdos.length === 0) && (
-                                    <div className="text-center p-8 border-2 border-dashed border-slate-200 rounded-xl text-slate-400">
-                                        No hay acuerdos registrados para este bono.
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-
-                {activeTab === 'nofence' && (
-                    <div className="card space-y-6">
-                        <h3 className="text-lg font-bold mb-6 flex items-center space-x-2 border-b pb-2">
-                            <Gift size={20} className="text-primary-500" />
-                            <span>Gestión Nofence</span>
-                        </h3>
-
-                        {/* Nofence Status */}
-                        <div className="card bg-slate-50">
-                            <h4 className="text-sm font-bold text-slate-700 uppercase mb-4 flex items-center">
-                                <div className="w-2 h-2 rounded-full bg-purple-500 mr-2"></div>
-                                Estado Nofence
-                            </h4>
-                            <div className="space-y-3">
-                                <select
-                                    className={`input-field font-bold text-sm ${!client.Estado_Nofence || client.Estado_Nofence === 'Avisar a Nofence' ? 'bg-orange-50 text-orange-700 border-orange-200' :
-                                        client.Estado_Nofence === 'Pago pendiente' ? 'bg-blue-50 text-blue-700 border-blue-200' :
-                                            client.Estado_Nofence === 'Pago realizado' ? 'bg-green-50 text-green-700 border-green-200' :
-                                                'bg-purple-50 text-purple-700 border-purple-200'
-                                        }`}
-                                    value={client.Estado_Nofence || ''}
-                                    onChange={async (e) => {
-                                        await updateCliente(dni, { Estado_Nofence: e.target.value });
-                                        fetchData();
-                                    }}
-                                >
-                                    <option value="">Sin estado</option>
-                                    <option value="Avisar a Nofence">Avisar a Nofence</option>
-                                    <option value="Pago pendiente">Pago pendiente</option>
-                                    <option value="Pago realizado">Pago realizado</option>
-                                    <option value="Fotos recibidas">Fotos recibidas</option>
-                                </select>
-
-                                {!client.Estado_Nofence && (
-                                    <div className="text-xs text-slate-400 italic">
-                                        El estado se establecerá automáticamente a "Avisar a Nofence" cuando se emita la primera factura.
-                                    </div>
-                                )}
-
-                                {/* Importe Nofence */}
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-600 uppercase mb-2">
-                                        Importe Pago Nofence (€)
-                                    </label>
-                                    <input
-                                        type="number"
-                                        step="0.01"
-                                        className="input-field"
-                                        placeholder="0.00"
-                                        value={client.Importe_Nofence || ''}
-                                        onChange={async (e) => {
-                                            const value = e.target.value ? parseFloat(e.target.value) : null;
-                                            await updateCliente(dni, { Importe_Nofence: value });
-                                            fetchData();
-                                        }}
-                                    />
-                                    <div className="text-xs text-slate-400 mt-1 italic">
-                                        Importe del pago realizado a Nofence para calcular beneficios
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Collares Management */}
-                        <div className="card bg-slate-50">
-                            <h4 className="text-sm font-bold text-slate-700 uppercase mb-4 flex items-center">
-                                <div className="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
-                                Collares ({(() => {
-                                    try {
-                                        return client.Collares ? JSON.parse(client.Collares).length : 0;
-                                    } catch {
-                                        return 0;
-                                    }
-                                })()})
-                            </h4>
-
-                            {/* Add Collar Form */}
-                            <div className="mb-4">
-                                <form onSubmit={async (e) => {
-                                    e.preventDefault();
-                                    if (!newCollar.trim()) return;
-
-                                    try {
-                                        let collares = [];
-                                        if (client.Collares) {
-                                            try {
-                                                collares = JSON.parse(client.Collares);
-                                            } catch (parseErr) {
-                                                console.error('Error parsing existing Collares:', parseErr);
-                                                collares = [];
-                                            }
-                                        }
-                                        collares.push(newCollar.trim());
-
-                                        const collaresString = JSON.stringify(collares);
-                                        console.log('Sending collares update:', collaresString);
-
-                                        const response = await updateCliente(dni, { Collares: collaresString });
-                                        console.log('Update response:', response);
-
-                                        setNewCollar('');
-                                        await fetchData();
-                                    } catch (err) {
-                                        console.error('Error adding collar:', err);
-                                        alert('Error al añadir collar: ' + (err.message || err));
-                                    }
-                                }} className="flex space-x-2">
-                                    <input
-                                        type="text"
-                                        className="input-field flex-1"
-                                        placeholder="Número de collar"
-                                        value={newCollar}
-                                        onChange={(e) => setNewCollar(e.target.value)}
-                                    />
-                                    <button type="submit" className="btn-primary flex items-center space-x-1 px-4">
-                                        <Plus size={16} />
-                                        <span>Añadir</span>
-                                    </button>
-                                </form>
-                            </div>
-
-                            {/* Collar List */}
-                            <div className="space-y-2">
-                                {(() => {
-                                    try {
-                                        const collares = client.Collares ? JSON.parse(client.Collares) : [];
-                                        if (collares.length === 0) {
-                                            return <div className="text-sm text-slate-400 italic">No hay collares registrados</div>;
-                                        }
-                                        return collares.map((collar, idx) => (
-                                            <div key={idx} className="flex justify-between items-center bg-white p-3 rounded-lg border border-slate-200">
-                                                <div className="flex items-center space-x-3">
-                                                    <div className="w-8 h-8 bg-green-100 text-green-700 rounded-full flex items-center justify-center font-bold text-xs">
-                                                        {idx + 1}
-                                                    </div>
-                                                    <span className="font-bold text-slate-800">{collar}</span>
-                                                </div>
-                                                <button
-                                                    onClick={async () => {
-                                                        if (!confirm(`¿Eliminar collar ${collar}?`)) return;
-                                                        try {
-                                                            let collares = JSON.parse(client.Collares);
-                                                            collares.splice(idx, 1);
-                                                            await updateCliente(dni, { Collares: JSON.stringify(collares) });
-                                                            fetchData();
-                                                        } catch (err) {
-                                                            console.error('Error removing collar:', err);
-                                                            alert('Error al eliminar collar');
-                                                        }
-                                                    }}
-                                                    className="text-red-500 hover:text-red-700 transition-colors p-1"
-                                                    title="Eliminar collar"
-                                                >
-                                                    <Trash2 size={16} />
-                                                </button>
-                                            </div>
-                                        ));
-                                    } catch (err) {
-                                        return <div className="text-sm text-red-500">Error al cargar collares</div>;
-                                    }
-                                })()}
-                            </div>
-                        </div>
-
-                        {/* Coordenadas GPS */}
-                        <div className="card bg-slate-50">
-                            <h4 className="text-sm font-bold text-slate-700 uppercase mb-4 flex items-center">
-                                <MapPin size={16} className="mr-2 text-blue-500" />
-                                Coordenadas GPS
-                            </h4>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-600 uppercase mb-2">Coord. X</label>
-                                    <input
-                                        type="number"
-                                        step="any"
-                                        className="input-field"
-                                        value={client.Coordenadas_X || ''}
-                                        onChange={e => setClient({ ...client, Coordenadas_X: parseFloat(e.target.value) })}
-                                        onBlur={() => updateCliente(dni, { Coordenadas_X: client.Coordenadas_X })}
-                                        placeholder="Latitud..."
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-600 uppercase mb-2">Coord. Y</label>
-                                    <input
-                                        type="number"
-                                        step="any"
-                                        className="input-field"
-                                        value={client.Coordenadas_Y || ''}
-                                        onChange={e => setClient({ ...client, Coordenadas_Y: parseFloat(e.target.value) })}
-                                        onBlur={() => updateCliente(dni, { Coordenadas_Y: client.Coordenadas_Y })}
-                                        placeholder="Longitud..."
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {activeTab === 'historial' && (
-                    <div className="card">
-                        <h3 className="text-lg font-bold mb-6 flex items-center space-x-2">
-                            <Clock size={20} className="text-primary-500" />
-                            <span>Historial del Cliente</span>
-                        </h3>
-
-                        <div className="relative border-l-2 border-slate-200 ml-3 space-y-8 pb-4">
-                            {/* Generator History List */}
-                            {(() => {
-                                const events = [];
-
-                                if (client.Fecha_Aprobacion_Bono) events.push({ date: client.Fecha_Aprobacion_Bono, title: 'Bono Kit Digital Aprobado', type: 'kit' });
-
-                                client.acuerdos?.forEach(a => {
-                                    if (a.Fecha_Envio) events.push({ date: a.Fecha_Envio, title: `Acuerdo ${a.Numero_Acuerdo || ''} Enviado`, type: 'acuerdo_envio' });
-                                    if (a.Fecha_Firma) events.push({ date: a.Fecha_Firma, title: `Acuerdo ${a.Numero_Acuerdo || ''} Firmado`, type: 'acuerdo_firma' });
-                                    if (a.Fecha_Aprobacion) events.push({ date: a.Fecha_Aprobacion, title: `Acuerdo ${a.Numero_Acuerdo || ''} Aprobado`, type: 'acuerdo_aprob' });
-
-                                    a.facturas?.forEach(f => {
-                                        if (f.Fecha_Emision) events.push({ date: f.Fecha_Emision, title: `Factura ${f.Numero_Factura_Real} Emitida`, type: 'factura_emision', amount: f.Importe });
-                                        if (f.Fecha_Pago) events.push({ date: f.Fecha_Pago, title: `Factura ${f.Numero_Factura_Real} Pagada`, type: 'factura_pago' });
-                                    });
-                                });
-
-                                // Sort descending
-                                events.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                                if (events.length === 0) return <div className="ml-6 text-slate-400 italic">No hay registros en el historial.</div>;
-
-                                return events.map((ev, idx) => (
-                                    <div key={idx} className="relative ml-6">
-                                        <div className={`absolute -left-[31px] bg-white border-2 w-4 h-4 rounded-full ${ev.type.includes('pago') ? 'border-green-500 bg-green-500' :
-                                            ev.type.includes('factura') ? 'border-purple-500' :
-                                                ev.type.includes('firma') ? 'border-blue-500 bg-blue-500' :
-                                                    'border-slate-400'
-                                            }`}></div>
-                                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center bg-slate-50 p-3 rounded-lg">
-                                            <div>
-                                                <span className="text-xs font-bold text-slate-400 block mb-1">{formatDate(ev.date)}</span>
-                                                <h4 className="text-sm font-bold text-slate-800">{ev.title}</h4>
-                                            </div>
-                                            {ev.amount && (
-                                                <div className="text-sm font-bold text-slate-900 mt-2 sm:mt-0">{ev.amount} €</div>
-                                            )}
-                                        </div>
-                                    </div>
-                                ));
-                            })()}
-                        </div>
-
-                        <div className="mt-8 pt-6 border-t border-slate-100">
-                            <h4 className="text-xs font-bold text-slate-400 uppercase mb-2">Estado Actual Calculado</h4>
-                            <div className="bg-primary-50 text-primary-800 p-4 rounded-xl text-center font-bold text-lg border border-primary-100">
-                                {client.Estado}
-                            </div>
-                        </div>
-                    </div>
-                )}
+                    {activeTab === 'historial' && (
+                        <Historial client={client} />
+                    )}
+                </div>
             </div>
-
-            {
-                showAcuerdoModal && (
-                    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                        <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
-                            <h3 className="text-lg font-bold mb-4">Añadir Nuevo Acuerdo</h3>
-                            <form onSubmit={handleAddAcuerdo} className="space-y-4">
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Tipo de Acuerdo</label>
-                                    <select className="input-field" value={newAcuerdo.Tipo} onChange={e => setNewAcuerdo({ ...newAcuerdo, Tipo: e.target.value })}>
-                                        <option value="GA">Gestión del Cambio (GA)</option>
-                                        <option value="GC">Gestión de Clientes (GC)</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Importe (€)</label>
-                                    <input required type="number" step="0.01" className="input-field" value={newAcuerdo.Importe} onChange={e => setNewAcuerdo({ ...newAcuerdo, Importe: parseFloat(e.target.value) })} />
-                                </div>
-
-                                <div className="bg-blue-50 p-3 rounded-lg text-xs text-blue-700">
-                                    <Info size={14} className="inline mr-1 mb-0.5" />
-                                    Podrás añadir el Nº de Acuerdo y la Fecha de Aprobación más tarde, una vez firmado.
-                                </div>
-
-                                <div className="flex space-x-3 pt-4">
-                                    <button type="button" onClick={() => setShowAcuerdoModal(false)} className="btn-secondary flex-1">Cancelar</button>
-                                    <button type="submit" className="btn-primary flex-1">Añadir</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                )
-            }
-        </div >
+        </div>
     );
 };
 
