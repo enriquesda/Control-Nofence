@@ -26,6 +26,8 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
 allowed_origins = [
     "http://localhost:5173",  # Local development
+    "http://localhost:5174",  # Local development (alternative port)
+    "http://localhost:5175",  # Local development (alternative port)
     frontend_url,  # Production (from environment variable)
 ]
 
@@ -126,6 +128,7 @@ class Cliente(BaseModel):
     Localidad: Optional[str] = None
     Provincia: Optional[str] = None
     Codigo_Postal: Optional[str] = None
+    Numero_Explotacion: Optional[str] = None  # New field
     
     Estado: Optional[str] = "Kit pedido"
     Estado_Nofence: Optional[str] = None 
@@ -135,6 +138,10 @@ class Cliente(BaseModel):
     Importe_Factura_Nofence: Optional[float] = None
     Importe_Cobrado_Cliente: Optional[float] = None
     Beneficio: Optional[float] = None
+    
+    # Coordenadas Nofence
+    Coordenadas_X: Optional[float] = None
+    Coordenadas_Y: Optional[float] = None
 
 class ClienteUpdate(BaseModel):
     Nombre: Optional[str] = None
@@ -144,8 +151,11 @@ class ClienteUpdate(BaseModel):
     Localidad: Optional[str] = None
     Provincia: Optional[str] = None
     Codigo_Postal: Optional[str] = None
+    Numero_Explotacion: Optional[str] = None
     Estado_Nofence: Optional[str] = None
     Importe_Nofence: Optional[float] = None
+    Coordenadas_X: Optional[float] = None
+    Coordenadas_Y: Optional[float] = None
     Collares: Optional[str] = None
     Pedido_Nofence: Optional[str] = None
     Importe_Factura_Nofence: Optional[float] = None

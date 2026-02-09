@@ -56,11 +56,15 @@ const ClientDetail = () => {
             Localidad: client.Localidad || null,
             Provincia: client.Provincia || null,
             Codigo_Postal: client.Codigo_Postal ? String(client.Codigo_Postal) : null,
+            Codigo_Postal: client.Codigo_Postal ? String(client.Codigo_Postal) : null,
+            Numero_Explotacion: client.Numero_Explotacion || null, // New field
             Estado_Nofence: client.Estado_Nofence || null,
             Pedido_Nofence: client.Pedido_Nofence || null,
             Importe_Factura_Nofence: parseOptionalFloat(client.Importe_Factura_Nofence),
             Importe_Cobrado_Cliente: parseOptionalFloat(client.Importe_Cobrado_Cliente),
-            Beneficio: parseOptionalFloat(client.Beneficio)
+            Beneficio: parseOptionalFloat(client.Beneficio),
+            Coordenadas_X: parseOptionalFloat(client.Coordenadas_X), // New field
+            Coordenadas_Y: parseOptionalFloat(client.Coordenadas_Y)  // New field
         };
 
         try {
@@ -211,6 +215,17 @@ const ClientDetail = () => {
                                         <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Provincia</label>
                                         <input type="text" className="input-field" value={client.Provincia || ''} onChange={e => setClient({ ...client, Provincia: e.target.value })} />
                                     </div>
+                                    <div className="col-span-2">
+                                        <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Nº Explotación</label>
+                                        <input
+                                            type="text"
+                                            className="input-field"
+                                            value={client.Numero_Explotacion || ''}
+                                            onChange={e => setClient({ ...client, Numero_Explotacion: e.target.value })}
+                                            onBlur={() => updateCliente(dni, { Numero_Explotacion: client.Numero_Explotacion })}
+                                            placeholder="ES..."
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -236,18 +251,18 @@ const ClientDetail = () => {
                             {/* Nofence Status Badge */}
                             {client.Estado_Nofence && (
                                 <div className={`p-4 rounded-lg border-2 ${client.Estado_Nofence === 'Avisar a Nofence' ? 'bg-orange-50 border-orange-200' :
-                                        client.Estado_Nofence === 'Pago pendiente' ? 'bg-blue-50 border-blue-200' :
-                                            client.Estado_Nofence === 'Pago realizado' ? 'bg-green-50 border-green-200' :
-                                                'bg-purple-50 border-purple-200'
+                                    client.Estado_Nofence === 'Pago pendiente' ? 'bg-blue-50 border-blue-200' :
+                                        client.Estado_Nofence === 'Pago realizado' ? 'bg-green-50 border-green-200' :
+                                            'bg-purple-50 border-purple-200'
                                     }`}>
                                     <div className="space-y-3">
                                         <div className="flex justify-between items-center">
                                             <div>
                                                 <div className="text-xs font-bold text-slate-400 uppercase mb-1">Estado Nofence</div>
                                                 <div className={`text-lg font-bold ${client.Estado_Nofence === 'Avisar a Nofence' ? 'text-orange-700' :
-                                                        client.Estado_Nofence === 'Pago pendiente' ? 'text-blue-700' :
-                                                            client.Estado_Nofence === 'Pago realizado' ? 'text-green-700' :
-                                                                'text-purple-700'
+                                                    client.Estado_Nofence === 'Pago pendiente' ? 'text-blue-700' :
+                                                        client.Estado_Nofence === 'Pago realizado' ? 'text-green-700' :
+                                                            'text-purple-700'
                                                     }`}>
                                                     {client.Estado_Nofence}
                                                 </div>
@@ -942,6 +957,40 @@ const ClientDetail = () => {
                                         return <div className="text-sm text-red-500">Error al cargar collares</div>;
                                     }
                                 })()}
+                            </div>
+                        </div>
+
+                        {/* Coordenadas GPS */}
+                        <div className="card bg-slate-50">
+                            <h4 className="text-sm font-bold text-slate-700 uppercase mb-4 flex items-center">
+                                <MapPin size={16} className="mr-2 text-blue-500" />
+                                Coordenadas GPS
+                            </h4>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-600 uppercase mb-2">Coord. X</label>
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        className="input-field"
+                                        value={client.Coordenadas_X || ''}
+                                        onChange={e => setClient({ ...client, Coordenadas_X: parseFloat(e.target.value) })}
+                                        onBlur={() => updateCliente(dni, { Coordenadas_X: client.Coordenadas_X })}
+                                        placeholder="Latitud..."
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-600 uppercase mb-2">Coord. Y</label>
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        className="input-field"
+                                        value={client.Coordenadas_Y || ''}
+                                        onChange={e => setClient({ ...client, Coordenadas_Y: parseFloat(e.target.value) })}
+                                        onBlur={() => updateCliente(dni, { Coordenadas_Y: client.Coordenadas_Y })}
+                                        placeholder="Longitud..."
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
