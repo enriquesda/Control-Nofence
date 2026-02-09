@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getClientes, updateCliente, addAcuerdo, updateAcuerdo, deleteAcuerdo } from "../api";
+import { getClientes, updateCliente, updateKit, addAcuerdo, updateAcuerdo, deleteAcuerdo } from "../api";
 import { ArrowLeft, User, Gift, Clock, MapPin } from 'lucide-react';
 import Button from "./ui/Button";
 import Badge from "./ui/Badge";
@@ -38,11 +38,87 @@ const ClientDetail = () => {
         fetchData();
     }, [dni]);
 
-    const handleUpdateClient = async (e) => {
-        if (e) e.preventDefault();
-        await updateCliente(dni, client);
-        fetchData();
-        alert('Datos actualizados correctamente');
+    // Fields allowed in ClienteUpdate model (backend/models.py)
+    const ALLOWED_CLIENT_FIELDS = [
+        'Nombre', 'Telefono', 'Email', 'Calle', 'Localidad', 'Provincia', 'Codigo_Postal', 'Numero_Explotacion',
+        'Estado_Nofence', 'Importe_Nofence', 'Coordenadas_X', 'Coordenadas_Y', 'Collares',
+        'Pedido_Nofence', 'Importe_Factura_Nofence', 'Importe_Cobrado_Cliente', 'Beneficio'
+    ];
+
+    const handleUpdateClient = async (e, specificUpdates = null) => {
+        if (e && e.preventDefault) e.preventDefault();
+
+        const fullData = specificUpdates ? { ...client, ...specificUpdates } : client;
+
+        // Sanitize payload to only include allowed fields
+        const dataToSave = {};
+        ALLOWED_CLIENT_FIELDS.forEach(field => {
+            if (fullData[field] !== undefined) {
+                let val = fullData[field];
+
+                // STRICT Sanitization for Numeric Fields
+                if (field.includes('Importe') || field.includes('Coordenadas') || field === 'Beneficio') {
+                    // Check for empty string, null, or invalid number
+                    if (val === '' || val === null || val === undefined || isNaN(Number(val))) {
+                        val = null;
+                    } else {
+                        val = parseFloat(val);
+                    }
+                }
+                // STRICT Sanitization for JSON Strings (Collares)
+                else if (field === 'Collares') {
+                    if (Array.isArray(val)) {
+                        val = JSON.stringify(val);
+                    } else if (typeof val !== 'string' && val !== null) {
+                        val = JSON.stringify(val); // Safety net
+                    }
+                }
+                // STRICT Sanitization for Text Fields (Force String)
+                else if (['Nombre', 'Telefono', 'Email', 'Calle', 'Localidad', 'Provincia', 'Codigo_Postal', 'Numero_Explotacion', 'Estado_Nofence', 'Pedido_Nofence'].includes(field)) {
+                    if (val !== null && val !== undefined) {
+                        val = String(val);
+                    }
+                }
+
+                dataToSave[field] = val;
+            }
+        });
+
+        console.log("Saving Client Data:", dataToSave);
+
+        try {
+            await updateCliente(dni, dataToSave);
+            fetchData();
+            if (!specificUpdates) alert('Datos de cliente actualizados correctamente');
+        } catch (error) {
+            console.error("Error updating client:", error);
+            // Detailed error for debugging
+            const errorMsg = error.response?.data?.detail
+                ? JSON.stringify(error.response.data.detail)
+                : error.message;
+            alert(`Error al actualizar datos (422): ${errorMsg}`);
+        }
+    };
+
+    // Handler specifically for Kit Digital / Bono updates
+    const handleUpdateKit = async (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+
+        // Extract Kit fields from client state
+        const kitData = {
+            Numero_Bono: client.Numero_Bono,
+            Importe_Bono: client.Importe_Bono,
+            Fecha_Aprobacion_Bono: client.Fecha_Aprobacion_Bono
+        };
+
+        try {
+            await updateKit(dni, kitData);
+            fetchData();
+            alert('Datos del Bono actualizados correctamente');
+        } catch (error) {
+            console.error("Error updating Kit:", error);
+            alert('Error al actualizar Bono Kit Digital');
+        }
     };
 
     // --- AGREEMENT HANDLERS ---
@@ -147,7 +223,7 @@ const ClientDetail = () => {
                             client={client}
                             setClient={setClient}
                             dni={dni}
-                            onUpdateKit={handleUpdateClient}
+                            onUpdateKit={handleUpdateKit} // Use specific Kit handler
                             onAddAcuerdo={handleAddAcuerdo}
                             onToggleAcuerdo={handleToggleAcuerdo}
                             onUpdateAcuerdo={handleUpdateAcuerdo}

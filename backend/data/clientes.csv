@@ -1,6 +1,6 @@
 Dni,Nombre,Telefono,Email,Calle,Localidad,Provincia,Codigo_Postal,Estado,Estado_Nofence,Pedido_Nofence,Importe_Factura_Nofence,Importe_Cobrado_Cliente,Beneficio,Collares,Importe_Nofence,Numero_Explotacion,Coordenadas_X,Coordenadas_Y
-12345678A,Juan Perez,600112233,juan@example.com,,,,Kit aprobado,Justificado,Pendiente de avisar,,,,,,,,,
+12345678A,Juan Perez,600112233,juan@example.com,,,,Kit aprobado,Justificado,,,,,,"[""123""]",100.0,,,
 07256443N,Enrique Ambrona Valverde,655492798,enriquealbuera60@gmail.com,francisco alvarez gomez,La albuera,Badajoz,06170,Justificado,Fotos recibidas,,,,,"[""765685"",""967857"",""078967""]",2897.0,,,
 0723462754,k hufhisadgfiohas,8739674,jfag@fioha.es,Francisco ALasjkd,La Albuera,Badajoz,06170,Justificado,Fotos recibidas,,,,,"[""213"",""123"",""123""]",3000.0,EsEnrique,89374672.0,234234.0
 747082390,uui diasudoi a,32798462,3242@kjfoak.com,,,,,Justificado,Fotos recibidas,,,,,"[""5675"",""234234"",""23424""]",3000.0,,,
-093827402934,Final enirque,1252345352,nfsid@fnos,heofwuibfjnñ,dasda,123412421,2342,Factura pagada,Avisar a Nofence,,,,,,,Es30289u2,,
+093827402934,Final enirque,1252345352,nfsid@fnos,heofwuibfjnñ,dasda,123412421,2342,Factura pagada,Pago pendiente,,,,,"[""324"",""34453"",""243""]",3000.0,Es30289u2,23.32423,324.2342
