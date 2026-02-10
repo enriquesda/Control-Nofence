@@ -17,6 +17,7 @@ from models import (
     Factura, FacturaUpdate
 )
 from logic import recalcular_estados
+import generate_client_csv
 
 app = FastAPI(title="CRM Control Nofence")
 
@@ -309,6 +310,35 @@ def update_acuerdo(id_acuerdo: str, update: AcuerdoUpdate):
     save_csv(df_a, ACUERDOS_CSV)
     recalcular_estados()
     return {"message": "Acuerdo actualizado"}
+
+from fastapi.responses import FileResponse, JSONResponse
+
+@app.post("/api/automation/generate-client-csv")
+def run_client_csv_generation():
+    try:
+        result = generate_client_csv.main()
+        if result and result.get("status") == "success":
+            file_path = result.get("file")
+            if file_path and os.path.exists(file_path):
+                # Return the file as a downloadable attachment
+                return FileResponse(
+                    path=file_path, 
+                    filename="clientes_filtrados.csv", 
+                    media_type='text/csv'
+                )
+            else:
+                 return JSONResponse(status_code=404, content={"status": "error", "message": "File not found after generation."})
+        else:
+            # If main returns None (e.g. early return in script), construct a message
+            # logic in generate_client_csv might return None if checks fail, 
+            # let's Ensure generate_client_csv always returns a dict or handle None.
+            return JSONResponse(
+                status_code=200, 
+                content={"status": "info", "message": "Proceso completado, pero no se generaron datos (ver logs server)."}
+            )
+    except Exception as e:
+        print(f"Error executing automation: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn

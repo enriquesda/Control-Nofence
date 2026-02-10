@@ -106,6 +106,7 @@ const ClientDetail = () => {
 
         // Extract Kit fields from client state
         const kitData = {
+            Dni: dni,
             Numero_Bono: client.Numero_Bono,
             Importe_Bono: client.Importe_Bono,
             Fecha_Aprobacion_Bono: client.Fecha_Aprobacion_Bono
@@ -131,8 +132,8 @@ const ClientDetail = () => {
         }
     };
 
-    const handleToggleAcuerdo = async (idAcuerdo, field, currentValue) => {
-        const newValue = !currentValue;
+    const handleToggleAcuerdo = async (idAcuerdo, field, targetValue) => {
+        const newValue = targetValue;
         const payload = { [field]: newValue };
 
         // Set date automatically if checked

@@ -1,0 +1,341 @@
+INFO:     Started server process [36676]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+Starting client CSV generation...
+Generated CSV at: /Users/ventumidc/Documents/trabajo/Control Nofence/backend/data/clientes_filtrados.csv
+            Nombre completo                    correo  ... IMPORTE  fecha Pago
+0  Enrique Ambrona Valverde  enriquealbuera@gmail.com  ...  3000.0  19-12-2025
+
+[1 rows x 11 columns]
+INFO:     127.0.0.1:52976 - "POST /api/automation/generate-client-csv HTTP/1.1" 200 OK
+Starting client CSV generation...
+Generated CSV at: /Users/ventumidc/Documents/trabajo/Control Nofence/backend/data/clientes_filtrados.csv
+            Nombre completo                    correo  ... IMPORTE  fecha Pago
+0  Enrique Ambrona Valverde  enriquealbuera@gmail.com  ...  3000.0  19-12-2025
+
+[1 rows x 11 columns]
+INFO:     127.0.0.1:53200 - "POST /api/automation/generate-client-csv HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54048 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54048 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54048 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54048 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54071 - "OPTIONS /api/clientes/8833079K/acuerdos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54071 - "POST /api/clientes/8833079K/acuerdos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54071 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54086 - "OPTIONS /api/clientes/8833079K/factura HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54086 - "POST /api/clientes/8833079K/factura HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54086 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54086 - "OPTIONS /api/clientes/8833079K HTTP/1.1" 200 OK
+DEBUG: Updating client 8833079K with data: {'Estado_Nofence': 'Avisar a Nofence'}
+DEBUG: Setting Estado_Nofence = Avisar a Nofence
+DEBUG: Saved CSV. Client 8833079K now has Collares: nan
+INFO:     127.0.0.1:54086 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54086 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54103 - "POST /api/clientes/8833079K/acuerdos HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54103 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54110 - "POST /api/clientes/8833079K/factura HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54110 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54110 - "GET /api/clientes HTTP/1.1" 200 OK
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': None, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = alicia guisado macedo
+DEBUG: Setting Telefono = 678543243
+DEBUG: Setting Email = aliciaguisado@gmail.com
+DEBUG: Setting Calle = En su casa 
+DEBUG: Setting Localidad = Alburquerque
+DEBUG: Setting Provincia = Badajoz
+DEBUG: Setting Codigo_Postal = 3298
+DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = None
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 8833079K now has Collares: None
+INFO:     127.0.0.1:54112 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54112 - "GET /api/clientes HTTP/1.1" 200 OK
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 2997.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = alicia guisado macedo
+DEBUG: Setting Telefono = 678543243
+DEBUG: Setting Email = aliciaguisado@gmail.com
+DEBUG: Setting Calle = En su casa 
+DEBUG: Setting Localidad = Alburquerque
+DEBUG: Setting Provincia = Badajoz
+DEBUG: Setting Codigo_Postal = 3298
+DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 2997.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 8833079K now has Collares: None
+INFO:     127.0.0.1:54114 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54114 - "GET /api/clientes HTTP/1.1" 200 OK
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 2997.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = alicia guisado macedo
+DEBUG: Setting Telefono = 678543243
+DEBUG: Setting Email = aliciaguisado@gmail.com
+DEBUG: Setting Calle = En su casa 
+DEBUG: Setting Localidad = Alburquerque
+DEBUG: Setting Provincia = Badajoz
+DEBUG: Setting Codigo_Postal = 3298
+DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 2997.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 8833079K now has Collares: None
+INFO:     127.0.0.1:54114 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54114 - "GET /api/clientes HTTP/1.1" 200 OK
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = alicia guisado macedo
+DEBUG: Setting Telefono = 678543243
+DEBUG: Setting Email = aliciaguisado@gmail.com
+DEBUG: Setting Calle = En su casa 
+DEBUG: Setting Localidad = Alburquerque
+DEBUG: Setting Provincia = Badajoz
+DEBUG: Setting Codigo_Postal = 3298
+DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 8833079K now has Collares: None
+INFO:     127.0.0.1:54117 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54117 - "GET /api/clientes HTTP/1.1" 200 OK
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = alicia guisado macedo
+DEBUG: Setting Telefono = 678543243
+DEBUG: Setting Email = aliciaguisado@gmail.com
+DEBUG: Setting Calle = En su casa 
+DEBUG: Setting Localidad = Alburquerque
+DEBUG: Setting Provincia = Badajoz
+DEBUG: Setting Codigo_Postal = 3298
+DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 8833079K now has Collares: None
+INFO:     127.0.0.1:54117 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54117 - "GET /api/clientes HTTP/1.1" 200 OK
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': '["4356"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = alicia guisado macedo
+DEBUG: Setting Telefono = 678543243
+DEBUG: Setting Email = aliciaguisado@gmail.com
+DEBUG: Setting Calle = En su casa 
+DEBUG: Setting Localidad = Alburquerque
+DEBUG: Setting Provincia = Badajoz
+DEBUG: Setting Codigo_Postal = 3298
+DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = ["4356"]
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 8833079K now has Collares: ["4356"]
+INFO:     127.0.0.1:54120 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54120 - "GET /api/clientes HTTP/1.1" 200 OK
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': '["4356","675"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = alicia guisado macedo
+DEBUG: Setting Telefono = 678543243
+DEBUG: Setting Email = aliciaguisado@gmail.com
+DEBUG: Setting Calle = En su casa 
+DEBUG: Setting Localidad = Alburquerque
+DEBUG: Setting Provincia = Badajoz
+DEBUG: Setting Codigo_Postal = 3298
+DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = ["4356","675"]
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 8833079K now has Collares: ["4356","675"]
+INFO:     127.0.0.1:54120 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54120 - "GET /api/clientes HTTP/1.1" 200 OK
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': '["4356","675","678"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = alicia guisado macedo
+DEBUG: Setting Telefono = 678543243
+DEBUG: Setting Email = aliciaguisado@gmail.com
+DEBUG: Setting Calle = En su casa 
+DEBUG: Setting Localidad = Alburquerque
+DEBUG: Setting Provincia = Badajoz
+DEBUG: Setting Codigo_Postal = 3298
+DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = ["4356","675","678"]
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 8833079K now has Collares: ["4356","675","678"]
+INFO:     127.0.0.1:54120 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54120 - "GET /api/clientes HTTP/1.1" 200 OK
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': 43.76789, 'Coordenadas_Y': None, 'Collares': '["4356","675","678"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = alicia guisado macedo
+DEBUG: Setting Telefono = 678543243
+DEBUG: Setting Email = aliciaguisado@gmail.com
+DEBUG: Setting Calle = En su casa 
+DEBUG: Setting Localidad = Alburquerque
+DEBUG: Setting Provincia = Badajoz
+DEBUG: Setting Codigo_Postal = 3298
+DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = 43.76789
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = ["4356","675","678"]
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 8833079K now has Collares: ["4356","675","678"]
+INFO:     127.0.0.1:54128 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54128 - "GET /api/clientes HTTP/1.1" 200 OK
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
+  df_c.at[idx, key] = value
+DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': 43.76789, 'Coordenadas_Y': 39.0, 'Collares': '["4356","675","678"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = alicia guisado macedo
+DEBUG: Setting Telefono = 678543243
+DEBUG: Setting Email = aliciaguisado@gmail.com
+DEBUG: Setting Calle = En su casa 
+DEBUG: Setting Localidad = Alburquerque
+DEBUG: Setting Provincia = Badajoz
+DEBUG: Setting Codigo_Postal = 3298
+DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = 43.76789
+DEBUG: Setting Coordenadas_Y = 39.0
+DEBUG: Setting Collares = ["4356","675","678"]
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 8833079K now has Collares: ["4356","675","678"]
+INFO:     127.0.0.1:54130 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54130 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54130 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54130 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54130 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54130 - "GET /api/clientes HTTP/1.1" 200 OK
+Starting client CSV generation...
+Generated CSV at: /Users/ventumidc/Documents/trabajo/Control Nofence/backend/data/clientes_filtrados.csv
+            Nombre completo                    correo  ... IMPORTE  fecha Pago
+0  Enrique Ambrona Valverde  enriquealbuera@gmail.com  ...  3000.0  19-12-2025
+1     alicia guisado macedo   aliciaguisado@gmail.com  ...  3000.0  11-02-2026
+
+[2 rows x 11 columns]
+INFO:     127.0.0.1:54130 - "POST /api/automation/generate-client-csv HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54156 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54156 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54167 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54167 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54167 - "OPTIONS /api/acuerdos/baa48106 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54167 - "PATCH /api/acuerdos/baa48106 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54167 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54167 - "OPTIONS /api/acuerdos/c33eb010 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54167 - "PATCH /api/acuerdos/c33eb010 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54167 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54170 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54170 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54176 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54176 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54207 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54207 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54227 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54227 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54227 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54227 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54238 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54238 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54274 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54274 - "GET /api/clientes HTTP/1.1" 200 OK
+Starting client CSV generation...
+Generated CSV at: /Users/ventumidc/Documents/trabajo/Control Nofence/backend/data/clientes_filtrados.csv
+            Nombre completo                    correo  ... IMPORTE  fecha Pago
+0  Enrique Ambrona Valverde  enriquealbuera@gmail.com  ...  3000.0  19-12-2025
+1     alicia guisado macedo   aliciaguisado@gmail.com  ...  3000.0  11-02-2026
+
+[2 rows x 11 columns]
+INFO:     127.0.0.1:54279 - "POST /api/automation/generate-client-csv HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54542 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54542 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54542 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54542 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54547 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54547 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54549 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54549 - "GET /api/clientes HTTP/1.1" 200 OK

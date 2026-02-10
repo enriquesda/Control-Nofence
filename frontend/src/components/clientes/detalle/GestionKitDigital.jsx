@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Gift, CheckSquare, AlertTriangle, Send, PenTool, Plus, Save } from 'lucide-react';
+import { Gift, CheckSquare, Square, AlertTriangle, Send, PenTool, Plus, Save } from 'lucide-react';
 import Card from '../../ui/Card';
 import Button from '../../ui/Button';
 import Input from '../../ui/Input';
@@ -18,7 +18,14 @@ const GestionKitDigital = ({
     dni
 }) => {
     const [showAcuerdoModal, setShowAcuerdoModal] = useState(false);
-    const [newAcuerdo, setNewAcuerdo] = useState({ Numero_Acuerdo: '', Tipo: 'GA', Importe: 0, Fecha_Aprobacion: '' });
+    const [newAcuerdo, setNewAcuerdo] = useState({
+        Numero_Acuerdo: '',
+        Tipo: 'GA',
+        Importe: 0,
+        Fecha_Aprobacion: '',
+        Enviado: true,
+        Fecha_Envio: new Date().toISOString().split('T')[0]
+    });
 
     // Local state for inline editing of agreements
     const [editingAcuerdo, setEditingAcuerdo] = useState(null);
@@ -33,6 +40,14 @@ const GestionKitDigital = ({
         e.preventDefault();
         onAddAcuerdo(newAcuerdo);
         setShowAcuerdoModal(false);
+        setNewAcuerdo({
+            Numero_Acuerdo: '',
+            Tipo: 'GA',
+            Importe: 0,
+            Fecha_Aprobacion: '',
+            Enviado: true,
+            Fecha_Envio: new Date().toISOString().split('T')[0]
+        });
     };
 
     const handleUpdateAcuerdoDetails = async (idAcuerdo, details) => {
@@ -170,7 +185,7 @@ const GestionKitDigital = ({
                                         {acuerdo.Enviado ? (
                                             <button onClick={() => onToggleAcuerdo(acuerdo.Id_Acuerdo, 'Enviado', false)} className="flex items-center hover:text-red-500 transition-colors" title="Desmarcar"><CheckSquare size={14} className="mr-1" /> Enviado</button>
                                         ) : (
-                                            <button onClick={() => onToggleAcuerdo(acuerdo.Id_Acuerdo, 'Enviado', true)} className="text-blue-600 underline decoration-blue-300 hover:text-blue-800">Marcar Enviado</button>
+                                            <button onClick={() => onToggleAcuerdo(acuerdo.Id_Acuerdo, 'Enviado', true)} className="flex items-center hover:text-blue-600 transition-colors" title="Marcar Enviado"><Square size={14} className="mr-1" /> Enviado</button>
                                         )}
                                     </div>
                                     {acuerdo.Fecha_Envio && <span className="text-[10px] text-slate-500">{formatDate(acuerdo.Fecha_Envio)}</span>}
@@ -182,7 +197,7 @@ const GestionKitDigital = ({
                                         {acuerdo.Firmado ? (
                                             <button onClick={() => onToggleAcuerdo(acuerdo.Id_Acuerdo, 'Firmado', false)} className="flex items-center hover:text-red-500 transition-colors" title="Desmarcar"><CheckSquare size={14} className="mr-1" /> Firmado</button>
                                         ) : (
-                                            <button onClick={() => onToggleAcuerdo(acuerdo.Id_Acuerdo, 'Firmado', true)} className="text-blue-600 underline decoration-blue-300 hover:text-blue-800">Marcar Firmado</button>
+                                            <button onClick={() => onToggleAcuerdo(acuerdo.Id_Acuerdo, 'Firmado', true)} className="flex items-center hover:text-blue-600 transition-colors" title="Marcar Firmado"><Square size={14} className="mr-1" /> Firmado</button>
                                         )}
                                     </div>
                                     {acuerdo.Fecha_Firma && <span className="text-[10px] text-slate-500">{formatDate(acuerdo.Fecha_Firma)}</span>}
