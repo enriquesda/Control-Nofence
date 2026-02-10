@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, HTTPException, Request, status, UploadFile, File
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -338,6 +338,35 @@ def run_client_csv_generation():
             )
     except Exception as e:
         print(f"Error executing automation: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/automation/preview-import")
+async def preview_import_endpoint(file: UploadFile = File(...)):
+    if not file.filename.endswith('.csv'):
+        raise HTTPException(status_code=400, detail="Invalid file type. Please upload a CSV.")
+    
+    try:
+        content = await file.read()
+        import import_clients
+        result = import_clients.preview_import(content)
+        return result
+    except Exception as e:
+        print(f"Error previewing import: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/automation/confirm-import")
+def confirm_import_endpoint(data: dict):
+    # data expected to have "clients" list
+    clients_data = data.get("clients", [])
+    if not clients_data:
+        raise HTTPException(status_code=400, detail="No client data provided for import.")
+    
+    try:
+        import import_clients
+        result = import_clients.execute_import(clients_data)
+        return result
+    except Exception as e:
+        print(f"Error executing import: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":

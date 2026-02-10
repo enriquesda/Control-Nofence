@@ -1,55 +1,39 @@
-INFO:     Started server process [36676]
+INFO:     Started server process [40278]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-Starting client CSV generation...
-Generated CSV at: /Users/ventumidc/Documents/trabajo/Control Nofence/backend/data/clientes_filtrados.csv
-            Nombre completo                    correo  ... IMPORTE  fecha Pago
-0  Enrique Ambrona Valverde  enriquealbuera@gmail.com  ...  3000.0  19-12-2025
-
-[1 rows x 11 columns]
-INFO:     127.0.0.1:52976 - "POST /api/automation/generate-client-csv HTTP/1.1" 200 OK
-Starting client CSV generation...
-Generated CSV at: /Users/ventumidc/Documents/trabajo/Control Nofence/backend/data/clientes_filtrados.csv
-            Nombre completo                    correo  ... IMPORTE  fecha Pago
-0  Enrique Ambrona Valverde  enriquealbuera@gmail.com  ...  3000.0  19-12-2025
-
-[1 rows x 11 columns]
-INFO:     127.0.0.1:53200 - "POST /api/automation/generate-client-csv HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54048 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54048 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54048 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54048 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54071 - "OPTIONS /api/clientes/8833079K/acuerdos HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54071 - "POST /api/clientes/8833079K/acuerdos HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54071 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54086 - "OPTIONS /api/clientes/8833079K/factura HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54086 - "POST /api/clientes/8833079K/factura HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54086 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54086 - "OPTIONS /api/clientes/8833079K HTTP/1.1" 200 OK
-DEBUG: Updating client 8833079K with data: {'Estado_Nofence': 'Avisar a Nofence'}
-DEBUG: Setting Estado_Nofence = Avisar a Nofence
-DEBUG: Saved CSV. Client 8833079K now has Collares: nan
-INFO:     127.0.0.1:54086 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54086 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54103 - "POST /api/clientes/8833079K/acuerdos HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54103 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54110 - "POST /api/clientes/8833079K/factura HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54110 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54110 - "GET /api/clientes HTTP/1.1" 200 OK
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': None, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
-DEBUG: Setting Nombre = alicia guisado macedo
-DEBUG: Setting Telefono = 678543243
-DEBUG: Setting Email = aliciaguisado@gmail.com
-DEBUG: Setting Calle = En su casa 
-DEBUG: Setting Localidad = Alburquerque
-DEBUG: Setting Provincia = Badajoz
-DEBUG: Setting Codigo_Postal = 3298
-DEBUG: Setting Numero_Explotacion = ES289374829
+ERROR:    [Errno 48] error while attempting to bind on address ('0.0.0.0INFO:     127.0.0.1:55595 - "POST /api/automation/preview-import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55600 - "OPTIONS /api/automation/confirm-import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55600 - "POST /api/automation/confirm-import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55600 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55603 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55612 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55614 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55614 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55612 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55612 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55614 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55929 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55931 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55984 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55986 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55989 - "OPTIONS /api/acuerdos/108d8769 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55989 - "PATCH /api/acuerdos/108d8769 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55990 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55990 - "PATCH /api/acuerdos/108d8769 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55989 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55989 - "OPTIONS /api/acuerdos/9a7d4529 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55989 - "PATCH /api/acuerdos/9a7d4529 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55990 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55993 - "OPTIONS /api/clientes/72457643F HTTP/1.1" 200 OK
+DEBUG: Updating client 72457643F with data: {'Nombre': 'Eñaut Balerdi Azpeitia', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': None, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Eñaut Balerdi Azpeitia
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
 DEBUG: Setting Estado_Nofence = Collares pedidos
 DEBUG: Setting Importe_Nofence = None
 DEBUG: Setting Coordenadas_X = None
@@ -59,72 +43,18 @@ DEBUG: Setting Pedido_Nofence = None
 DEBUG: Setting Importe_Factura_Nofence = None
 DEBUG: Setting Importe_Cobrado_Cliente = None
 DEBUG: Setting Beneficio = None
-DEBUG: Saved CSV. Client 8833079K now has Collares: None
-INFO:     127.0.0.1:54112 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54112 - "GET /api/clientes HTTP/1.1" 200 OK
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 2997.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
-DEBUG: Setting Nombre = alicia guisado macedo
-DEBUG: Setting Telefono = 678543243
-DEBUG: Setting Email = aliciaguisado@gmail.com
-DEBUG: Setting Calle = En su casa 
-DEBUG: Setting Localidad = Alburquerque
-DEBUG: Setting Provincia = Badajoz
-DEBUG: Setting Codigo_Postal = 3298
-DEBUG: Setting Numero_Explotacion = ES289374829
-DEBUG: Setting Estado_Nofence = Collares pedidos
-DEBUG: Setting Importe_Nofence = 2997.0
-DEBUG: Setting Coordenadas_X = None
-DEBUG: Setting Coordenadas_Y = None
-DEBUG: Setting Collares = None
-DEBUG: Setting Pedido_Nofence = None
-DEBUG: Setting Importe_Factura_Nofence = None
-DEBUG: Setting Importe_Cobrado_Cliente = None
-DEBUG: Setting Beneficio = None
-DEBUG: Saved CSV. Client 8833079K now has Collares: None
-INFO:     127.0.0.1:54114 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54114 - "GET /api/clientes HTTP/1.1" 200 OK
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 2997.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
-DEBUG: Setting Nombre = alicia guisado macedo
-DEBUG: Setting Telefono = 678543243
-DEBUG: Setting Email = aliciaguisado@gmail.com
-DEBUG: Setting Calle = En su casa 
-DEBUG: Setting Localidad = Alburquerque
-DEBUG: Setting Provincia = Badajoz
-DEBUG: Setting Codigo_Postal = 3298
-DEBUG: Setting Numero_Explotacion = ES289374829
-DEBUG: Setting Estado_Nofence = Collares pedidos
-DEBUG: Setting Importe_Nofence = 2997.0
-DEBUG: Setting Coordenadas_X = None
-DEBUG: Setting Coordenadas_Y = None
-DEBUG: Setting Collares = None
-DEBUG: Setting Pedido_Nofence = None
-DEBUG: Setting Importe_Factura_Nofence = None
-DEBUG: Setting Importe_Cobrado_Cliente = None
-DEBUG: Setting Beneficio = None
-DEBUG: Saved CSV. Client 8833079K now has Collares: None
-INFO:     127.0.0.1:54114 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54114 - "GET /api/clientes HTTP/1.1" 200 OK
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
-DEBUG: Setting Nombre = alicia guisado macedo
-DEBUG: Setting Telefono = 678543243
-DEBUG: Setting Email = aliciaguisado@gmail.com
-DEBUG: Setting Calle = En su casa 
-DEBUG: Setting Localidad = Alburquerque
-DEBUG: Setting Provincia = Badajoz
-DEBUG: Setting Codigo_Postal = 3298
-DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Saved CSV. Client 72457643F now has Collares: None
+INFO:     127.0.0.1:55993 - "PATCH /api/clientes/72457643F HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55993 - "GET /api/clientes HTTP/1.1" 200 OK
+DEBUG: Updating client 72457643F with data: {'Nombre': 'Eñaut Balerdi Azpeitia', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Eñaut Balerdi Azpeitia
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
 DEBUG: Setting Estado_Nofence = Collares pedidos
 DEBUG: Setting Importe_Nofence = 3000.0
 DEBUG: Setting Coordenadas_X = None
@@ -134,22 +64,18 @@ DEBUG: Setting Pedido_Nofence = None
 DEBUG: Setting Importe_Factura_Nofence = None
 DEBUG: Setting Importe_Cobrado_Cliente = None
 DEBUG: Setting Beneficio = None
-DEBUG: Saved CSV. Client 8833079K now has Collares: None
-INFO:     127.0.0.1:54117 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54117 - "GET /api/clientes HTTP/1.1" 200 OK
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
-DEBUG: Setting Nombre = alicia guisado macedo
-DEBUG: Setting Telefono = 678543243
-DEBUG: Setting Email = aliciaguisado@gmail.com
-DEBUG: Setting Calle = En su casa 
-DEBUG: Setting Localidad = Alburquerque
-DEBUG: Setting Provincia = Badajoz
-DEBUG: Setting Codigo_Postal = 3298
-DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Saved CSV. Client 72457643F now has Collares: None
+INFO:     127.0.0.1:55993 - "PATCH /api/clientes/72457643F HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55993 - "GET /api/clientes HTTP/1.1" 200 OK
+DEBUG: Updating client 72457643F with data: {'Nombre': 'Eñaut Balerdi Azpeitia', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Eñaut Balerdi Azpeitia
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
 DEBUG: Setting Estado_Nofence = Collares pedidos
 DEBUG: Setting Importe_Nofence = 3000.0
 DEBUG: Setting Coordenadas_X = None
@@ -159,183 +85,333 @@ DEBUG: Setting Pedido_Nofence = None
 DEBUG: Setting Importe_Factura_Nofence = None
 DEBUG: Setting Importe_Cobrado_Cliente = None
 DEBUG: Setting Beneficio = None
-DEBUG: Saved CSV. Client 8833079K now has Collares: None
-INFO:     127.0.0.1:54117 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54117 - "GET /api/clientes HTTP/1.1" 200 OK
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': '["4356"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
-DEBUG: Setting Nombre = alicia guisado macedo
-DEBUG: Setting Telefono = 678543243
-DEBUG: Setting Email = aliciaguisado@gmail.com
-DEBUG: Setting Calle = En su casa 
-DEBUG: Setting Localidad = Alburquerque
-DEBUG: Setting Provincia = Badajoz
-DEBUG: Setting Codigo_Postal = 3298
-DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Saved CSV. Client 72457643F now has Collares: None
+INFO:     127.0.0.1:55993 - "PATCH /api/clientes/72457643F HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55993 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55993 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55998 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56000 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56002 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56002 - "OPTIONS /api/acuerdos/3481a3a0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56002 - "PATCH /api/acuerdos/3481a3a0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56000 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56000 - "OPTIONS /api/acuerdos/b4ab7a6e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56000 - "PATCH /api/acuerdos/b4ab7a6e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56002 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56007 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56009 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56011 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56013 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56013 - "OPTIONS /api/clientes/75548854H HTTP/1.1" 200 OK
+DEBUG: Updating client 75548854H with data: {'Nombre': 'Sebastian Vaz Padilla', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': None, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Sebastian Vaz Padilla
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = None
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 75548854H now has Collares: None
+INFO:     127.0.0.1:56013 - "PATCH /api/clientes/75548854H HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56013 - "GET /api/clientes HTTP/1.1" 200 OK
+DEBUG: Updating client 75548854H with data: {'Nombre': 'Sebastian Vaz Padilla', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Sebastian Vaz Padilla
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
 DEBUG: Setting Estado_Nofence = Collares pedidos
 DEBUG: Setting Importe_Nofence = 3000.0
 DEBUG: Setting Coordenadas_X = None
 DEBUG: Setting Coordenadas_Y = None
-DEBUG: Setting Collares = ["4356"]
+DEBUG: Setting Collares = None
 DEBUG: Setting Pedido_Nofence = None
 DEBUG: Setting Importe_Factura_Nofence = None
 DEBUG: Setting Importe_Cobrado_Cliente = None
 DEBUG: Setting Beneficio = None
-DEBUG: Saved CSV. Client 8833079K now has Collares: ["4356"]
-INFO:     127.0.0.1:54120 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54120 - "GET /api/clientes HTTP/1.1" 200 OK
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': '["4356","675"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
-DEBUG: Setting Nombre = alicia guisado macedo
-DEBUG: Setting Telefono = 678543243
-DEBUG: Setting Email = aliciaguisado@gmail.com
-DEBUG: Setting Calle = En su casa 
-DEBUG: Setting Localidad = Alburquerque
-DEBUG: Setting Provincia = Badajoz
-DEBUG: Setting Codigo_Postal = 3298
-DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Saved CSV. Client 75548854H now has Collares: None
+INFO:     127.0.0.1:56013 - "PATCH /api/clientes/75548854H HTTP/1.1" 200 OK
+DEBUG: Updating client 75548854H with data: {'Nombre': 'Sebastian Vaz Padilla', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Sebastian Vaz Padilla
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
 DEBUG: Setting Estado_Nofence = Collares pedidos
 DEBUG: Setting Importe_Nofence = 3000.0
 DEBUG: Setting Coordenadas_X = None
 DEBUG: Setting Coordenadas_Y = None
-DEBUG: Setting Collares = ["4356","675"]
+DEBUG: Setting Collares = None
 DEBUG: Setting Pedido_Nofence = None
 DEBUG: Setting Importe_Factura_Nofence = None
 DEBUG: Setting Importe_Cobrado_Cliente = None
 DEBUG: Setting Beneficio = None
-DEBUG: Saved CSV. Client 8833079K now has Collares: ["4356","675"]
-INFO:     127.0.0.1:54120 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54120 - "GET /api/clientes HTTP/1.1" 200 OK
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': '["4356","675","678"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
-DEBUG: Setting Nombre = alicia guisado macedo
-DEBUG: Setting Telefono = 678543243
-DEBUG: Setting Email = aliciaguisado@gmail.com
-DEBUG: Setting Calle = En su casa 
-DEBUG: Setting Localidad = Alburquerque
-DEBUG: Setting Provincia = Badajoz
-DEBUG: Setting Codigo_Postal = 3298
-DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Saved CSV. Client 75548854H now has Collares: None
+INFO:     127.0.0.1:56016 - "PATCH /api/clientes/75548854H HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56013 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56016 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56016 - "OPTIONS /api/acuerdos/26d5e78e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56016 - "PATCH /api/acuerdos/26d5e78e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56020 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56020 - "OPTIONS /api/acuerdos/10a3fe90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56020 - "PATCH /api/acuerdos/10a3fe90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56016 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56016 - "PATCH /api/acuerdos/10a3fe90 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56020 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56020 - "PATCH /api/acuerdos/26d5e78e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56016 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56016 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56020 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56023 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56025 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56025 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56023 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56028 - "OPTIONS /api/acuerdos/f650dd8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56028 - "PATCH /api/acuerdos/f650dd8f HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56029 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56029 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56028 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56028 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56029 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56029 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56028 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56028 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56029 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56036 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56038 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56038 - "OPTIONS /api/acuerdos/6f306195 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56038 - "PATCH /api/acuerdos/6f306195 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56040 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56040 - "OPTIONS /api/acuerdos/e0f59a05 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56040 - "PATCH /api/acuerdos/e0f59a05 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56038 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56043 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56045 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56050 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56052 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56055 - "OPTIONS /api/acuerdos/45feb6dd HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56055 - "PATCH /api/acuerdos/45feb6dd HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56056 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56056 - "OPTIONS /api/acuerdos/078bb1e2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56056 - "PATCH /api/acuerdos/078bb1e2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56055 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56055 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56056 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56056 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56055 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56062 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56064 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56067 - "OPTIONS /api/acuerdos/84b50617 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56067 - "PATCH /api/acuerdos/84b50617 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56068 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56071 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56073 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56075 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56077 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56081 - "OPTIONS /api/acuerdos/1792da9e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56081 - "PATCH /api/acuerdos/1792da9e HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56082 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56086 - "OPTIONS /api/clientes/25356814G HTTP/1.1" 200 OK
+DEBUG: Updating client 25356814G with data: {'Nombre': 'OCTAVIO GASCON MAZA', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': None, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = OCTAVIO GASCON MAZA
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = None
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 25356814G now has Collares: None
+INFO:     127.0.0.1:56086 - "PATCH /api/clientes/25356814G HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56086 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56086 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56088 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56092 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56094 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56098 - "OPTIONS /api/acuerdos/ca6d5cb1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56098 - "PATCH /api/acuerdos/ca6d5cb1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56099 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56099 - "OPTIONS /api/acuerdos/ff60d787 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56099 - "PATCH /api/acuerdos/ff60d787 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56098 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56098 - "OPTIONS /api/clientes/70813018C HTTP/1.1" 200 OK
+DEBUG: Updating client 70813018C with data: {'Nombre': 'JULIA BLAZQUEZ NAVARRO', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': None, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = JULIA BLAZQUEZ NAVARRO
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = None
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 70813018C now has Collares: None
+INFO:     127.0.0.1:56098 - "PATCH /api/clientes/70813018C HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56098 - "GET /api/clientes HTTP/1.1" 200 OK
+DEBUG: Updating client 70813018C with data: {'Nombre': 'JULIA BLAZQUEZ NAVARRO', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = JULIA BLAZQUEZ NAVARRO
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
 DEBUG: Setting Estado_Nofence = Collares pedidos
 DEBUG: Setting Importe_Nofence = 3000.0
 DEBUG: Setting Coordenadas_X = None
 DEBUG: Setting Coordenadas_Y = None
-DEBUG: Setting Collares = ["4356","675","678"]
+DEBUG: Setting Collares = None
 DEBUG: Setting Pedido_Nofence = None
 DEBUG: Setting Importe_Factura_Nofence = None
 DEBUG: Setting Importe_Cobrado_Cliente = None
 DEBUG: Setting Beneficio = None
-DEBUG: Saved CSV. Client 8833079K now has Collares: ["4356","675","678"]
-INFO:     127.0.0.1:54120 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54120 - "GET /api/clientes HTTP/1.1" 200 OK
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': 43.76789, 'Coordenadas_Y': None, 'Collares': '["4356","675","678"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
-DEBUG: Setting Nombre = alicia guisado macedo
-DEBUG: Setting Telefono = 678543243
-DEBUG: Setting Email = aliciaguisado@gmail.com
-DEBUG: Setting Calle = En su casa 
-DEBUG: Setting Localidad = Alburquerque
-DEBUG: Setting Provincia = Badajoz
-DEBUG: Setting Codigo_Postal = 3298
-DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Saved CSV. Client 70813018C now has Collares: None
+INFO:     127.0.0.1:56098 - "PATCH /api/clientes/70813018C HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56098 - "GET /api/clientes HTTP/1.1" 200 OK
+DEBUG: Updating client 70813018C with data: {'Nombre': 'JULIA BLAZQUEZ NAVARRO', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = JULIA BLAZQUEZ NAVARRO
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
 DEBUG: Setting Estado_Nofence = Collares pedidos
 DEBUG: Setting Importe_Nofence = 3000.0
-DEBUG: Setting Coordenadas_X = 43.76789
+DEBUG: Setting Coordenadas_X = None
 DEBUG: Setting Coordenadas_Y = None
-DEBUG: Setting Collares = ["4356","675","678"]
+DEBUG: Setting Collares = None
 DEBUG: Setting Pedido_Nofence = None
 DEBUG: Setting Importe_Factura_Nofence = None
 DEBUG: Setting Importe_Cobrado_Cliente = None
 DEBUG: Setting Beneficio = None
-DEBUG: Saved CSV. Client 8833079K now has Collares: ["4356","675","678"]
-INFO:     127.0.0.1:54128 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54128 - "GET /api/clientes HTTP/1.1" 200 OK
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '678543243' has dtype incompatible with int64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:273: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise an error in a future version of pandas. Value '3298' has dtype incompatible with float64, please explicitly cast to a compatible dtype first.
-  df_c.at[idx, key] = value
-DEBUG: Updating client 8833079K with data: {'Nombre': 'alicia guisado macedo', 'Telefono': '678543243', 'Email': 'aliciaguisado@gmail.com', 'Calle': 'En su casa ', 'Localidad': 'Alburquerque', 'Provincia': 'Badajoz', 'Codigo_Postal': '3298', 'Numero_Explotacion': 'ES289374829', 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': 43.76789, 'Coordenadas_Y': 39.0, 'Collares': '["4356","675","678"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
-DEBUG: Setting Nombre = alicia guisado macedo
-DEBUG: Setting Telefono = 678543243
-DEBUG: Setting Email = aliciaguisado@gmail.com
-DEBUG: Setting Calle = En su casa 
-DEBUG: Setting Localidad = Alburquerque
-DEBUG: Setting Provincia = Badajoz
-DEBUG: Setting Codigo_Postal = 3298
-DEBUG: Setting Numero_Explotacion = ES289374829
+DEBUG: Saved CSV. Client 70813018C now has Collares: None
+INFO:     127.0.0.1:56101 - "PATCH /api/clientes/70813018C HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56101 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56101 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56098 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56106 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56108 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56108 - "OPTIONS /api/acuerdos/1a559812 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56108 - "PATCH /api/acuerdos/1a559812 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56110 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56110 - "OPTIONS /api/acuerdos/3a3b98b8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56110 - "PATCH /api/acuerdos/3a3b98b8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56108 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56108 - "PATCH /api/acuerdos/3a3b98b8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56110 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56115 - "PATCH /api/acuerdos/1a559812 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56116 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56116 - "PATCH /api/acuerdos/3a3b98b8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56115 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56115 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56116 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56118 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56120 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56127 - "OPTIONS /api/acuerdos/db5d16c7 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56127 - "PATCH /api/acuerdos/db5d16c7 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56128 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56128 - "OPTIONS /api/acuerdos/635ad8f0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56128 - "PATCH /api/acuerdos/635ad8f0 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56127 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56130 - "OPTIONS /api/clientes/18465113T HTTP/1.1" 200 OK
+DEBUG: Updating client 18465113T with data: {'Nombre': 'ESTELA CERON VALDES', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': None, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = ESTELA CERON VALDES
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = None
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 18465113T now has Collares: None
+INFO:     127.0.0.1:56130 - "PATCH /api/clientes/18465113T HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56130 - "GET /api/clientes HTTP/1.1" 200 OK
+DEBUG: Updating client 18465113T with data: {'Nombre': 'ESTELA CERON VALDES', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = ESTELA CERON VALDES
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
 DEBUG: Setting Estado_Nofence = Collares pedidos
 DEBUG: Setting Importe_Nofence = 3000.0
-DEBUG: Setting Coordenadas_X = 43.76789
-DEBUG: Setting Coordenadas_Y = 39.0
-DEBUG: Setting Collares = ["4356","675","678"]
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
 DEBUG: Setting Pedido_Nofence = None
 DEBUG: Setting Importe_Factura_Nofence = None
 DEBUG: Setting Importe_Cobrado_Cliente = None
 DEBUG: Setting Beneficio = None
-DEBUG: Saved CSV. Client 8833079K now has Collares: ["4356","675","678"]
-INFO:     127.0.0.1:54130 - "PATCH /api/clientes/8833079K HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54130 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54130 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54130 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54130 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54130 - "GET /api/clientes HTTP/1.1" 200 OK
-Starting client CSV generation...
-Generated CSV at: /Users/ventumidc/Documents/trabajo/Control Nofence/backend/data/clientes_filtrados.csv
-            Nombre completo                    correo  ... IMPORTE  fecha Pago
-0  Enrique Ambrona Valverde  enriquealbuera@gmail.com  ...  3000.0  19-12-2025
-1     alicia guisado macedo   aliciaguisado@gmail.com  ...  3000.0  11-02-2026
-
-[2 rows x 11 columns]
-INFO:     127.0.0.1:54130 - "POST /api/automation/generate-client-csv HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54156 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54156 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54167 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54167 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54167 - "OPTIONS /api/acuerdos/baa48106 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54167 - "PATCH /api/acuerdos/baa48106 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54167 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54167 - "OPTIONS /api/acuerdos/c33eb010 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54167 - "PATCH /api/acuerdos/c33eb010 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54167 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54170 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54170 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54176 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54176 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54207 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54207 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54227 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54227 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54227 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54227 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54238 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54238 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54274 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54274 - "GET /api/clientes HTTP/1.1" 200 OK
-Starting client CSV generation...
-Generated CSV at: /Users/ventumidc/Documents/trabajo/Control Nofence/backend/data/clientes_filtrados.csv
-            Nombre completo                    correo  ... IMPORTE  fecha Pago
-0  Enrique Ambrona Valverde  enriquealbuera@gmail.com  ...  3000.0  19-12-2025
-1     alicia guisado macedo   aliciaguisado@gmail.com  ...  3000.0  11-02-2026
-
-[2 rows x 11 columns]
-INFO:     127.0.0.1:54279 - "POST /api/automation/generate-client-csv HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54542 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54542 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54542 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54542 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54547 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54547 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54549 - "GET /api/clientes HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54549 - "GET /api/clientes HTTP/1.1" 200 OK
+DEBUG: Saved CSV. Client 18465113T now has Collares: None
+INFO:     127.0.0.1:56130 - "PATCH /api/clientes/18465113T HTTP/1.1" 200 OK
+DEBUG: Updating client 18465113T with data: {'Nombre': 'ESTELA CERON VALDES', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = ESTELA CERON VALDES
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 18465113T now has Collares: None
+INFO:     127.0.0.1:56132 - "PATCH /api/clientes/18465113T HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56130 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56132 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56132 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56130 - "GET /api/clientes HTTP/1.1" 200 OK

@@ -33,7 +33,9 @@ const ClientList = () => {
     };
 
     const filtered = clientes.filter(c => {
-        const matchesSearch = c.Nombre.toLowerCase().includes(search.toLowerCase()) || c.Dni.toLowerCase().includes(search.toLowerCase());
+        const nombreMatch = (c.Nombre || '').toLowerCase().includes(search.toLowerCase());
+        const dniMatch = (c.Dni || '').toLowerCase().includes(search.toLowerCase());
+        const matchesSearch = nombreMatch || dniMatch;
         const matchesFilter = filterEstado === 'Todos' || c.Estado === filterEstado;
         return matchesSearch && matchesFilter;
     });
