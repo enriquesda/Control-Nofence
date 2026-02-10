@@ -415,3 +415,228 @@ INFO:     127.0.0.1:56130 - "GET /api/clientes HTTP/1.1" 200 OK
 INFO:     127.0.0.1:56132 - "GET /api/clientes HTTP/1.1" 200 OK
 INFO:     127.0.0.1:56132 - "GET /api/clientes HTTP/1.1" 200 OK
 INFO:     127.0.0.1:56130 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56140 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56142 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56142 - "OPTIONS /api/acuerdos/ebb7a6b3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56142 - "PATCH /api/acuerdos/ebb7a6b3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56140 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56140 - "OPTIONS /api/acuerdos/93714e30 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56140 - "PATCH /api/acuerdos/93714e30 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56142 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56149 - "OPTIONS /api/clientes/18442289S HTTP/1.1" 200 OK
+DEBUG: Updating client 18442289S with data: {'Nombre': 'Javier Gómez Gómez', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': None, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Javier Gómez Gómez
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = None
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 18442289S now has Collares: None
+INFO:     127.0.0.1:56149 - "PATCH /api/clientes/18442289S HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56149 - "GET /api/clientes HTTP/1.1" 200 OK
+DEBUG: Updating client 18442289S with data: {'Nombre': 'Javier Gómez Gómez', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Javier Gómez Gómez
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 18442289S now has Collares: None
+INFO:     127.0.0.1:56149 - "PATCH /api/clientes/18442289S HTTP/1.1" 200 OK
+DEBUG: Updating client 18442289S with data: {'Nombre': 'Javier Gómez Gómez', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Javier Gómez Gómez
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 18442289S now has Collares: None
+INFO:     127.0.0.1:56151 - "PATCH /api/clientes/18442289S HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56149 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56151 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56153 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56155 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56159 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56161 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56164 - "OPTIONS /api/acuerdos/f6a9e799 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56164 - "PATCH /api/acuerdos/f6a9e799 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56165 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56165 - "OPTIONS /api/acuerdos/ae3cc7cf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56165 - "PATCH /api/acuerdos/ae3cc7cf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56164 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56164 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56165 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56165 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56164 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56172 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56174 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56198 - "OPTIONS /api/clientes HTTP/1.1" 200 OK
+/Users/ventumidc/Documents/trabajo/Control Nofence/backend/main.py:182: FutureWarning: The behavior of DataFrame concatenation with empty or all-NA entries is deprecated. In a future version, this will no longer exclude empty or all-NA columns when determining the result dtypes. To retain the old behavior, exclude the relevant entries before the concat operation.
+  df_c = pd.concat([df_c, new_row], ignore_index=True)
+INFO:     127.0.0.1:56198 - "POST /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56198 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56198 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56200 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56208 - "OPTIONS /api/clientes/04614174P/kit HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56208 - "PUT /api/clientes/04614174P/kit HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56208 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56217 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56219 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56223 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56225 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56225 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56223 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56230 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56232 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56234 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56236 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56242 - "OPTIONS /api/clientes/08797133R HTTP/1.1" 200 OK
+DEBUG: Updating client 08797133R with data: {'Nombre': 'Fernando Alonso Jaraquemada Ovando', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': None, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Fernando Alonso Jaraquemada Ovando
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = None
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 08797133R now has Collares: None
+INFO:     127.0.0.1:56242 - "PATCH /api/clientes/08797133R HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56242 - "GET /api/clientes HTTP/1.1" 200 OK
+DEBUG: Updating client 08797133R with data: {'Nombre': 'Fernando Alonso Jaraquemada Ovando', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': None, 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Fernando Alonso Jaraquemada Ovando
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = None
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 08797133R now has Collares: None
+INFO:     127.0.0.1:56242 - "PATCH /api/clientes/08797133R HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56242 - "GET /api/clientes HTTP/1.1" 200 OK
+DEBUG: Updating client 08797133R with data: {'Nombre': 'Fernando Alonso Jaraquemada Ovando', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': '["232"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Fernando Alonso Jaraquemada Ovando
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = ["232"]
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 08797133R now has Collares: ["232"]
+INFO:     127.0.0.1:56242 - "PATCH /api/clientes/08797133R HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56242 - "GET /api/clientes HTTP/1.1" 200 OK
+DEBUG: Updating client 08797133R with data: {'Nombre': 'Fernando Alonso Jaraquemada Ovando', 'Telefono': None, 'Email': None, 'Calle': None, 'Localidad': None, 'Provincia': None, 'Codigo_Postal': None, 'Numero_Explotacion': None, 'Estado_Nofence': 'Collares pedidos', 'Importe_Nofence': 3000.0, 'Coordenadas_X': None, 'Coordenadas_Y': None, 'Collares': '["232","234"]', 'Pedido_Nofence': None, 'Importe_Factura_Nofence': None, 'Importe_Cobrado_Cliente': None, 'Beneficio': None}
+DEBUG: Setting Nombre = Fernando Alonso Jaraquemada Ovando
+DEBUG: Setting Telefono = None
+DEBUG: Setting Email = None
+DEBUG: Setting Calle = None
+DEBUG: Setting Localidad = None
+DEBUG: Setting Provincia = None
+DEBUG: Setting Codigo_Postal = None
+DEBUG: Setting Numero_Explotacion = None
+DEBUG: Setting Estado_Nofence = Collares pedidos
+DEBUG: Setting Importe_Nofence = 3000.0
+DEBUG: Setting Coordenadas_X = None
+DEBUG: Setting Coordenadas_Y = None
+DEBUG: Setting Collares = ["232","234"]
+DEBUG: Setting Pedido_Nofence = None
+DEBUG: Setting Importe_Factura_Nofence = None
+DEBUG: Setting Importe_Cobrado_Cliente = None
+DEBUG: Setting Beneficio = None
+DEBUG: Saved CSV. Client 08797133R now has Collares: ["232","234"]
+INFO:     127.0.0.1:56242 - "PATCH /api/clientes/08797133R HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56242 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56250 - "POST /api/automation/preview-import HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56252 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56254 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56254 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56252 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56260 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56262 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56265 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56267 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56269 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56271 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56271 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56269 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56274 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56276 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56276 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56279 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56284 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56286 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56289 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56292 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56292 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56289 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56298 - "OPTIONS /api/acuerdos/10fb38df HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56298 - "PATCH /api/acuerdos/10fb38df HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56299 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56299 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56298 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56298 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56299 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56315 - "GET /api/clientes HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56318 - "GET /api/clientes HTTP/1.1" 200 OK

@@ -1,5 +1,5 @@
 Dni,Nombre,Telefono,Email,Calle,Localidad,Provincia,Codigo_Postal,Estado,Estado_Nofence,Pedido_Nofence,Importe_Factura_Nofence,Importe_Cobrado_Cliente,Beneficio,Collares,Importe_Nofence,Numero_Explotacion,Coordenadas_X,Coordenadas_Y,Direccion,Poblacion,Fecha_Agente_Digitalizador
-07256443N,Enrique Ambrona Valverde,655492798.0,enriquealbuera@gmail.com,Francisco Alvarez Gomez 47,La Albuera,Badajoz,6170.0,Factura pagada,Collares pedidos,,,,,"[""234"",""123"",""324""]",3000.0,Es37082393820,23.1231,123.12,,,
+07256443N,Enrique Ambrona Valverde,655492798.0,enriquealbuera@gmail.com,Francisco Alvarez Gomez 47,La Albuera,Badajoz,6170.0,Justificado,Collares pedidos,,,,,"[""234"",""123"",""324""]",3000.0,Es37082393820,23.1231,123.12,,,
 8833079K,alicia guisado macedo,678543243.0,aliciaguisado@gmail.com,En su casa ,Alburquerque,Badajoz,3298.0,Factura pagada,Collares pedidos,,,,,"[""4356"",""675"",""678""]",3000.0,ES289374829,43.76789,39.0,,,
 73506024W,Garai Michelena Ochotorena,,,,,,,Justificado,,,,,,,,,,,,,2026-02-10
 33433019N,Mirian Ochotorena Choperena,,,,,,,Justificado,,,,,,,,,,,,,2026-02-10
@@ -46,7 +46,7 @@ B19322833,GANADERIA J.BARRIOPEDRO S.L.,,,,,,,Pendiente de justificar,,,,,,,,,,,,
 45423139W,Ricardo Manso Gutiérrez,,,,,,,Justificado,,,,,,,,,,,,,2026-02-10
 70813018C,JULIA BLAZQUEZ NAVARRO,,,,,,,Justificación pendiente de firma,Collares pedidos,,,,,,3000.0,,,,,,2026-02-10
 71292337L,miguel garcia garcia	,,,,,,,Justificado,,,,,,,,,,,,,2026-02-10
-08797133R,Fernando Alonso Jaraquemada Ovando,,,,,,,Justificado,,,,,,,,,,,,,2026-02-10
+08797133R,Fernando Alonso Jaraquemada Ovando,,,,,,,Justificado,Collares pedidos,,,,,"[""232"",""234""]",3000.0,,,,,,2026-02-10
 V36686186,COMUNIDADE DE MONTES VECIÑAIS EN MAN COMÚN DE VINCIOS,,,,,,,Justificado,,,,,,,,,,,,,2026-02-10
 71470116P,Miriam Perez Gallego,,,,,,,Justificado,,,,,,,,,,,,,2026-02-10
 71032700Y,Victor Iván Jorge Pintado,,,,,,,Justificado,,,,,,,,,,,,,2026-02-10
@@ -58,9 +58,9 @@ V36686186,COMUNIDADE DE MONTES VECIÑAIS EN MAN COMÚN DE VINCIOS,,,,,,,Justific
 73417987D,Sergio Cobo Pelegrin,,,,,,,Justificación pendiente de firma,,,,,,,,,,,,,2026-02-10
 25356814G,OCTAVIO GASCON MAZA,,,,,,,Justificación pendiente de firma,Collares pedidos,,,,,,,,,,,,2026-02-10
 44619040Y,Adelardo Paternain Cadena,,,,,,,Justificado,,,,,,,,,,,,,2026-02-10
-18442289S,Javier Gómez Gómez,,,,,,,Pendiente de justificar,,,,,,,,,,,,,2026-02-10
+18442289S,Javier Gómez Gómez,,,,,,,Justificado,Collares pedidos,,,,,,3000.0,,,,,,2026-02-10
 18463707C,ISMAEL PEREZ MIGUEL,,,,,,,Pendiente de justificar,,,,,,,,,,,,,2026-02-10
-80045182F,David Nuñez MArtin,,,,,,,Justificado,,,,,,,,,,,,,2026-02-10
+80045182F,David Nuñez MArtin,,,,,,,Justificación pendiente de firma,,,,,,,,,,,,,2026-02-10
 Y0376684G,PIERRE BOY,,,,,,,Justificado,,,,,,,,,,,,,2026-02-10
 72512291F,JOSEBA ALTUNA USANDIZAGA,,,,,,,Pendiente de justificar,,,,,,,,,,,,,2026-02-10
 72664336E,"PEDRO MARIA CUARTERO
@@ -176,3 +176,4 @@ J74183880,GANADERIA CASA VENTURO SC,,,,,,,Pendiente de justificar,,,,,,,,,,,,,20
 J55358287,"PASTURABOSC, SCP",,,,,,,Pendiente de justificar,,,,,,,,,,,,,2026-02-10
 B71039093,Hipica Zahori Sl,,,,,,,Pendiente de justificar,,,,,,,,,,,,,2026-02-10
 B17699422,FRANCESC FONT ROVIRA,,,,,,,Pendiente de justificar,,,,,,,,,,,,,2026-02-10
+04614174P,ALVARO USERO MORENO,601034669.0,,,,,,Kit aprobado,,,,,,,,,,,,,
