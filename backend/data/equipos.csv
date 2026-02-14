@@ -1,4 +1,6 @@
 Id_Equipo,Dni_Cliente,Nombre,Categoria,Estado,Notas,Precio,Fecha_Estado
-bd35cf3d,07256443N,silo prueba,silo,pedido,hay que probar esto,123.23,2026-02-14T10:14:28.644192
-57083b86,07256443N,solar ns,lector,espera,,21.0,2026-02-14T10:15:06.648710
-fd6aa50e,07256443N,pruebatolva,tolva,en oficina,,123.0,2026-02-14T10:15:22.982488
+bd35cf3d,07256443N,silo prueba,silo,en oficina,hay que probar esto,123.23,2026-02-14T10:32:02.979996
+57083b86,07256443N,solar ns,lector,en oficina,,21.0,2026-02-14T10:32:04.283966
+fd6aa50e,07256443N,pruebatolva,tolva,revicido,,123.0,2026-02-14T10:29:15.305374
+55d3f27a,33433019N,lector ejemplo,lector,pedido,qwe,123.0,2026-02-14T10:34:20.727840
+3a4f345c,33433019N,tolvoas prueba,tolva,pagado,rwqr,234.0,2026-02-14T10:34:22.395556

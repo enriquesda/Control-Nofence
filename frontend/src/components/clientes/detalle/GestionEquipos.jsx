@@ -146,15 +146,97 @@ const GestionEquipos = ({ dni }) => {
                     </div>
                 )}
             </div>
-
             <ModalEquipo
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
                 onSave={handleSave}
                 initialData={editingEquipo}
             />
+
+            <HistorialEquiposCliente equipos={equipos} />
         </div>
     );
 };
 
+const HistorialEquiposCliente = ({ equipos }) => {
+    const [groupedHistory, setGroupedHistory] = useState({});
+
+    useEffect(() => {
+        const fetchAllHistory = async () => {
+            if (!equipos || equipos.length === 0) return;
+
+            try {
+                const { getHistorialEquipos } = await import('../../../api');
+
+                let allHistory = [];
+                const promises = equipos.map(eq => getHistorialEquipos({ id_equipo: eq.Id_Equipo }));
+                const results = await Promise.all(promises);
+
+                results.forEach(res => {
+                    if (res.data) allHistory = [...allHistory, ...res.data];
+                });
+
+                // Group by equipment
+                const grouped = {};
+                equipos.forEach(eq => {
+                    const eqHistory = allHistory.filter(h => h.Id_Equipo === eq.Id_Equipo);
+                    // Sort descending by date
+                    eqHistory.sort((a, b) => new Date(b.Fecha_Cambio) - new Date(a.Fecha_Cambio));
+                    if (eqHistory.length > 0) {
+                        grouped[eq.Id_Equipo] = {
+                            nombre: eq.Nombre,
+                            historial: eqHistory
+                        };
+                    }
+                });
+
+                setGroupedHistory(grouped);
+            } catch (err) {
+                console.error("Error fetching history", err);
+            }
+        };
+
+        fetchAllHistory();
+    }, [equipos]);
+
+    if (Object.keys(groupedHistory).length === 0) return null;
+
+    return (
+        <Card className="mt-8">
+            <h4 className="font-bold text-slate-700 mb-6 border-b pb-2">Historial de Cambios (Equipos)</h4>
+            <div className="space-y-6">
+                {Object.values(groupedHistory).map((item, idx) => (
+                    <div key={idx} className="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                        <h5 className="font-bold text-slate-800 mb-3">{item.nombre}</h5>
+                        <div className="relative">
+                            <div className="absolute top-3 left-0 w-full h-0.5 bg-slate-200 -z-0"></div>
+                            <div className="flex space-x-8 overflow-x-auto pb-4 pt-1 px-1 relative z-10">
+                                {item.historial.map((h, hIdx) => (
+                                    <div key={hIdx} className="flex-shrink-0 flex flex-col items-center">
+                                        <div className="w-4 h-4 rounded-full bg-primary-500 border-2 border-white shadow-sm mb-2"></div>
+                                        <div className="bg-white p-2 rounded shadow-sm border border-slate-100 min-w-[140px] text-center">
+                                            <div className="text-xs font-bold text-slate-700 mb-1">
+                                                {new Date(h.Fecha_Cambio).toLocaleDateString()}
+                                            </div>
+                                            <div className="text-[10px] text-slate-400 mb-1">
+                                                {new Date(h.Fecha_Cambio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </div>
+                                            <div className="flex items-center justify-center space-x-1 text-xs">
+                                                <span className="text-slate-500 line-through text-[10px]">{h.Estado_Anterior}</span>
+                                                <span className="text-primary-500">➜</span>
+                                                <span className="font-medium text-slate-800">{h.Estado_Nuevo}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </Card>
+    );
+}
+
 export default GestionEquipos;
+

@@ -21,5 +21,6 @@ export const getEquipos = (params) => api.get('/equipos', { params });
 export const addEquipo = (dni, data) => api.post(`/clientes/${dni}/equipos`, data);
 export const deleteEquipo = (id) => api.delete(`/equipos/${id}`);
 export const updateEquipoStatus = (id, data) => api.patch(`/equipos/${id}/estado`, data);
+export const getHistorialEquipos = (params) => api.get('/equipos/historial', { params });
 
 export default api;

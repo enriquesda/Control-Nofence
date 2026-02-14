@@ -40,42 +40,50 @@ const TablaEstadoEquipos = ({ titulo, equipos, estado, onStatusChange }) => {
                 <table className="w-full text-left">
                     <thead className="bg-slate-50 border-b border-slate-200">
                         <tr>
-                            <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase">Equipo</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase">Cliente</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase">Categoría</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase">Tiempo en Estado</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase text-right">Acciones</th>
+                            <th className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase">Equipo</th>
+                            <th className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase">Cliente</th>
+                            <th className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase">Categoría</th>
+                            <th className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase">Tiempo</th>
+                            <th className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase text-right">Acciones</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
                         {sortedEquipos.map(eq => (
                             <tr key={eq.Id_Equipo} className="hover:bg-slate-50 transition-colors">
-                                <td className="px-6 py-4">
-                                    <div className="font-medium text-slate-800">{eq.Nombre}</div>
-                                    {eq.Notas && <div className="text-xs text-slate-500 truncate max-w-xs">{eq.Notas}</div>}
+                                <td className="px-3 py-3">
+                                    <div className="font-medium text-slate-800 text-sm">{eq.Nombre}</div>
+                                    {eq.Notas && <div className="text-xs text-slate-500 truncate max-w-[120px]">{eq.Notas}</div>}
                                 </td>
-                                <td className="px-6 py-4">
-                                    {/* Debido a que la API devuelve Dni_Cliente, idealmente deberíamos cruzar datos o traer el nombre.
-                                        Por ahora mostraremos el DNI o un link al cliente. */}
+                                <td className="px-3 py-3">
                                     <button
-                                        onClick={() => navigate(`/clientes/${eq.Dni_Cliente}`)}
-                                        className="text-primary-600 hover:text-primary-800 text-sm font-medium hover:underline"
+                                        onClick={() => navigate(`/clientes/${eq.Dni_Cliente}?tab=equipos`)}
+                                        className="text-primary-600 hover:text-primary-800 text-xs font-medium hover:underline text-left block"
                                     >
-                                        {eq.Dni_Cliente}
+                                        Ver Cliente <br />
+                                        <span className="text-[10px] text-slate-400 font-mono">{eq.Dni_Cliente}</span>
                                     </button>
                                 </td>
-                                <td className="px-6 py-4">
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
+                                <td className="px-3 py-3">
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-800">
                                         {eq.Categoria}
                                     </span>
                                 </td>
-                                <td className="px-6 py-4 text-sm text-slate-600 flex items-center">
-                                    <Clock size={14} className="mr-1.5 text-slate-400" />
-                                    {getTimeInState(eq.Fecha_Estado)}
+                                <td className="px-3 py-3 text-xs text-slate-600">
+                                    <div className="flex items-center">
+                                        <Clock size={12} className="mr-1 text-slate-400" />
+                                        {getTimeInState(eq.Fecha_Estado)}
+                                    </div>
                                 </td>
-                                <td className="px-6 py-4 text-right">
-                                    {/* Aquí podríamos poner botones rápidos para avanzar estado */}
-                                    <div className="text-xs text-slate-400">Ver ficha cliente</div>
+                                <td className="px-3 py-3 text-right">
+                                    <select
+                                        className="text-xs p-1 rounded border-slate-300 bg-white shadow-sm focus:border-primary-500 focus:ring-primary-500 w-full max-w-[110px]"
+                                        value={eq.Estado}
+                                        onChange={(e) => onStatusChange && onStatusChange(eq.Id_Equipo, e.target.value)}
+                                    >
+                                        {['espera', 'pedido', 'pagado', 'en oficina', 'enviado', 'revicido'].map(st => (
+                                            <option key={st} value={st}>{st}</option>
+                                        ))}
+                                    </select>
                                 </td>
                             </tr>
                         ))}

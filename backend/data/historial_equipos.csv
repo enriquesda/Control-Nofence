@@ -1,2 +1,11 @@
 Id_History,Id_Equipo,Estado_Anterior,Estado_Nuevo,Fecha_Cambio
 3ac17114,bd35cf3d,espera,pedido,2026-02-14T10:14:28.643110
+4a78f560,57083b86,espera,pedido,2026-02-14T10:26:49.087937
+37ebd087,fd6aa50e,en oficina,enviado,2026-02-14T10:26:53.820451
+6ee0e239,bd35cf3d,pedido,pagado,2026-02-14T10:29:12.186624
+22c69a35,57083b86,pedido,pagado,2026-02-14T10:29:14.072558
+b985e62c,fd6aa50e,enviado,revicido,2026-02-14T10:29:15.303420
+6647f7b6,bd35cf3d,pagado,en oficina,2026-02-14T10:32:02.978050
+605d79f4,57083b86,pagado,en oficina,2026-02-14T10:32:04.282827
+3444b1a6,55d3f27a,espera,pedido,2026-02-14T10:34:20.724988
+52748b64,3a4f345c,pedido,pagado,2026-02-14T10:34:22.391956

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getClientes, updateCliente, updateKit, addAcuerdo, updateAcuerdo, deleteAcuerdo } from "../api";
 import { ArrowLeft, User, Gift, Clock, MapPin, Package } from 'lucide-react';
 import Button from "./ui/Button";
@@ -12,11 +12,15 @@ import GestionEquipos from './clientes/detalle/GestionEquipos';
 import Historial from './clientes/detalle/Historial';
 
 const ClientDetail = () => {
-    const { dni } = useParams();
+    const { dni } = useParams(); // URL params
+    const location = useLocation(); // Hook to get query params
     const navigate = useNavigate();
     const [client, setClient] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('general');
+    // Parse query param 'tab'
+    const queryParams = new URLSearchParams(location.search);
+    const initialTab = queryParams.get('tab') || 'general';
+    const [activeTab, setActiveTab] = useState(initialTab);
 
     const fetchData = async () => {
         try {

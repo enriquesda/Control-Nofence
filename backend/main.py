@@ -450,6 +450,26 @@ def update_equipo_estado(id_equipo: str, update: EquipoUpdate):
     save_csv(df_e, EQUIPOS_CSV)
     return {"message": "Equipo actualizado"}
 
+@app.get("/api/equipos/historial")
+def get_historial_equipos(id_equipo: str = None):
+    df_h = read_csv(HISTORIAL_EQUIPOS_CSV)
+    
+    if df_h.empty:
+        return []
+        
+    if id_equipo:
+        df_h = df_h[df_h['Id_Equipo'].astype(str) == str(id_equipo)]
+        
+    # Sort by date desc
+    if not df_h.empty and 'Fecha_Cambio' in df_h.columns:
+        df_h['Fecha_Cambio'] = pd.to_datetime(df_h['Fecha_Cambio'])
+        df_h = df_h.sort_values(by='Fecha_Cambio', ascending=False)
+        # Convert back to ISO string for JSON serialization if needed, 
+        # but to_dict usually handles timestamps. Let's ensure string format.
+        df_h['Fecha_Cambio'] = df_h['Fecha_Cambio'].dt.strftime('%Y-%m-%dT%H:%M:%S')
+
+    return df_h.replace({np.nan: None}).to_dict(orient="records")
+
 
 if __name__ == "__main__":
     import uvicorn
