@@ -94,3 +94,29 @@ class ClienteUpdate(BaseModel):
     Importe_Factura_Nofence: Optional[float] = None
     Importe_Cobrado_Cliente: Optional[float] = None
     Beneficio: Optional[float] = None
+
+class Equipo(BaseModel):
+    Id_Equipo: Optional[str] = None
+    Dni_Cliente: str
+    Nombre: str
+    Categoria: str  # camara, lector, pastor, puerta, silo, tolva, deposito, otros
+    Estado: str  # espera, pedido, pagado, en oficina, enviado, revicido
+    Notas: Optional[str] = ""
+    Precio: Optional[float] = 0.0
+    Fecha_Estado: Optional[str] = None # ISO format datetime
+
+class EquipoUpdate(BaseModel):
+    Nombre: Optional[str] = None
+    Categoria: Optional[str] = None
+    Estado: Optional[str] = None
+    Notas: Optional[str] = None
+    Precio: Optional[float] = None
+    Fecha_Estado: Optional[str] = None
+
+class HistorialEquipo(BaseModel):
+    Id_History: Optional[str] = None
+    Id_Equipo: str
+    Estado_Anterior: str
+    Estado_Nuevo: str
+    Fecha_Cambio: str # ISO format datetime
+

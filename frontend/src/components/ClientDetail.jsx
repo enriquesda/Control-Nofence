@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getClientes, updateCliente, updateKit, addAcuerdo, updateAcuerdo, deleteAcuerdo } from "../api";
-import { ArrowLeft, User, Gift, Clock, MapPin } from 'lucide-react';
+import { ArrowLeft, User, Gift, Clock, MapPin, Package } from 'lucide-react';
 import Button from "./ui/Button";
 import Badge from "./ui/Badge";
 
 import ResumenCliente from './clientes/detalle/ResumenCliente';
 import GestionKitDigital from './clientes/detalle/GestionKitDigital';
 import GestionNofence from './clientes/detalle/GestionNofence';
+import GestionEquipos from './clientes/detalle/GestionEquipos';
 import Historial from './clientes/detalle/Historial';
 
 const ClientDetail = () => {
@@ -162,6 +163,7 @@ const ClientDetail = () => {
         { id: 'general', label: 'Resumen', icon: <User size={18} /> },
         { id: 'kit', label: 'Kit Digital & Acuerdos', icon: <Gift size={18} /> },
         { id: 'nofence', label: 'Nofence', icon: <MapPin size={18} /> },
+        { id: 'equipos', label: 'Equipos', icon: <Package size={18} /> },
         { id: 'historial', label: 'Historial', icon: <Clock size={18} /> },
     ];
 
@@ -240,6 +242,11 @@ const ClientDetail = () => {
                             dni={dni}
                         />
                     )}
+
+                    {activeTab === 'equipos' && (
+                        <GestionEquipos dni={dni} />
+                    )}
+
 
                     {activeTab === 'historial' && (
                         <Historial client={client} />

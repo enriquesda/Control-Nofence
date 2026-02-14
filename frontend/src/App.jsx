@@ -4,6 +4,7 @@ import { Users, LayoutDashboard, PlusCircle, Cpu } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import ClientList from './components/ClientList';
 import ClientDetail from './components/ClientDetail';
+import EquiposPage from './components/EquiposPage';
 import Automation from './components/Automation';
 
 function App() {
@@ -25,6 +26,10 @@ function App() {
               <Users size={20} />
               <span className="font-medium">Clientes</span>
             </Link>
+            <Link to="/equipos" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-100 text-slate-700 transition-colors">
+              <LayoutDashboard size={20} />
+              <span className="font-medium">Equipos</span>
+            </Link>
             <Link to="/automatizacion" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-100 text-slate-700 transition-colors">
               <Cpu size={20} />
               <span className="font-medium">Automatización</span>
@@ -38,7 +43,9 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/clientes" element={<ClientList />} />
             <Route path="/clientes/:dni" element={<ClientDetail />} />
+            <Route path="/equipos" element={<EquiposPage />} />
             <Route path="/automatizacion" element={<Automation />} />
+
           </Routes>
         </main>
       </div>

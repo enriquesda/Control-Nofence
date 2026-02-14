@@ -9,12 +9,13 @@ import uuid
 from datetime import datetime, timedelta
 
 # Local imports
-from database import read_csv, save_csv, CLIENTES_CSV, KIT_DIGITAL_CSV, ACUERDOS_CSV, FACTURAS_CSV
+from database import read_csv, save_csv, CLIENTES_CSV, KIT_DIGITAL_CSV, ACUERDOS_CSV, FACTURAS_CSV, EQUIPOS_CSV, HISTORIAL_EQUIPOS_CSV
 from models import (
     Cliente, ClienteUpdate, 
     KitDigital, 
     Acuerdo, AcuerdoUpdate, 
-    Factura, FacturaUpdate
+    Factura, FacturaUpdate,
+    Equipo, EquipoUpdate, HistorialEquipo
 )
 from logic import recalcular_estados
 import generate_client_csv
@@ -368,6 +369,87 @@ def confirm_import_endpoint(data: dict):
     except Exception as e:
         print(f"Error executing import: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+# --- EQUIPOS ENDPOINTS ---
+
+@app.get("/api/equipos")
+def get_equipos(estado: str = None, dni_cliente: str = None):
+    df_e = read_csv(EQUIPOS_CSV)
+    
+    if df_e.empty:
+        return []
+        
+    if estado:
+        df_e = df_e[df_e['Estado'] == estado]
+        
+    if dni_cliente:
+        df_e = df_e[df_e['Dni_Cliente'].astype(str) == str(dni_cliente)]
+        
+    return df_e.replace({np.nan: None}).to_dict(orient="records")
+
+@app.post("/api/clientes/{dni}/equipos")
+def add_equipo(dni: str, equipo: Equipo):
+    df_e = read_csv(EQUIPOS_CSV)
+    
+    equipo.Dni_Cliente = dni
+    equipo.Id_Equipo = str(uuid.uuid4())[:8]
+    equipo.Fecha_Estado = datetime.now().isoformat()
+    
+    new_row = pd.DataFrame([equipo.model_dump()])
+    df_e = pd.concat([df_e, new_row], ignore_index=True)
+    save_csv(df_e, EQUIPOS_CSV)
+    
+    return {"message": "Equipo añadido", "Id_Equipo": equipo.Id_Equipo}
+
+@app.delete("/api/equipos/{id_equipo}")
+def delete_equipo(id_equipo: str):
+    df_e = read_csv(EQUIPOS_CSV)
+    if not df_e.empty and str(id_equipo) in df_e['Id_Equipo'].astype(str).values:
+        initial_len = len(df_e)
+        df_e = df_e[df_e['Id_Equipo'].astype(str) != str(id_equipo)]
+        if len(df_e) < initial_len:
+            save_csv(df_e, EQUIPOS_CSV)
+            return {"message": "Equipo eliminado"}
+    raise HTTPException(status_code=404, detail="Equipo no encontrado")
+
+@app.patch("/api/equipos/{id_equipo}/estado")
+def update_equipo_estado(id_equipo: str, update: EquipoUpdate):
+    df_e = read_csv(EQUIPOS_CSV)
+    
+    if df_e.empty or str(id_equipo) not in df_e['Id_Equipo'].astype(str).values:
+        raise HTTPException(status_code=404, detail="Equipo no encontrado")
+        
+    idx = df_e[df_e['Id_Equipo'].astype(str) == str(id_equipo)].index[0]
+    current_estado = df_e.at[idx, 'Estado']
+    new_estado = update.Estado
+    
+    # Record history if status changes
+    if new_estado and new_estado != current_estado:
+        df_h = read_csv(HISTORIAL_EQUIPOS_CSV)
+        historial = HistorialEquipo(
+            Id_History=str(uuid.uuid4())[:8],
+            Id_Equipo=id_equipo,
+            Estado_Anterior=current_estado,
+            Estado_Nuevo=new_estado,
+            Fecha_Cambio=datetime.now().isoformat()
+        )
+        new_h_row = pd.DataFrame([historial.model_dump()])
+        df_h = pd.concat([df_h, new_h_row], ignore_index=True)
+        save_csv(df_h, HISTORIAL_EQUIPOS_CSV)
+        
+        # Update timestamp only on status change
+        df_e.at[idx, 'Fecha_Estado'] = datetime.now().isoformat()
+        df_e.at[idx, 'Estado'] = new_estado
+
+    # Update other fields if present
+    update_data = update.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        if key != 'Estado': # Already handled status
+             df_e.at[idx, key] = value
+             
+    save_csv(df_e, EQUIPOS_CSV)
+    return {"message": "Equipo actualizado"}
+
 
 if __name__ == "__main__":
     import uvicorn
