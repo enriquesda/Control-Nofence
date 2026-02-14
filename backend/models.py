@@ -63,6 +63,7 @@ class Cliente(BaseModel):
     Codigo_Postal: Optional[str] = None
     Numero_Explotacion: Optional[str] = None
     
+    Tipo: Optional[str] = "Nofence" # Nofence / Normal
     Estado: Optional[str] = "Kit pedido"
     Estado_Nofence: Optional[str] = None 
     Importe_Nofence: Optional[float] = None  # Payment amount for Nofence
@@ -85,6 +86,7 @@ class ClienteUpdate(BaseModel):
     Provincia: Optional[str] = None
     Codigo_Postal: Optional[str] = None
     Numero_Explotacion: Optional[str] = None
+    Tipo: Optional[str] = None
     Estado_Nofence: Optional[str] = None
     Importe_Nofence: Optional[float] = None
     Coordenadas_X: Optional[float] = None

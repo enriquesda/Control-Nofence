@@ -3,6 +3,7 @@ import { getClientes, deleteCliente, createCliente } from '../api';
 import FiltrosClientes from './clientes/FiltrosClientes';
 import TablaClientes from './clientes/TablaClientes';
 import ModalNuevoCliente from './clientes/ModalNuevoCliente';
+import { useClientFilter } from '../context/ClientFilterContext';
 
 const ClientList = () => {
     const [clientes, setClientes] = useState([]);
@@ -32,12 +33,23 @@ const ClientList = () => {
         fetchData();
     };
 
+    const { filterMode } = useClientFilter();
+
     const filtered = clientes.filter(c => {
         const nombreMatch = (c.Nombre || '').toLowerCase().includes(search.toLowerCase());
         const dniMatch = (c.Dni || '').toLowerCase().includes(search.toLowerCase());
         const matchesSearch = nombreMatch || dniMatch;
         const matchesFilter = filterEstado === 'Todos' || c.Estado === filterEstado;
-        return matchesSearch && matchesFilter;
+
+        // Filter by Client Type (Nofence/Normal)
+        let matchesType = true;
+        if (filterMode === 'nofence') {
+            matchesType = !c.Tipo || c.Tipo === 'Nofence'; // Default to Nofence if null
+        } else if (filterMode === 'normal') {
+            matchesType = c.Tipo === 'Normal';
+        }
+
+        return matchesSearch && matchesFilter && matchesType;
     });
 
     return (

@@ -3,6 +3,7 @@ import { getClientes, updateAcuerdo } from '../api';
 import Estadisticas from './dashboard/Estadisticas';
 import AccionesPendientes from './dashboard/AccionesPendientes';
 import Alertas from './dashboard/Alertas';
+import { useClientFilter } from '../context/ClientFilterContext';
 
 const Dashboard = () => {
     const [clientes, setClientes] = useState([]);
@@ -14,13 +15,23 @@ const Dashboard = () => {
         justificaciones_pendientes: 0
     });
 
+    const { filterMode } = useClientFilter();
+
     useEffect(() => {
         loadData();
-    }, []);
+    }, [filterMode]); // Reload/Recalculate when filter changes. Ideally we fetch once and filter locally, but loadData calls API.
 
     const loadData = async () => {
         const res = await getClientes();
-        const clientsData = res.data;
+        let clientsData = res.data;
+
+        // Apply Filter
+        if (filterMode === 'nofence') {
+            clientsData = clientsData.filter(c => !c.Tipo || c.Tipo === 'Nofence');
+        } else if (filterMode === 'normal') {
+            clientsData = clientsData.filter(c => c.Tipo === 'Normal');
+        }
+
         setClientes(clientsData);
 
         // Calcular estadísticas

@@ -71,7 +71,12 @@ def get_clientes():
     else:
         df_combined = df_c.copy()
         
-    # Reemplazar NaN por None para JSON válido
+    # Reemplazar NaN por None para JSON válido (pero Tipo por defecto Nofence)
+    if 'Tipo' not in df_combined.columns:
+        df_combined['Tipo'] = 'Nofence'
+    else:
+        df_combined['Tipo'] = df_combined['Tipo'].fillna('Nofence')
+
     df_combined = df_combined.replace({np.nan: None})
 
     clientes_list = df_combined.to_dict(orient="records")
@@ -384,6 +389,24 @@ def get_equipos(estado: str = None, dni_cliente: str = None):
         
     if dni_cliente:
         df_e = df_e[df_e['Dni_Cliente'].astype(str) == str(dni_cliente)]
+    
+    # Enrich with Client Type
+    df_c = read_csv(CLIENTES_CSV)
+    if not df_c.empty and not df_e.empty:
+        # Create a mapping dictionary for Dni -> Tipo
+        # Handle case where Tipo might not exist in old CSVs yet
+        if 'Tipo' not in df_c.columns:
+            df_c['Tipo'] = 'Nofence'
+            
+        # Ensure Dni is string for matching
+        df_c['Dni'] = df_c['Dni'].astype(str)
+        df_e['Dni_Cliente'] = df_e['Dni_Cliente'].astype(str)
+        
+        # Merge or map
+        tipo_map = dict(zip(df_c['Dni'], df_c['Tipo']))
+        df_e['Cliente_Tipo'] = df_e['Dni_Cliente'].map(tipo_map).fillna('Nofence')
+    else:
+        df_e['Cliente_Tipo'] = 'Nofence'
         
     return df_e.replace({np.nan: None}).to_dict(orient="records")
 

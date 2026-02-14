@@ -3,6 +3,7 @@ import { getEquipos } from '../api';
 import FiltrosEquipos from './equipos/FiltrosEquipos';
 import TablaEstadoEquipos from './equipos/TablaEstadoEquipos';
 import { Loader } from 'lucide-react';
+import { useClientFilter } from '../context/ClientFilterContext';
 
 const ESTADOS_VISIBLE = ['espera', 'pedido', 'pagado', 'en oficina', 'enviado'];
 
@@ -28,13 +29,23 @@ const EquiposPage = () => {
         }
     };
 
+    const { filterMode } = useClientFilter();
+
     // Filtrado local
     const filteredEquipos = equipos.filter(eq => {
         const matchSearch = (eq.Nombre || '').toLowerCase().includes(search.toLowerCase());
         const matchCat = category === 'Todas' || eq.Categoria === category;
-        // Excluimos 'revicido' (recibido) de esta vista general según requisitos
         const isVisibleState = ESTADOS_VISIBLE.includes(eq.Estado);
-        return matchSearch && matchCat && isVisibleState;
+
+        // Filter by Client Type
+        let matchesType = true;
+        if (filterMode === 'nofence') {
+            matchesType = !eq.Cliente_Tipo || eq.Cliente_Tipo === 'Nofence';
+        } else if (filterMode === 'normal') {
+            matchesType = eq.Cliente_Tipo === 'Normal';
+        }
+
+        return matchSearch && matchCat && isVisibleState && matchesType;
     });
 
     // Obtener categorías únicas para el filtro
