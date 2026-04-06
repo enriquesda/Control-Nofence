@@ -22,7 +22,12 @@ from logic import recalcular_estados
 import generate_client_csv
 
 app = FastAPI(title="CRM Control Nofence")
-
+@app.middleware("http")
+async def block_direct_access(request: Request, call_next):
+    host = request.headers.get("host", "")
+    if "fly.dev" in host:
+        return JSONResponse(status_code=403, content={"detail": "Acceso no permitido"})
+    return await call_next(request)
 # Initialize database (create CSVs if they don't exist)
 init_db()
 
