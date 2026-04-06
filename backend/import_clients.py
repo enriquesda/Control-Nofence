@@ -86,6 +86,7 @@ def parse_import_csv(content_bytes):
             clients_map[current_nif] = {
                 "Dni": current_nif,
                 "Nombre": current_name if pd.notna(current_name) else "",
+                "Tipo": str(row.get('TIPO', 'Nofence')).strip() if pd.notna(row.get('TIPO')) else "Nofence",
                 "kit": None,
                 "acuerdos": []
             }
@@ -214,13 +215,15 @@ def execute_import(clients_data):
             idx = df_clientes[df_clientes['Dni'].astype(str) == dni].index[0]
             if pd.isna(df_clientes.at[idx, 'Nombre']) or df_clientes.at[idx, 'Nombre'] == '':
                  df_clientes.at[idx, 'Nombre'] = client['Nombre']
+            df_clientes.at[idx, 'Tipo'] = client.get('Tipo', 'Nofence')
         else:
             # Create
             new_client = {
                 "Dni": dni, 
                 "Nombre": client['Nombre'],
-                "Email": "", "Telefono": "", "Direccion": "", "Poblacion": "", "Provincia": "",
-                "Estado": "Activo",
+                "Tipo": client.get('Tipo', 'Nofence'),
+                "Email": "", "Telefono": "", "Calle": "", "Localidad": "", "Provincia": "",
+                "Estado": "Kit pedido",
                 "Fecha_Agente_Digitalizador": datetime.now().strftime("%Y-%m-%d")
             }
             df_clientes = pd.concat([df_clientes, pd.DataFrame([new_client])], ignore_index=True)

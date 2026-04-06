@@ -16,7 +16,7 @@ const Automation = () => {
         setLoading(true);
         setResult(null);
         try {
-            const response = await fetch('http://localhost:8000/api/automation/generate-client-csv', {
+            const response = await fetch('/api/automation/generate-client-csv', {
                 method: 'POST',
             });
 
@@ -67,7 +67,7 @@ const Automation = () => {
         formData.append('file', importFile);
 
         try {
-            const response = await fetch('http://localhost:8000/api/automation/preview-import', {
+            const response = await fetch('/api/automation/preview-import', {
                 method: 'POST',
                 body: formData,
             });
@@ -93,7 +93,7 @@ const Automation = () => {
             // Backend expects list of clients
             const clientsList = Object.values(previewData.raw_data);
 
-            const response = await fetch('http://localhost:8000/api/automation/confirm-import', {
+            const response = await fetch('/api/automation/confirm-import', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ clients: clientsList }),
