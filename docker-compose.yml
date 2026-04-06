@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nofence-backend
+    volumes:
+      - ./backend/data:/app/data
+    restart: always
+    # Port 8000 shared with frontend container via network
+    # Exposing here is optional if only accessed via proxy, but useful for debugging
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nofence-frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    restart: always
+
+# Persistent data is handled via bind mount to ./backend/data

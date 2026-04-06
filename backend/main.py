@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException, Request, status, UploadFile, File
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse, FileResponse
 import pandas as pd
 import numpy as np
 import os
@@ -492,6 +493,25 @@ def get_historial_equipos(id_equipo: str = None):
         df_h['Fecha_Cambio'] = df_h['Fecha_Cambio'].dt.strftime('%Y-%m-%dT%H:%M:%S')
 
     return df_h.replace({np.nan: None}).to_dict(orient="records")
+
+
+# --- React App Serving (SPA) ---
+
+# Sirve los activos estáticos (JS, CSS, imágenes)
+if os.path.exists("dist"):
+    app.mount("/assets", StaticFiles(directory="dist/assets"), name="assets")
+
+    # Cualquier ruta que no coincida con /api/* devuelve el index.html de React
+    @app.get("/{full_path:path}")
+    async def serve_react(full_path: str):
+        # Evitar capturar accidentalmente rutas de la API que no existen
+        if full_path.startswith("api/"):
+             raise HTTPException(status_code=404, detail="API route not found")
+             
+        index_path = os.path.join("dist", "index.html")
+        if os.path.exists(index_path):
+            return FileResponse(index_path)
+        return JSONResponse(status_code=404, content={"detail": "Frontend build not found"})
 
 
 if __name__ == "__main__":

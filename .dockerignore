@@ -1,0 +1,20 @@
+# Root .dockerignore for Fly.io build context
+.git/
+.gitignore
+.DS_Store
+*.log
+venv/
+node_modules/
+dist/
+**/__pycache__/
+**/*.py[cod]
+**/data/
+fly.toml
+Dockerfile
+supervisord.conf
+nginx.fly.conf
+deploy/
+render.yaml
+*.csv
+!backend/requirements.txt
+!frontend/package*.json

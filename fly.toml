@@ -1,0 +1,23 @@
+# fly.toml configuration file for control-nofence
+#
+# See https://fly.io/docs/reference/configuration/ for information
+
+app = "control-nofence"
+primary_region = "mad"
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+
+[mounts]
+  source = "nofence_data"
+  destination = "/app/data"
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1
