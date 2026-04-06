@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime, timedelta
 
 # Local imports
-from database import read_csv, save_csv, CLIENTES_CSV, KIT_DIGITAL_CSV, ACUERDOS_CSV, FACTURAS_CSV, EQUIPOS_CSV, HISTORIAL_EQUIPOS_CSV
+from database import read_csv, save_csv, init_db, CLIENTES_CSV, KIT_DIGITAL_CSV, ACUERDOS_CSV, FACTURAS_CSV, EQUIPOS_CSV, HISTORIAL_EQUIPOS_CSV
 from models import (
     Cliente, ClienteUpdate, 
     KitDigital, 
@@ -22,6 +22,9 @@ from logic import recalcular_estados
 import generate_client_csv
 
 app = FastAPI(title="CRM Control Nofence")
+
+# Initialize database (create CSVs if they don't exist)
+init_db()
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):

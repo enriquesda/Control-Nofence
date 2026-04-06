@@ -19,7 +19,7 @@ COPY backend/ .
 
 # Copiamos el build de React desde la etapa anterior
 # Esto creará una carpeta 'dist' accesible por main.py
-COPY --from=frontend-build /app/frontend/dist ./dist
+COPY --from=frontend-build /app/dist ./dist
 
 # Directorio para los datos persistentes (CSV)
 RUN mkdir -p /app/data

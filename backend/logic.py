@@ -20,9 +20,9 @@ def recalcular_estados():
         dni = str(row['Dni'])
         
         # Datos relacionados
-        kit_row = df_k_safe[df_k_safe['Dni'].astype(str) == dni]
-        acuerdos_cliente = df_a_safe[df_a_safe['Dni_Cliente'].astype(str) == dni]
-        facturas_cliente = df_f_safe[df_f_safe['Dni_Cliente'].astype(str) == dni]
+        kit_row = df_k_safe[df_k_safe['Dni'].astype(str) == dni] if 'Dni' in df_k_safe.columns else pd.DataFrame()
+        acuerdos_cliente = df_a_safe[df_a_safe['Dni_Cliente'].astype(str) == dni] if 'Dni_Cliente' in df_a_safe.columns else pd.DataFrame()
+        facturas_cliente = df_f_safe[df_f_safe['Dni_Cliente'].astype(str) == dni] if 'Dni_Cliente' in df_f_safe.columns else pd.DataFrame()
         
         # 1. Estado Base
         nuevo_estado = "Kit pedido"
