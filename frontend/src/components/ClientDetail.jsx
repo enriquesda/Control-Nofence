@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { getClientes, updateCliente, updateKit, addAcuerdo, updateAcuerdo, deleteAcuerdo } from "../api";
+import { getCliente, updateCliente, updateKit, addAcuerdo, updateAcuerdo, deleteAcuerdo } from "../api";
 import { ArrowLeft, User, Gift, Clock, MapPin, Package } from 'lucide-react';
 import Button from "./ui/Button";
 import Badge from "./ui/Badge";
@@ -24,10 +24,9 @@ const ClientDetail = () => {
 
     const fetchData = async () => {
         try {
-            const res = await getClientes();
-            const found = res.data.find(c => c.Dni === dni);
-            if (found) {
-                setClient(found);
+            const res = await getCliente(dni);
+            if (res.data) {
+                setClient(res.data);
             } else {
                 alert('Cliente no encontrado');
                 navigate('/');
@@ -46,8 +45,8 @@ const ClientDetail = () => {
     // Fields allowed in ClienteUpdate model (backend/models.py)
     const ALLOWED_CLIENT_FIELDS = [
         'Nombre', 'Telefono', 'Email', 'Calle', 'Localidad', 'Provincia', 'Codigo_Postal', 'Numero_Explotacion',
-        'Estado_Nofence', 'Importe_Nofence', 'Coordenadas_X', 'Coordenadas_Y', 'Collares',
-        'Pedido_Nofence', 'Importe_Factura_Nofence', 'Importe_Cobrado_Cliente', 'Beneficio'
+        'Estado_Nofence', 'Importe_Nofence', 'Referencia_Pago_Nofence', 'Coordenadas_X', 'Coordenadas_Y', 'Collares',
+        'Pedido_Nofence', 'Importe_Factura_Nofence', 'Importe_Cobrado_Cliente', 'Beneficio', 'Notas'
     ];
 
     const handleUpdateClient = async (e, specificUpdates = null) => {
@@ -79,7 +78,7 @@ const ClientDetail = () => {
                     }
                 }
                 // STRICT Sanitization for Text Fields (Force String)
-                else if (['Nombre', 'Telefono', 'Email', 'Calle', 'Localidad', 'Provincia', 'Codigo_Postal', 'Numero_Explotacion', 'Estado_Nofence', 'Pedido_Nofence'].includes(field)) {
+                else if (['Nombre', 'Telefono', 'Email', 'Calle', 'Localidad', 'Provincia', 'Codigo_Postal', 'Numero_Explotacion', 'Estado_Nofence', 'Referencia_Pago_Nofence', 'Pedido_Nofence', 'Notas'].includes(field)) {
                     if (val !== null && val !== undefined) {
                         val = String(val);
                     }

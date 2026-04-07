@@ -10,13 +10,13 @@ import uuid
 from datetime import datetime, timedelta
 
 # Local imports
-from database import read_csv, save_csv, init_db, CLIENTES_CSV, KIT_DIGITAL_CSV, ACUERDOS_CSV, FACTURAS_CSV, EQUIPOS_CSV, HISTORIAL_EQUIPOS_CSV
+from database import read_csv, save_csv, init_db, CLIENTES_CSV, KIT_DIGITAL_CSV, ACUERDOS_CSV, FACTURAS_CSV, EQUIPOS_CSV, HISTORIAL_EQUIPOS_CSV, NOTAS_DASHBOARD_CSV
 from models import (
     Cliente, ClienteUpdate, 
     KitDigital, 
     Acuerdo, AcuerdoUpdate, 
     Factura, FacturaUpdate,
-    Equipo, EquipoUpdate, HistorialEquipo
+    Equipo, EquipoUpdate, HistorialEquipo, NotaDashboard
 )
 from logic import recalcular_estados
 import generate_client_csv
@@ -68,58 +68,51 @@ def get_clientes():
     df_a = read_csv(ACUERDOS_CSV)
     df_f = read_csv(FACTURAS_CSV)
     
-    # Cast Dnis
-    if not df_c.empty:
-        df_c['Dni'] = df_c['Dni'].astype(str)
-    else:
+    if df_c.empty:
         return []
 
+    df_c['Dni'] = df_c['Dni'].astype(str)
+
+    # Merge with Kit Digital
     if not df_k.empty:
         df_k['Dni'] = df_k['Dni'].astype(str)
         df_combined = pd.merge(df_c, df_k, on="Dni", how="left")
     else:
         df_combined = df_c.copy()
-        
-    # Reemplazar NaN por None para JSON válido (pero Tipo por defecto Nofence)
+
+    # Ensure Tipo column
     if 'Tipo' not in df_combined.columns:
         df_combined['Tipo'] = 'Nofence'
     else:
         df_combined['Tipo'] = df_combined['Tipo'].fillna('Nofence')
 
     df_combined = df_combined.replace({np.nan: None})
-
     clientes_list = df_combined.to_dict(orient="records")
-    
-    for client in clientes_list:
-        dni = str(client['Dni'])
+
+    # --- Vectorized Acuerdos + Facturas ---
+    # Build acuerdos map: {dni -> [acuerdos]}
+    acuerdos_by_dni = {}
+    if not df_a.empty:
+        df_a['Dni_Cliente'] = df_a['Dni_Cliente'].astype(str)
+        df_a_clean = df_a.replace({np.nan: None})
         
-        # Acuerdos
-        if not df_a.empty:
-            client_acuerdos = df_a[df_a['Dni_Cliente'].astype(str) == dni].replace({np.nan: None}).to_dict(orient="records")
-        else:
-            client_acuerdos = []
-            
-        # Fechas límite Acuerdos
-        fecha_bono = client.get('Fecha_Aprobacion_Bono')
-        limite_acuerdos = None
-        if fecha_bono:
-            try:
-                dt_bono = datetime.strptime(str(fecha_bono), "%Y-%m-%d")
-                limite_acuerdos = (dt_bono + timedelta(days=180)).strftime("%Y-%m-%d")
-            except:
-                pass
-        client['Fecha_Limite_Acuerdos'] = limite_acuerdos
-        
-        # Facturas por Acuerdo
-        for acuerdo in client_acuerdos:
+        # Build facturas map: {id_acuerdo -> [facturas]}
+        facturas_by_acuerdo = {}
+        facturas_by_dni = {}
+        if not df_f.empty:
+            df_f['Id_Acuerdo'] = df_f['Id_Acuerdo'].astype(str)
+            df_f['Dni_Cliente'] = df_f['Dni_Cliente'].astype(str)
+            df_f_clean = df_f.replace({np.nan: None})
+            for row in df_f_clean.to_dict(orient="records"):
+                facturas_by_acuerdo.setdefault(str(row['Id_Acuerdo']), []).append(row)
+                facturas_by_dni.setdefault(str(row['Dni_Cliente']), []).append(row)
+
+        for acuerdo in df_a_clean.to_dict(orient="records"):
             id_acuerdo = str(acuerdo['Id_Acuerdo'])
-            if not df_f.empty:
-                acuerdo_facturas = df_f[df_f['Id_Acuerdo'].astype(str) == id_acuerdo].replace({np.nan: None}).to_dict(orient="records")
-            else:
-                acuerdo_facturas = []
+            acuerdo_facturas = facturas_by_acuerdo.get(id_acuerdo, [])
             acuerdo['facturas'] = acuerdo_facturas
-            
-            # Limite Factura
+
+            # Compute date limits
             fecha_aprob = acuerdo.get('Fecha_Aprobacion')
             limite_factura = None
             if fecha_aprob:
@@ -130,35 +123,141 @@ def get_clientes():
                     pass
             acuerdo['Fecha_Limite_Factura'] = limite_factura
 
-            # Limite Justificacion (calculado si hay factura)
             limite_justificacion = None
             if acuerdo_facturas:
-                # Tomamos la fecha de emisión de la primera factura
-                factura = acuerdo_facturas[0]
-                fecha_emision = factura.get('Fecha_Emision')
+                fecha_emision = acuerdo_facturas[0].get('Fecha_Emision')
                 if fecha_emision:
                     try:
                         dt_emision = datetime.strptime(str(fecha_emision), "%Y-%m-%d")
-                        # Asumimos 3 meses (90 días) para justificación tras factura
                         limite_justificacion = (dt_emision + timedelta(days=90)).strftime("%Y-%m-%d")
                     except:
                         pass
             acuerdo['Fecha_Limite_Justificacion'] = limite_justificacion
 
+            dni_key = str(acuerdo['Dni_Cliente'])
+            acuerdos_by_dni.setdefault(dni_key, []).append(acuerdo)
+    else:
+        facturas_by_dni = {}
+
+    # Attach to each client
+    for client in clientes_list:
+        dni = str(client['Dni'])
+        client_acuerdos = acuerdos_by_dni.get(dni, [])
         client['acuerdos'] = client_acuerdos
-        
-        # Facturas Flat
-        if not df_f.empty:
-            all_facturas = df_f[df_f['Dni_Cliente'].astype(str) == dni].copy()
-            client['facturas_flat'] = all_facturas.replace({np.nan: None}).to_dict(orient="records")
-            
-            all_facturas['Importe'] = pd.to_numeric(all_facturas['Importe'], errors='coerce').fillna(0)
-            client['total_facturado'] = float(all_facturas['Importe'].sum())
-        else:
-            client['facturas_flat'] = []
-            client['total_facturado'] = 0.0
+
+        # Fecha límite acuerdos desde bono
+        fecha_bono = client.get('Fecha_Aprobacion_Bono')
+        limite_acuerdos = None
+        if fecha_bono:
+            try:
+                dt_bono = datetime.strptime(str(fecha_bono), "%Y-%m-%d")
+                limite_acuerdos = (dt_bono + timedelta(days=180)).strftime("%Y-%m-%d")
+            except:
+                pass
+        client['Fecha_Limite_Acuerdos'] = limite_acuerdos
+
+        # Facturas flat
+        flat = facturas_by_dni.get(dni, [])
+        client['facturas_flat'] = flat
+        client['total_facturado'] = sum(float(f.get('Importe') or 0) for f in flat)
 
     return clientes_list
+
+
+@app.get("/api/clientes/{dni}")
+def get_cliente(dni: str):
+    """Endpoint optimizado para cargar UN solo cliente. Mucho más rápido para la vista de detalle."""
+    recalcular_estados()
+    df_c = read_csv(CLIENTES_CSV)
+    if df_c.empty:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
+
+    df_c['Dni'] = df_c['Dni'].astype(str)
+    df_c_row = df_c[df_c['Dni'] == str(dni)]
+    if df_c_row.empty:
+        raise HTTPException(status_code=404, detail="Cliente no encontrado")
+
+    df_k = read_csv(KIT_DIGITAL_CSV)
+    if not df_k.empty:
+        df_k['Dni'] = df_k['Dni'].astype(str)
+        df_k_row = df_k[df_k['Dni'] == str(dni)]
+        if not df_k_row.empty:
+            df_combined = pd.merge(df_c_row, df_k_row, on="Dni", how="left")
+        else:
+            df_combined = df_c_row.copy()
+    else:
+        df_combined = df_c_row.copy()
+
+    if 'Tipo' not in df_combined.columns:
+        df_combined['Tipo'] = 'Nofence'
+    else:
+        df_combined['Tipo'] = df_combined['Tipo'].fillna('Nofence')
+
+    df_combined = df_combined.replace({np.nan: None})
+    client = df_combined.to_dict(orient="records")[0]
+
+    df_a = read_csv(ACUERDOS_CSV)
+    df_f = read_csv(FACTURAS_CSV)
+
+    client_acuerdos = []
+    if not df_a.empty:
+        df_a['Dni_Cliente'] = df_a['Dni_Cliente'].astype(str)
+        client_acuerdos_df = df_a[df_a['Dni_Cliente'] == str(dni)].replace({np.nan: None})
+        client_acuerdos = client_acuerdos_df.to_dict(orient="records")
+
+        facturas_by_acuerdo = {}
+        if not df_f.empty:
+            df_f['Id_Acuerdo'] = df_f['Id_Acuerdo'].astype(str)
+            df_f_row = df_f[df_f['Dni_Cliente'].astype(str) == str(dni)].replace({np.nan: None})
+            for row in df_f_row.to_dict(orient="records"):
+                facturas_by_acuerdo.setdefault(str(row['Id_Acuerdo']), []).append(row)
+        
+        for acuerdo in client_acuerdos:
+            id_acuerdo = str(acuerdo['Id_Acuerdo'])
+            acuerdo_facturas = facturas_by_acuerdo.get(id_acuerdo, [])
+            acuerdo['facturas'] = acuerdo_facturas
+
+            fecha_aprob = acuerdo.get('Fecha_Aprobacion')
+            limite_factura = None
+            if fecha_aprob:
+                try:
+                    dt_aprob = datetime.strptime(str(fecha_aprob), "%Y-%m-%d")
+                    limite_factura = (dt_aprob + timedelta(days=90)).strftime("%Y-%m-%d")
+                except:
+                    pass
+            acuerdo['Fecha_Limite_Factura'] = limite_factura
+
+            limite_justificacion = None
+            if acuerdo_facturas:
+                fecha_emision = acuerdo_facturas[0].get('Fecha_Emision')
+                if fecha_emision:
+                    try:
+                        dt_emision = datetime.strptime(str(fecha_emision), "%Y-%m-%d")
+                        limite_justificacion = (dt_emision + timedelta(days=90)).strftime("%Y-%m-%d")
+                    except:
+                        pass
+            acuerdo['Fecha_Limite_Justificacion'] = limite_justificacion
+
+    client['acuerdos'] = client_acuerdos
+
+    fecha_bono = client.get('Fecha_Aprobacion_Bono')
+    limite_acuerdos = None
+    if fecha_bono:
+        try:
+            dt_bono = datetime.strptime(str(fecha_bono), "%Y-%m-%d")
+            limite_acuerdos = (dt_bono + timedelta(days=180)).strftime("%Y-%m-%d")
+        except:
+            pass
+    client['Fecha_Limite_Acuerdos'] = limite_acuerdos
+
+    flat = []
+    if not df_f.empty:
+        flat_df = df_f[df_f['Dni_Cliente'].astype(str) == str(dni)].replace({np.nan: None})
+        flat = flat_df.to_dict(orient="records")
+    client['facturas_flat'] = flat
+    client['total_facturado'] = sum(float(f.get('Importe') or 0) for f in flat)
+
+    return client
 
 @app.delete("/api/clientes/{dni}")
 def delete_cliente(dni: str):
@@ -501,6 +600,52 @@ def get_historial_equipos(id_equipo: str = None):
         df_h['Fecha_Cambio'] = df_h['Fecha_Cambio'].dt.strftime('%Y-%m-%dT%H:%M:%S')
 
     return df_h.replace({np.nan: None}).to_dict(orient="records")
+
+
+# --- NOTAS DASHBOARD ENDPOINTS ---
+
+@app.get("/api/notas_dashboard")
+def get_notas_dashboard():
+    df_n = read_csv(NOTAS_DASHBOARD_CSV)
+    if df_n.empty:
+        return []
+        
+    df_c = read_csv(CLIENTES_CSV)
+    
+    # Resolving client names for UI convenience
+    notas = df_n.replace({np.nan: None}).to_dict(orient="records")
+    if not df_c.empty:
+        client_names = {str(row['Dni']): row['Nombre'] for row in df_c.to_dict(orient="records")}
+        for nota in notas:
+            if nota.get('Dni_Cliente'):
+                nota['Nombre_Cliente'] = client_names.get(str(nota['Dni_Cliente']), "Desconocido")
+                
+    # Sort by date desc
+    notas.sort(key=lambda x: x.get('Fecha_Creacion') or '', reverse=True)
+    return notas
+
+@app.post("/api/notas_dashboard")
+def create_nota_dashboard(nota: NotaDashboard):
+    df_n = read_csv(NOTAS_DASHBOARD_CSV)
+    
+    nota.Id_Nota = str(uuid.uuid4())[:8]
+    nota.Fecha_Creacion = datetime.now().isoformat()
+    
+    new_row = pd.DataFrame([nota.model_dump()])
+    df_n = pd.concat([df_n, new_row], ignore_index=True)
+    save_csv(df_n, NOTAS_DASHBOARD_CSV)
+    return {"message": "Nota añadida", "Id_Nota": nota.Id_Nota}
+
+@app.delete("/api/notas_dashboard/{id_nota}")
+def delete_nota_dashboard(id_nota: str):
+    df_n = read_csv(NOTAS_DASHBOARD_CSV)
+    if not df_n.empty and str(id_nota) in df_n['Id_Nota'].astype(str).values:
+        initial_len = len(df_n)
+        df_n = df_n[df_n['Id_Nota'].astype(str) != str(id_nota)]
+        if len(df_n) < initial_len:
+            save_csv(df_n, NOTAS_DASHBOARD_CSV)
+            return {"message": "Nota eliminada"}
+    raise HTTPException(status_code=404, detail="Nota no encontrada")
 
 
 # --- React App Serving (SPA) ---

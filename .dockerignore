@@ -3,9 +3,10 @@
 .gitignore
 .DS_Store
 *.log
-venv/
-node_modules/
-dist/
+**/venv/
+**/.venv/
+**/node_modules/
+**/dist/
 **/__pycache__/
 **/*.py[cod]
 **/data/

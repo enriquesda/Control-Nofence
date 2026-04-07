@@ -5,6 +5,7 @@ const api = axios.create({
 });
 
 export const getClientes = () => api.get('/clientes');
+export const getCliente = (dni) => api.get(`/clientes/${dni}`);
 export const getDashboard = () => api.get('/dashboard');
 export const createCliente = (data) => api.post('/clientes', data);
 export const deleteCliente = (dni) => api.delete(`/clientes/${dni}`);
@@ -22,5 +23,10 @@ export const addEquipo = (dni, data) => api.post(`/clientes/${dni}/equipos`, dat
 export const deleteEquipo = (id) => api.delete(`/equipos/${id}`);
 export const updateEquipoStatus = (id, data) => api.patch(`/equipos/${id}/estado`, data);
 export const getHistorialEquipos = (params) => api.get('/equipos/historial', { params });
+
+// Notas Dashboard
+export const getNotasDashboard = () => api.get('/notas_dashboard');
+export const createNotaDashboard = (data) => api.post('/notas_dashboard', data);
+export const deleteNotaDashboard = (id) => api.delete(`/notas_dashboard/${id}`);
 
 export default api;

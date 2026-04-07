@@ -113,6 +113,21 @@ const ResumenCliente = ({ client, setClient, onSave }) => {
                     )}
                 </Card>
 
+                {/* Notas / Comentarios */}
+                <Card className="space-y-4">
+                    <h3 className="text-lg font-bold mb-2 flex items-center space-x-2 border-b pb-2">
+                        <Info size={20} className="text-primary-500" />
+                        <span>Notas / Comentarios</span>
+                    </h3>
+                    <textarea
+                        className="w-full text-sm p-3 border border-slate-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500 outline-none resize-y min-h-[120px]"
+                        placeholder="Añadir comentarios sobre el cliente..."
+                        value={client.Notas || ''}
+                        onChange={e => setClient({ ...client, Notas: e.target.value })}
+                        onBlur={onSave}
+                    />
+                </Card>
+
                 {/* Tarjeta de Resumen de Equipos */}
                 <EquipoResumenCard dni={client.Dni} />
             </div>

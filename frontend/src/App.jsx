@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { Users, LayoutDashboard, PlusCircle, Cpu, Filter } from 'lucide-react';
+import { Users, LayoutDashboard, PlusCircle, Cpu, Filter, MapPin } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import ClientList from './components/ClientList';
 import ClientDetail from './components/ClientDetail';
 import EquiposPage from './components/EquiposPage';
 import Automation from './components/Automation';
+import NofencePage from './components/NofencePage';
 import { ClientFilterProvider, useClientFilter } from './context/ClientFilterContext';
 
 const FilterSelector = () => {
@@ -55,6 +56,10 @@ function AppContent() {
             <LayoutDashboard size={20} />
             <span className="font-medium">Equipos</span>
           </Link>
+          <Link to="/nofence" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-100 text-slate-700 transition-colors">
+            <MapPin size={20} />
+            <span className="font-medium">Nofence Central</span>
+          </Link>
           <Link to="/automatizacion" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-slate-100 text-slate-700 transition-colors">
             <Cpu size={20} />
             <span className="font-medium">Automatización</span>
@@ -68,6 +73,7 @@ function AppContent() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/clientes" element={<ClientList />} />
           <Route path="/clientes/:dni" element={<ClientDetail />} />
+          <Route path="/nofence" element={<NofencePage />} />
           <Route path="/equipos" element={<EquiposPage />} />
           <Route path="/automatizacion" element={<Automation />} />
         </Routes>

@@ -64,6 +64,16 @@ const GestionNofence = ({ client, setClient, onUpdate, dni }) => {
                         onBlur={(e) => handleAutoSave('Importe_Nofence', parseFloat(e.target.value))}
                     />
                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <Input
+                        label="Referencia del Pago Nofence"
+                        type="text"
+                        value={client.Referencia_Pago_Nofence || ''}
+                        onChange={e => setClient({ ...client, Referencia_Pago_Nofence: e.target.value })}
+                        onBlur={(e) => handleAutoSave('Referencia_Pago_Nofence', e.target.value)}
+                        placeholder="Ej. TRF-123456"
+                    />
+                </div>
                 {/* Save button kept for manual reassurance, but auto-save is active */}
                 <div className="mt-4 flex justify-end">
                     <Button onClick={(e) => onUpdate(e, null)}>Guardar Cambios Nofence</Button>

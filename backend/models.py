@@ -67,6 +67,7 @@ class Cliente(BaseModel):
     Estado: Optional[str] = "Kit pedido"
     Estado_Nofence: Optional[str] = None 
     Importe_Nofence: Optional[float] = None  # Payment amount for Nofence
+    Referencia_Pago_Nofence: Optional[str] = None
     Collares: Optional[str] = None  # JSON array of collar numbers
     Pedido_Nofence: Optional[str] = None
     Importe_Factura_Nofence: Optional[float] = None
@@ -76,6 +77,9 @@ class Cliente(BaseModel):
     # Coordenadas Nofence
     Coordenadas_X: Optional[float] = None
     Coordenadas_Y: Optional[float] = None
+
+    # Notas / Comentarios
+    Notas: Optional[str] = None
 
 class ClienteUpdate(BaseModel):
     Nombre: Optional[str] = None
@@ -89,6 +93,7 @@ class ClienteUpdate(BaseModel):
     Tipo: Optional[str] = None
     Estado_Nofence: Optional[str] = None
     Importe_Nofence: Optional[float] = None
+    Referencia_Pago_Nofence: Optional[str] = None
     Coordenadas_X: Optional[float] = None
     Coordenadas_Y: Optional[float] = None
     Collares: Optional[str] = None
@@ -96,6 +101,7 @@ class ClienteUpdate(BaseModel):
     Importe_Factura_Nofence: Optional[float] = None
     Importe_Cobrado_Cliente: Optional[float] = None
     Beneficio: Optional[float] = None
+    Notas: Optional[str] = None
 
 class Equipo(BaseModel):
     Id_Equipo: Optional[str] = None
@@ -122,3 +128,10 @@ class HistorialEquipo(BaseModel):
     Estado_Nuevo: str
     Fecha_Cambio: str # ISO format datetime
 
+class NotaDashboard(BaseModel):
+    Id_Nota: Optional[str] = None
+    Creador: str
+    Destinatario: str
+    Dni_Cliente: Optional[str] = None
+    Texto: str
+    Fecha_Creacion: Optional[str] = None

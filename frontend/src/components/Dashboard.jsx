@@ -3,6 +3,7 @@ import { getClientes, updateAcuerdo } from '../api';
 import Estadisticas from './dashboard/Estadisticas';
 import AccionesPendientes from './dashboard/AccionesPendientes';
 import Alertas from './dashboard/Alertas';
+import TablonNotas from './dashboard/TablonNotas';
 import { useClientFilter } from '../context/ClientFilterContext';
 
 const Dashboard = () => {
@@ -180,6 +181,8 @@ const Dashboard = () => {
             <h2 className="text-2xl font-bold text-slate-800 mb-6">Dashboard</h2>
 
             <Estadisticas stats={stats} />
+
+            <TablonNotas clientes={clientes} />
 
             <AccionesPendientes
                 acuerdosPendientes={getAcuerdosPendientes()}
