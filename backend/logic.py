@@ -24,76 +24,72 @@ def recalcular_estados():
         acuerdos_cliente = df_a_safe[df_a_safe['Dni_Cliente'].astype(str) == dni] if 'Dni_Cliente' in df_a_safe.columns else pd.DataFrame()
         facturas_cliente = df_f_safe[df_f_safe['Dni_Cliente'].astype(str) == dni] if 'Dni_Cliente' in df_f_safe.columns else pd.DataFrame()
         
-        # 1. Estado Base
+        # --- LOGICA DE ESTADOS ---
         nuevo_estado = "Kit pedido"
         
-        # 2. Kit Aprobado
+        # 1. Kit Aprobado
         if not kit_row.empty:
             k = kit_row.iloc[0]
             if str(k.get('Numero_Bono')).strip() != "":
                 nuevo_estado = "Kit aprobado"
                 
-        # 3. Acuerdos
+        # 2. Acuerdos
         if not acuerdos_cliente.empty:
-            # Si hay al menos un acuerdo enviado
             enviados = acuerdos_cliente[acuerdos_cliente['Enviado'] == True]
             if not enviados.empty:
                 nuevo_estado = "Acuerdos enviados"
             
-            # Si hay al menos un acuerdo firmado (prevalece sobre enviado)
             firmados = acuerdos_cliente[acuerdos_cliente['Firmado'] == True]
             if not firmados.empty:
                 nuevo_estado = "Acuerdos firmados"
                 
-            # Si hay al menos un acuerdo con numero y fecha aprobacion (prevalece sobre firmado)
+            # Acuerdos Aprobados (tienen numero y fecha)
             aprobados = acuerdos_cliente[
                 (acuerdos_cliente['Numero_Acuerdo'].astype(str).str.strip() != "") & 
                 (acuerdos_cliente['Fecha_Aprobacion'].astype(str).str.strip() != "")
             ]
+            
             if not aprobados.empty:
-                nuevo_estado = "Acuerdos aprobados"
-                
-        # 4. Facturas
-        if not facturas_cliente.empty:
-            nuevo_estado = "Factura enviada"
-            
-            # Si TODAS las facturas están pagadas? O al menos una? 
-            # El requisito dice "si se marca o rellena la opcion de pagada sera factura pagada"
-            # Asumiremos que si hay alguna factura pagada es suficiente o si la ultima lo esta.
-            # Logica conservadora: Si hay facturas y alguna esta pagada -> Factura pagada
-            pagadas = facturas_cliente[facturas_cliente['Estado_Pago'] == 'Pagado']
-            if not pagadas.empty:
-                nuevo_estado = "Factura pagada"
-
-        # 5. Justificación (Prevalece sobre todo si existe)
-        if not acuerdos_cliente.empty and 'Estado_Justificacion' in acuerdos_cliente.columns:
-            # Buscamos el estado de justificación más avanzado (o más 'bloqueante')
-            # Pendiente de captura -> Pendiente de justificar
-            # Enviada para firma -> Justificación pendiente de firma
-            # Justificada -> Justificado
-            
-            # Prioridad de estados de justificación (de menor a mayor avance global, pero mas específico)
-            # Logica de visualización: Si tengo una pendiente y una justificada, ¿en que estado estoy?
-            # Probablemente en el que requiera acción: Pendiente.
-            
-            estados_justif = acuerdos_cliente['Estado_Justificacion'].unique().tolist()
-            
-            # Mapeo de valores DB a texto Cliente
-            # 'Pendiente de captura', 'Enviada para firma', 'Justificada'
-            
-            if 'Pendiente de captura' in estados_justif:
-                nuevo_estado = "Pendiente de justificar"
-            elif 'Enviada para firma' in estados_justif:
-                nuevo_estado = "Justificación pendiente de firma"
-            elif 'Justificada' in estados_justif:
-                # Solo si TODOS están justificados o AL MENOS uno? 
-                # Si llegamos aqui, no hay pendientes ni enviadas. 
-                # Significa que las que tengan algo, tienen 'Justificada'.
-                # Pero cuidado con los NULL/None.
-                
-                # Chequear si todos los acuerdos 'facturados' estan justificados
-                # Simplificación: Si hay al menos un 'Justificada' y no hay pendientes anteriores -> Justificado
-                nuevo_estado = "Justificado"
+                # Si llegamos aquí, los acuerdos están aprobados. 
+                # Ahora la prioridad depende de las Facturas.
+                if facturas_cliente.empty:
+                    nuevo_estado = "Facturas no generadas"
+                else:
+                    # Hay facturas. ¿Están pagadas?
+                    pagadas = facturas_cliente[facturas_cliente['Estado_Pago'] == 'Pagado']
+                    
+                    if pagadas.empty:
+                        nuevo_estado = "Facturas no pagadas"
+                    else:
+                        if 'Estado_Justificacion' in acuerdos_cliente.columns:
+                            estados_justif = acuerdos_cliente['Estado_Justificacion'].unique().tolist()
+                            
+                            if 'Pendiente de captura' in estados_justif:
+                                nuevo_estado = "Pendiente de justificar"
+                            elif 'Enviada para firma' in estados_justif:
+                                nuevo_estado = "Justificación pendiente de firma"
+                            elif '2º Justificacion' in estados_justif:
+                                nuevo_estado = "2º Justificacion completada"
+                            elif 'Justificada' in estados_justif:
+                                nuevo_estado = "Justificado"
+                                
+                                # Check if 1 year has passed since 1st Justification
+                                if 'Fecha_Justificacion' in acuerdos_cliente.columns:
+                                    justif_df = acuerdos_cliente[acuerdos_cliente['Estado_Justificacion'] == 'Justificada']
+                                    for _, j_row in justif_df.iterrows():
+                                        fecha_j = j_row.get('Fecha_Justificacion')
+                                        if pd.notna(fecha_j) and str(fecha_j).strip() != "":
+                                            try:
+                                                dt_justif = datetime.strptime(str(fecha_j), "%Y-%m-%d")
+                                                if datetime.now() > dt_justif + timedelta(days=365):
+                                                    nuevo_estado = "Pendiente 2º justificacion"
+                                                    break # If at least one requires it, overall status changes
+                                            except:
+                                                pass
+                            else:
+                                nuevo_estado = "Facturas pagadas"
+                        else:
+                            nuevo_estado = "Facturas pagadas"
 
         df_c.at[index, 'Estado'] = nuevo_estado
 

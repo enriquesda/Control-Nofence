@@ -60,7 +60,7 @@ def parse_import_csv(content_bytes):
         return {}
 
     # Normalize columns
-    df.columns = [str(c).strip() for c in df.columns]
+    df.columns = [str(c).strip().upper() for c in df.columns]
     
     # Required columns check
     # NIF, nombre completo
@@ -74,12 +74,12 @@ def parse_import_csv(content_bytes):
     for index, row in df.iterrows():
         raw_nif = row.get('NIF')
         
-        # Determine if this row starts a new client or continues previous
+
         if pd.notna(raw_nif) and str(raw_nif).strip() != '' and str(raw_nif).lower() != 'nan':
              current_nif = str(raw_nif).strip()
-             current_name = row.get('nombre completo', '')
+             current_name = row.get('NOMBRE COMPLETO', '')
         elif current_nif is None:
-             # Skip rows before first valid NIF
+      
              continue
         
         if current_nif not in clients_map:
@@ -93,8 +93,7 @@ def parse_import_csv(content_bytes):
             
         client = clients_map[current_nif]
         
-        # Parse Kit Digital (Only if present in this row)
-        # "Si viene la columna nº expediente , limite y bono"
+
         expediente = row.get('Nº EXPEDIENTE')
         limite = row.get('LIMITE ACUERDOS')
         bono = row.get('BONO')
@@ -102,17 +101,14 @@ def parse_import_csv(content_bytes):
         if pd.notna(expediente) and str(expediente).strip() != '' and pd.notna(limite):
             limit_date = parse_date(limite)
             approval_date = calculate_approval_date(limit_date)
-            # Only set if not already set or this row has info (assume first row has it usually)
             if client["kit"] is None:
                 client["kit"] = {
                     "Numero_Bono": str(expediente),
                     "Importe_Bono": parse_currency(bono),
                     "Fecha_Aprobacion_Bono": approval_date,
-                    # "Fecha_Limite_Acuerdos": limit_date 
                 }
             
-        # Parse Agreement (Acuerdo)
-        # "Si tambien tiene fecha , numero, modalidad e importe"
+
         fecha_acuerdo = parse_date(row.get('FECHA'))
         numero_acuerdo = row.get('NUMERO')
         modalidad = row.get('MODALIDAD')
@@ -133,11 +129,9 @@ def parse_import_csv(content_bytes):
                 "factura": None
             }
             
-            # Invoice Logic
             fecha_factura = parse_date(row.get('FECHA FACTURA'))
             if fecha_factura:
                 num_acuerdo_str = str(numero_acuerdo)
-                # Last 4 digits
                 num_factura = num_acuerdo_str[-4:] if len(num_acuerdo_str) >= 4 else num_acuerdo_str
                 
                 factura = {
@@ -148,7 +142,6 @@ def parse_import_csv(content_bytes):
                     "Fecha_Pago": None
                 }
                 
-                # Payment Logic
                 fecha_pago = parse_date(row.get('FECHA PAGO IVA'))
                 if fecha_pago:
                     factura["Estado_Pago"] = "Pagado"
@@ -156,7 +149,6 @@ def parse_import_csv(content_bytes):
                     
                 acuerdo["factura"] = factura
                 
-            # Justification Logic
             limite_just = parse_date(row.get('LIMITE JUST 1'))
             if limite_just:
                 acuerdo["Estado_Justificacion"] = "Justificada"
@@ -168,7 +160,6 @@ def parse_import_csv(content_bytes):
 def preview_import(content_bytes):
     clients_map = parse_import_csv(content_bytes)
     
-    # Load existing data to check for updates vs new
     df_existing_clients = read_csv(CLIENTES_CSV)
     existing_dnis = set(df_existing_clients['Dni'].astype(str).values) if not df_existing_clients.empty else set()
     
@@ -187,9 +178,7 @@ def preview_import(content_bytes):
     return {
         "summary": preview_results, 
         "total": len(preview_results),
-        "raw_data": clients_map # Pass this back to frontend to send for confirmation? Or handle differently.
-        # Ideally we store temp or ask frontend to send back. 
-        # For simplicity, we can return it and frontend sends it back to execute.
+        "raw_data": clients_map 
     }
 
 def execute_import(clients_data):

@@ -121,59 +121,36 @@ const Dashboard = () => {
     };
 
     const getKitsCaducan = () => {
-        const results = [];
-        clientes.forEach(client => {
-            const totalAcuerdos = client.acuerdos ? client.acuerdos.reduce((acc, curr) => acc + (curr.Importe || 0), 0) : 0;
-            const saldoRestante = (client.Importe_Bono || 0) - totalAcuerdos;
-
-            if (client.Fecha_Aprobacion_Bono && saldoRestante > 0) {
-                const expiryDate = new Date(client.Fecha_Aprobacion_Bono);
-                expiryDate.setDate(expiryDate.getDate() + 180); // 6 meses
-                const days = daysUntil(expiryDate.toISOString().split('T')[0]);
-                if (days !== null && days >= 0) {
-                    results.push({ client, days, expiryDate: expiryDate.toISOString().split('T')[0] });
-                }
-            }
-        });
-        return results.sort((a, b) => a.days - b.days);
+        return clientes
+            .filter(c => c.Proximo_Vencimiento_Texto === "Vencimiento del bono" && c.Proximo_Vencimiento_Dias !== 9999)
+            .map(client => ({
+                client,
+                days: client.Proximo_Vencimiento_Dias,
+                expiryDate: client.Proximo_Vencimiento_Fecha
+            }))
+            .sort((a, b) => a.days - b.days);
     };
 
     const getAcuerdosVencen = () => {
-        const results = [];
-        clientes.forEach(client => {
-            client.acuerdos?.forEach(acuerdo => {
-                const hasInvoices = acuerdo.facturas && acuerdo.facturas.length > 0;
-                if (!hasInvoices && acuerdo.Fecha_Aprobacion) {
-                    const expiryDate = new Date(acuerdo.Fecha_Aprobacion);
-                    expiryDate.setDate(expiryDate.getDate() + 90); // 3 meses para facturar
-                    const days = daysUntil(expiryDate.toISOString().split('T')[0]);
-                    if (days !== null && days >= 0) {
-                        results.push({ client, acuerdo, days, expiryDate: expiryDate.toISOString().split('T')[0] });
-                    }
-                }
-            });
-        });
-        return results.sort((a, b) => a.days - b.days);
+        return clientes
+            .filter(c => c.Proximo_Vencimiento_Texto === "Vencimiento acuerdos" && c.Proximo_Vencimiento_Dias !== 9999)
+            .map(client => ({
+                client,
+                days: client.Proximo_Vencimiento_Dias,
+                expiryDate: client.Proximo_Vencimiento_Fecha
+            }))
+            .sort((a, b) => a.days - b.days);
     };
 
     const getJustificacionesVencen = () => {
-        const results = [];
-        clientes.forEach(client => {
-            client.acuerdos?.forEach(acuerdo => {
-                if (acuerdo.Estado_Justificacion !== 'Justificada' && acuerdo.facturas && acuerdo.facturas.length > 0) {
-                    const firstInvoice = acuerdo.facturas[0];
-                    if (firstInvoice.Fecha_Emision) {
-                        const expiryDate = new Date(firstInvoice.Fecha_Emision);
-                        expiryDate.setDate(expiryDate.getDate() + 90); // 3 meses para justificar
-                        const days = daysUntil(expiryDate.toISOString().split('T')[0]);
-                        if (days !== null && days >= 0) {
-                            results.push({ client, acuerdo, days, expiryDate: expiryDate.toISOString().split('T')[0] });
-                        }
-                    }
-                }
-            });
-        });
-        return results.sort((a, b) => a.days - b.days);
+        return clientes
+            .filter(c => c.Proximo_Vencimiento_Texto === "Vencimiento justificación" && c.Proximo_Vencimiento_Dias !== 9999)
+            .map(client => ({
+                client,
+                days: client.Proximo_Vencimiento_Dias,
+                expiryDate: client.Proximo_Vencimiento_Fecha
+            }))
+            .sort((a, b) => a.days - b.days);
     };
 
     return (

@@ -212,14 +212,30 @@ const GestionKitDigital = ({
                                                     'bg-green-50 border-green-200 text-green-700'}`}
                                         value={acuerdo.Estado_Justificacion || 'Pendiente de captura'}
                                         onChange={(e) => {
-                                            onUpdateAcuerdo(acuerdo.Id_Acuerdo, { Estado_Justificacion: e.target.value });
-                                            fetchData();
+                                            const newVal = e.target.value;
+                                            const updates = { Estado_Justificacion: newVal };
+                                            if (newVal === 'Justificada' && !acuerdo.Fecha_Justificacion) {
+                                                updates.Fecha_Justificacion = new Date().toISOString().split('T')[0];
+                                            }
+                                            onUpdateAcuerdo(acuerdo.Id_Acuerdo, updates).then(() => fetchData());
                                         }}
                                     >
                                         <option value="Pendiente de captura">Pendiente</option>
                                         <option value="Enviada para firma">Enviada</option>
                                         <option value="Justificada">Justificada</option>
+                                        <option value="2º Justificacion">2º Justificacion</option>
                                     </select>
+                                    {(acuerdo.Estado_Justificacion === 'Justificada' || acuerdo.Estado_Justificacion === '2º Justificacion' || acuerdo.Estado_Justificacion === 'Pendiente 2º justificacion') && (
+                                        <div className="mt-2 flex flex-col items-center">
+                                           <span className="text-[10px] text-slate-400 mb-1">Fecha Justificación:</span>
+                                           <input 
+                                                type="date"
+                                                className="text-[10px] p-1 border rounded bg-white text-slate-600 outline-none w-28"
+                                                value={acuerdo.Fecha_Justificacion || ''}
+                                                onChange={(e) => onUpdateAcuerdo(acuerdo.Id_Acuerdo, { Fecha_Justificacion: e.target.value }).then(() => fetchData())}
+                                           />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

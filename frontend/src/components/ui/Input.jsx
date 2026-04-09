@@ -2,6 +2,8 @@ import React from 'react';
 
 const Input = ({
     label,
+    name,
+    defaultValue,
     type = 'text',
     value,
     onChange,
@@ -20,7 +22,9 @@ const Input = ({
             )}
             <input
                 type={type}
+                name={name}
                 value={value}
+                defaultValue={defaultValue}
                 onChange={onChange}
                 onBlur={onBlur}
                 placeholder={placeholder}

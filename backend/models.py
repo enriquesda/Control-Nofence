@@ -38,7 +38,8 @@ class Acuerdo(BaseModel):
     Fecha_Envio: Optional[str] = None
     Firmado: Optional[bool] = False # Legacy/Helper
     Fecha_Firma: Optional[str] = None
-    Estado_Justificacion: Optional[str] = None # Pendiente de captura, Enviada para firma, Justificada
+    Estado_Justificacion: Optional[str] = None # Pendiente de captura, Enviada para firma, Justificada, 2º Justificacion
+    Fecha_Justificacion: Optional[str] = None # ISO format datetime when Justificada is hit
 
 class AcuerdoUpdate(BaseModel):
     Numero_Acuerdo: Optional[str] = None
@@ -49,6 +50,7 @@ class AcuerdoUpdate(BaseModel):
     Firmado: Optional[bool] = None
     Fecha_Firma: Optional[str] = None
     Estado_Justificacion: Optional[str] = None
+    Fecha_Justificacion: Optional[str] = None
 
 class Cliente(BaseModel):
     Dni: str

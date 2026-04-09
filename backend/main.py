@@ -21,6 +21,75 @@ from models import (
 from logic import recalcular_estados
 import generate_client_csv
 
+def calcular_situacion(client_dict):
+    estado = client_dict.get('Estado', '')
+    texto = None
+    fecha_limite = None
+    
+    try:
+        if estado in ['Kit pedido', 'Kit aprobado', 'Acuerdos enviados']:
+            fecha_bono = client_dict.get('Fecha_Aprobacion_Bono')
+            if fecha_bono:
+                fecha_limite = datetime.strptime(str(fecha_bono), "%Y-%m-%d") + timedelta(days=180)
+                texto = "Vencimiento del bono"
+        
+        elif estado in ['Acuerdos firmados', 'Acuerdos aprobados', 'Facturas no generadas']:
+            # Find earliest signed agreement
+            acuerdos = client_dict.get('acuerdos', [])
+            fechas_firmas = []
+            for ac in acuerdos:
+                if ac.get('Firmado') and ac.get('Fecha_Firma'):
+                    try:
+                        fechas_firmas.append(datetime.strptime(str(ac['Fecha_Firma']), "%Y-%m-%d"))
+                    except:
+                        pass
+            if fechas_firmas:
+                fecha_limite = min(fechas_firmas) + timedelta(days=90)
+                texto = "Vencimiento acuerdos"
+                
+        elif estado in ['Facturas enviada', 'Factura enviada', 'Facturas no pagadas', 'Facturas pagadas', 'Pendiente de justificar', 'Justificación pendiente de firma']:
+            # Find earliest invoice emission
+            facturas = client_dict.get('facturas_flat', [])
+            fechas_emision = []
+            for f in facturas:
+                if f.get('Fecha_Emision'):
+                    try:
+                        fechas_emision.append(datetime.strptime(str(f['Fecha_Emision']), "%Y-%m-%d"))
+                    except:
+                        pass
+            if fechas_emision:
+                fecha_limite = min(fechas_emision) + timedelta(days=90)
+                texto = "Vencimiento justificación"
+                
+        elif estado in ['Justificado', 'Pendiente 2º justificacion', '2º Justificacion completada']:
+            acuerdos = client_dict.get('acuerdos', [])
+            fechas_justif = []
+            for ac in acuerdos:
+                if ac.get('Fecha_Justificacion'):
+                    try:
+                        fechas_justif.append(datetime.strptime(str(ac['Fecha_Justificacion']), "%Y-%m-%d"))
+                    except:
+                        pass
+            if fechas_justif:
+                fecha_limite = max(fechas_justif) + timedelta(days=365) # Max to be conservative, or min? Use max (latest justified)
+                texto = "Vencimiento 2º justificación"
+
+        if fecha_limite and texto:
+            dias_restantes = (fecha_limite - datetime.now()).days
+            client_dict['Proximo_Vencimiento_Texto'] = texto
+            client_dict['Proximo_Vencimiento_Dias'] = dias_restantes
+            client_dict['Proximo_Vencimiento_Fecha'] = fecha_limite.strftime("%Y-%m-%d")
+        else:
+            client_dict['Proximo_Vencimiento_Texto'] = "-"
+            client_dict['Proximo_Vencimiento_Dias'] = 9999
+            client_dict['Proximo_Vencimiento_Fecha'] = None
+            
+    except Exception as e:
+        print(f"Error calculating situation: {e}")
+        client_dict['Proximo_Vencimiento_Texto'] = "-"
+        client_dict['Proximo_Vencimiento_Dias'] = 9999
+        client_dict['Proximo_Vencimiento_Fecha'] = None
+            
 app = FastAPI(title="CRM Control Nofence")
 @app.middleware("http")
 async def block_direct_access(request: Request, call_next):
@@ -160,6 +229,8 @@ def get_clientes():
         flat = facturas_by_dni.get(dni, [])
         client['facturas_flat'] = flat
         client['total_facturado'] = sum(float(f.get('Importe') or 0) for f in flat)
+        
+        calcular_situacion(client)
 
     return clientes_list
 
@@ -256,6 +327,8 @@ def get_cliente(dni: str):
         flat = flat_df.to_dict(orient="records")
     client['facturas_flat'] = flat
     client['total_facturado'] = sum(float(f.get('Importe') or 0) for f in flat)
+    
+    calcular_situacion(client)
 
     return client
 

@@ -50,6 +50,10 @@ const ClientList = () => {
         }
 
         return matchesSearch && matchesFilter && matchesType;
+    }).sort((a, b) => {
+        const diasA = a.Proximo_Vencimiento_Dias ?? 9999;
+        const diasB = b.Proximo_Vencimiento_Dias ?? 9999;
+        return diasA - diasB;
     });
 
     return (
